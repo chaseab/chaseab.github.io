@@ -1,28 +1,34 @@
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: 'kumbh Sans', sans-serif;
+body {
+  background-color:DABE99;
 }
-.navbar {
-  background: lightblue;
-  height: 80px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 1.2rem;
-  position: sticky;
-  top: 0;
-  z-index: 999
-}
-.navbar_container {
-  display: flex;
-  justify-content: left;
-  height: 80px;
-  z-index: 1;
-  width: 100%;
-  max-width: 1300px;
-  margin: 0 auto;
-  padding 0 50px;
 
+
+a:link {
+  text-decoration: none;
+  color: 33140A;
+}
+a:visited{
+  text-decoration: none;
+  color: 33140A;
+}
+.title {
+  color: 33140A;
+text-align: center;
+margin: 50px auto;
+}
+.navlist {
+  height: 30px;
+  background-color: CF9F6E;
+  font-weight: bold;
+  margin:auto;
+  padding-top: 9px;
+  Width: 250px;
+  border-radius: 10px;
+
+
+}
+.navtext {
+  padding-left:10px;
+  padding-right: 5px;
+  margin:auto;
 }
