@@ -1,0 +1,164 @@
+
+.wrapper {
+display: grid;
+grid-template-columns: repeat(10, 10vw);
+grid-template-rows: repeat(10, 10vh);
+grid-column-gap: 0px;
+grid-row-gap: 0px;
+background-color:#a6aeb7;
+z-index: -10;
+}
+.title {
+  grid-column: 4 ;
+  grid-row: 5 ;
+  color: black;
+  font-size: 8vmin;
+  z-index: 100;
+}
+.homepage-image {
+  grid-column: 7;
+  grid-row: 3;
+  height: 60vh;
+  border-radius: 35px;
+
+}
+.somethingelse {
+  margin-top: 2vh;
+}
+#stuff{
+  grid-column: 1;
+  grid-row: 1 / 11;
+  z-index: 4;
+}
+.header {
+  height: 70px;
+  z-index: 1;
+  background-color: #212529;
+  grid-column: 1/11;
+  grid-row: 1;
+  text-align: center;
+  color: white;
+
+}
+.something {
+  grid-column: 4 / 6;
+  grid-row: 8;
+  font-family: 'Inconsolata', monospace;
+  padding: 10px;
+  max-width: 640px;
+}
+
+@keyframes letters {
+  from {
+    left: 0;
+  }
+  to {
+    left: 50ch;
+  }
+}
+@keyframes lines {
+  from {
+    top: 0;
+  }
+  to {
+    top: 100%;
+  }
+}
+@keyframes cursor-type {
+  50% {
+    border-color: #000;
+  }
+}
+@keyframes cursor-wait {
+  0% {
+    box-shadow: inset 2px 0 0 0 rgba(0, 0, 0, 0);
+  }
+  1% {
+    box-shadow: inset 2px 0 0 0 black;
+  }
+  40% {
+    box-shadow: inset 2px 0 0 0 black;
+  }
+}
+.type {
+  position: relative;
+  font-family: 'Inconsolata', monospace;
+  width: 50ch;
+  line-height: 1.2;
+  word-break: break-all;
+  overflow: hidden;
+}
+@supports (width: 1ch) {
+  .type:before, .type:after {
+    box-sizing: border-box;
+    content: '';
+    position: absolute;
+    z-index: 1;
+    display: block;
+    height: 1.2em;
+    width: 100%;
+    background-color:#a6aeb7;
+  }
+  .type:before {
+    border-left: 2px solid transparent;
+    top: 100%;
+    animation-name: letters, lines, cursor-type, cursor-wait;
+    animation-fill-mode: both, both, both, backwards;
+  }
+  .type:after {
+    content: '';
+    height: 100%;
+    top: 100%;
+    left: 0;
+    margin-top: 1.2em;
+  }
+}
+.type:before {
+  animation-duration: 1.4285714286s, 1.4285714286s, 0.0285714286s, 0.8s;
+  animation-timing-function: steps(50, end), steps(1, end), step-end, ease-out;
+  animation-iteration-count: 1, 1, 35, 2;
+  animation-delay: 1.6s, 1.6s, 1.6s, 0s;
+}
+.type:after {
+  animation: lines 1.4285714286s steps(1, end) 1;
+  animation-fill-mode: both;
+  animation-delay: 1.6s;
+}
+.type + .type:before {
+  animation-duration: 1.4285714286s, 5.7142857143s, 0.0285714286s, 0.8s;
+  animation-timing-function: steps(50, end), steps(1, end), step-end, ease-out;
+  animation-iteration-count: 1, 1, 181, 2;
+  animation-delay: 4.2s, 4.2s, 4.2s, 2.6s;
+}
+.type + .type:after {
+  animation: lines 5.7142857143s steps(2, end) 1;
+  animation-fill-mode: both;
+  animation-delay: 4.2s;
+}
+
+.tetrisbutton {
+  background-color: white;
+  z-index: 1000;
+  white-space: nowrap;
+  padding-left: 21vmin;
+  padding-right: 40vmin;
+  padding-top: 23vmin;
+  padding-bottom: 30vmin;
+  border-radius: 20px;
+  grid-column: 5;
+  grid-row: 4;
+  font-size: 5vmin;
+  animation: pop 120s;
+}
+@keyframes pop
+{
+  0%{transform:scale(0);}
+  100%{transform:scale(0);}
+}
+.exitbutton {
+  grid-column: 7;
+  grid-row: 8;
+  margin-left: -50px;
+  z-index: 1001;
+  animation: pop 120s;
+}
