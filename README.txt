@@ -1,12 +1,4 @@
-JohnDoe Free Bootstrap landing page for personal and commercial use. Designed with ♥️ and creativity by Devcrud.com 
-
-Product Page: https://wwww.devcrud.com/
-
-Credits:
-
-    Demo Images:
-        Unsplash:       	(https://www.unsplash.com)
-
+Chase Boniglio's Porfolio
     Icons:
 		Themify Icons: 		(https://themify.me/themify-icons)
 
@@ -16,3 +8,4 @@ Credits:
 		Bootstrap Affix: 	(http://getbootstrap.com/javascript/#affix)  
 		Isotope: 			(https://isotope.metafizzy.co/) 
 		Google Maps:		(https://maps.google.com)
+		Website Template: 	(Devcrud.com)
