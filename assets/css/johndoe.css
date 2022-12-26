@@ -11650,6 +11650,9 @@ pre .code {
     min-height: auto !important;
   }
 }
+#map{
+  background-image: url(/assets/imgs/IMG_1939.jpeg);
+}
 
 .contact .map {
   position: absolute;
