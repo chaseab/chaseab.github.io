@@ -1,0 +1,46 @@
+{
+  "_note": "Rough SBD (squat/bench/deadlift) 1RM progression from Chase's memory. Dates are APPROXIMATE, worked back from summer 2026 (= after his first year of college). Class timeline: HS freshman 2021-22, sophomore 2022-23, junior 2023-24, senior 2024-25; college year 1 = 2025-26. Weights in lbs.",
+  "bench": {
+    "points": [
+      {"date":"2022-05","lbs":80,"label":"end of HS freshman yr"},
+      {"date":"2023-03","lbs":135,"label":"later sophomore yr"},
+      {"date":"2024-09","lbs":225,"label":"start of senior yr"},
+      {"date":"2024-12","lbs":235,"label":"senior yr winter"},
+      {"date":"2025-06","lbs":215,"label":"dropped, then steady"},
+      {"date":"2025-12","lbs":215,"label":"college freshman winter"},
+      {"date":"2026-01","lbs":240,"label":"built up in January"},
+      {"date":"2026-04","lbs":230,"label":"dipped in spring"},
+      {"date":"2026-07","lbs":265,"label":"now (mid-summer)"}
+    ],
+    "projection": [
+      {"date":"2026-07","lbs":265},
+      {"date":"2026-12","lbs":315,"label":"goal: winter 2026"}
+    ]
+  },
+  "squat": {
+    "points": [
+      {"date":"2022-05","lbs":135,"label":"starting out"},
+      {"date":"2023-03","lbs":225,"label":"sophomore yr"},
+      {"date":"2024-03","lbs":315,"label":"junior yr"},
+      {"date":"2025-03","lbs":365,"label":"senior yr"},
+      {"date":"2026-07","lbs":375,"label":"now"}
+    ],
+    "projection": [
+      {"date":"2026-07","lbs":375},
+      {"date":"2026-10","lbs":405,"label":"goal: this fall"}
+    ]
+  },
+  "deadlift": {
+    "points": [
+      {"date":"2022-05","lbs":185,"label":"starting out"},
+      {"date":"2023-03","lbs":225,"label":"sophomore yr"},
+      {"date":"2024-06","lbs":315,"label":"end of junior yr"},
+      {"date":"2025-03","lbs":385,"label":"senior yr"},
+      {"date":"2026-07","lbs":395,"label":"now"}
+    ],
+    "projection": [
+      {"date":"2026-07","lbs":395},
+      {"date":"2026-10","lbs":405,"label":"goal: this fall"}
+    ]
+  }
+}

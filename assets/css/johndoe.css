@@ -11508,10 +11508,10 @@ pre .code {
   position: relative;
   height: 80vh;
   min-height: 600px;
-  background-image: -webkit-linear-gradient(bottom, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(../imgs/header.png);
-  background-image: linear-gradient(to top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(../imgs/header.png);
+  background-image: -webkit-linear-gradient(bottom, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)), url(/assets/imgs/hero-workbench.jpg);
+  background-image: linear-gradient(to top, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)), url(/assets/imgs/hero-workbench.jpg);
   background-size: cover;
-  background-position: center;
+  background-position: center 65%;
   background-repeat: no-repeat;
   background-attachment: fixed;
   color: #fff;

@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Project Page Under Construction - Coming Soon">
+    <meta name="author" content="Chase Bonfiglio">
+    <title>Project Under Construction | Chase Bonfiglio</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Themify Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lykmapipo/themify-icons@0.1.2/css/themify-icons.css">
+    
+    <!-- Custom CSS -->
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        /* Header Styles */
+        .navbar {
+            background: linear-gradient(135deg, #1c2e4a 0%, #2a3f5a 100%);
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .navbar-nav.mr-auto {
+            justify-content: space-around;
+        }
+        
+        .navbar-nav.ml-auto {
+            justify-content: space-around;
+        }
+        
+        .navbar-nav.brand {
+            flex: 0 0 auto;
+        }
+        
+        .navbar-brand {
+            color: #fff !important;
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+        
+        .nav-link {
+            color: #fff !important;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            color: #ffd700 !important;
+            transform: translateY(-2px);
+        }
+        
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, #1c2e4a 0%, #2a3f5a 100%) !important;
+            color: white !important;
+            padding: 6rem 0 4rem 0;
+            text-align: center;
+            margin-top: 76px;
+        }
+        
+        /* Override any conflicting styles */
+        .hero-section,
+        .hero-section * {
+            background: linear-gradient(135deg, #1c2e4a 0%, #2a3f5a 100%) !important;
+            color: white !important;
+        }
+        
+        .project-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .project-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding: 4rem 0;
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1c2e4a;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: #666;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        /* Construction Icon */
+        .construction-icon {
+            font-size: 8rem;
+            color: #ffc107;
+            margin-bottom: 2rem;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-20px);
+            }
+            60% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        /* Project Details */
+        .project-details {
+            background: #f8f9fa;
+            padding: 3rem;
+            border-radius: 0;
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+        
+        .project-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #1c2e4a;
+            margin-bottom: 1rem;
+        }
+        
+        .project-description {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #555;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        /* Status Card */
+        .status-card {
+            background: #fff;
+            padding: 3rem;
+            border-radius: 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            border-radius: 0;
+            font-size: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: #ffc107;
+            color: #212529;
+            margin-bottom: 2rem;
+        }
+        
+        /* Progress Section */
+        .progress-section {
+            background: #fff;
+            padding: 3rem 0;
+        }
+        
+        .progress-card {
+            background: #f8f9fa;
+            border-radius: 0;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-left: 4px solid #1c2e4a;
+        }
+        
+        .progress-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #1c2e4a, #2a3f5a);
+            border-radius: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            margin-bottom: 1rem;
+        }
+        
+        /* Contact Section */
+        .contact-section {
+            background: #f8f9fa;
+            padding: 3rem 0;
+        }
+        
+        .contact-card {
+            background: #fff;
+            border-radius: 0;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .contact-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .contact-icon {
+            font-size: 2rem;
+            color: #1c2e4a;
+            margin-bottom: 1rem;
+        }
+        
+        /* Separator */
+        .separator {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #1c2e4a, transparent);
+            margin: 3rem auto;
+            width: 70%;
+        }
+        
+        /* Buttons */
+        .btn-primary {
+            background: linear-gradient(135deg, #1c2e4a 0%, #2a3f5a 100%) !important;
+            border: none !important;
+            border-radius: 0;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            color: white !important;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #2a3f5a 0%, #1c2e4a 100%) !important;
+            transform: translateY(-2px);
+            color: white !important;
+        }
+        
+        .btn-outline-primary {
+            border-color: #1c2e4a;
+            color: #1c2e4a;
+            border-radius: 0;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-outline-primary:hover {
+            background-color: #1c2e4a;
+            border-color: #1c2e4a;
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .project-title {
+                font-size: 2rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .construction-icon {
+                font-size: 5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <strong>Chase Bonfiglio</strong> Portfolio
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="project-admin.html">Projects</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html#resume">Resume</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html#photography">Photography</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html#contact">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <h1 class="project-title">Project Under Construction</h1>
+                         <p class="project-subtitle">This project page is currently under development and will be available in the near future.</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container">
+                         <!-- Project Status -->
+             <div class="status-card">
+                 <h2 class="project-title">Coming Soon</h2>
+                                 <p class="project-description">
+                     Thank you for your interest in this project. I am currently developing a comprehensive project page that will present the technical specifications, methodologies, and outcomes of this engineering work. The page will include project overview, technical documentation, photo galleries, and detailed analysis.
+                 </p>
+                 <p class="project-description">
+                     This project page will maintain the same professional format as my other completed project pages, providing a thorough understanding of the engineering challenges, solutions, and results achieved.
+                 </p>
+            </div>
+
+
+
+            <!-- Contact Section -->
+            <div class="contact-section">
+                <div class="row">
+                    <div class="col-lg-4 mb-4">
+                        <div class="contact-card">
+                            <div class="contact-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <h5>Contact Information</h5>
+                            <p>For questions regarding this project or potential collaboration opportunities, please reach out.</p>
+                            <a href="mailto:chasebonfiglio@vt.edu" class="btn btn-primary">
+                                <i class="fas fa-envelope"></i> Email Me
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 mb-4">
+                        <div class="contact-card">
+                            <div class="contact-icon">
+                                <i class="fas fa-home"></i>
+                            </div>
+                            <h5>Return Home</h5>
+                            <p>Go back to the main portfolio page to explore other sections of my work.</p>
+                            <a href="index.html" class="btn btn-outline-primary">
+                                <i class="fas fa-home"></i> Return Home
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 mb-4">
+                        <div class="contact-card">
+                            <div class="contact-icon">
+                                <i class="fas fa-arrow-left"></i>
+                            </div>
+                            <h5>View Other Projects</h5>
+                            <p>Access the main projects page to review other completed engineering work.</p>
+                            <a href="projects.html" class="btn btn-outline-primary">
+                                <i class="fas fa-arrow-left"></i> View All Projects
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Font Awesome JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Underwater ROV Senior Capstone Project - Marine Environment Analysis and Oyster Farming Research">
+    <meta name="author" content="Chase Bonfiglio">
+    <title>Underwater ROV - Senior Project | Chase Bonfiglio</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Themify Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lykmapipo/themify-icons@0.1.2/css/themify-icons.css">
+    
+    <!-- Custom CSS -->
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        /* Header Styles */
+        .navbar {
+            background: linear-gradient(135deg, #1c2e4a 0%, #2a3f5a 100%);
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .navbar-nav.mr-auto {
+            justify-content: space-around;
+        }
+        
+        .navbar-nav.ml-auto {
+            justify-content: space-around;
+        }
+        
+        .navbar-nav.brand {
+            flex: 0 0 auto;
+        }
+        
+        .navbar-brand {
+            color: #fff !important;
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+        
+        .nav-link {
+            color: #fff !important;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            color: #ffd700 !important;
+            transform: translateY(-2px);
+        }
+        
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, #1c2e4a 0%, #2a3f5a 100%);
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+        }
+        
+        .project-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .project-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding: 4rem 0;
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1c2e4a;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: #666;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        /* Project Images */
+        .main-image {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 2rem;
+        }
+        
+        .small-images {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .small-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .small-image:hover {
+            transform: scale(1.05);
+        }
+        
+        /* Project Details */
+        .project-details {
+            background: #f8f9fa;
+            padding: 3rem;
+            border-radius: 15px;
+            margin-bottom: 3rem;
+        }
+        
+        .project-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #1c2e4a;
+            margin-bottom: 1rem;
+        }
+        
+        .project-description {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #555;
+        }
+        
+        /* Technical Report */
+        .technical-report {
+            background: #fff;
+            padding: 3rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 3rem;
+        }
+        
+        .report-iframe {
+            width: 100%;
+            height: 600px;
+            border: 2px solid #1c2e4a;
+            border-radius: 10px;
+        }
+        
+        /* Project Components */
+        .components-section {
+            background: #fff;
+            padding: 3rem 0;
+        }
+        
+        .component-card {
+            background: #fff;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .component-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .component-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #1c2e4a, #2a3f5a);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            margin-bottom: 1rem;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .status-complete {
+            background: #28a745;
+            color: white;
+        }
+        
+        .status-incomplete {
+            background: #ffc107;
+            color: #212529;
+        }
+        
+        /* Image Gallery */
+        .image-gallery {
+            background: #f8f9fa;
+            padding: 3rem 0;
+        }
+        
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .gallery-item {
+            background: #fff;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .gallery-item:hover {
+            transform: translateY(-10px);
+        }
+        
+        .gallery-item img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+        
+        .gallery-caption {
+            padding: 1.5rem;
+        }
+        
+        .gallery-caption h5 {
+            color: #1c2e4a;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .gallery-caption p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        /* Technical Implementation */
+        .technical-section {
+            background: #fff;
+            padding: 3rem 0;
+        }
+        
+        .tech-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid #1c2e4a;
+        }
+        
+        /* Results Section */
+        .results-section {
+            background: linear-gradient(135deg, #1c2e4a 0%, #2a3f5a 100%);
+            color: white;
+            padding: 3rem 0;
+        }
+        
+        .results-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+        }
+        
+        /* Contact Section */
+        .contact-section {
+            background: #f8f9fa;
+            padding: 3rem 0;
+        }
+        
+        .contact-card {
+            background: #fff;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .contact-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .contact-icon {
+            font-size: 2rem;
+            color: #1c2e4a;
+            margin-bottom: 1rem;
+        }
+        
+        /* Separator */
+        .separator {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #1c2e4a, transparent);
+            margin: 3rem auto;
+            width: 70%;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .project-title {
+                font-size: 2rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+			<div class="container">
+            <a class="navbar-brand" href="index.html">
+                <strong>Chase Bonfiglio</strong> Portfolio
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+							<span class="navbar-toggler-icon"></span>
+					</button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mr-auto">
+									<li class="nav-item">
+											<a class="nav-link" href="index.html">Home</a>
+									</li>
+									<li class="nav-item">
+                        <a class="nav-link" href="projects.html">Projects</a>
+									</li>
+									<li class="nav-item">
+                        <a class="nav-link" href="index.html#resume">Resume</a>
+									</li>
+									<li class="nav-item">
+                        <a class="nav-link" href="index.html#photography">Photography</a>
+									</li>
+                </ul>
+                <ul class="navbar-nav ml-auto">
+									<li class="nav-item">
+                        <a class="nav-link" href="index.html#contact">Contact</a>
+									</li>
+							</ul>
+					</div>
+			</div>
+    </nav>
+
+
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container">
+            <!-- Project Overview -->
+            <div class="project-details">
+                                    <div class="text-center mb-4">
+                        <img src="assets/imgs/cad/rov/Front View 2.jpg" alt="Underwater ROV Front View" class="main-image">
+        </div>
+                <h2 class="project-title">Engineering Design Prompt</h2>
+                <p class="project-description">
+                    Building upon a previously constructed underwater ROV that I had designed and built, this senior capstone project focused on extending its capabilities by implementing a water sampling mechanism, CTD (conductivity, temperature, and depth) sensor package, telemetry system, backend software for data processing, and photogrammetry system.
+                </p>
+                <p class="project-description">
+                    This senior capstone project was completed at the OL Math and Science Academy, focusing on marine environment analysis and oyster farming decision support. The ROV should theoretically operate at depths up to 30 feet with reliable telemetry communication and comprehensive sensor data collection. I archived the project in the summer of 2025 while I was working, but I hope to continue working on it in the future.
+		    </p>
+		</div>
+
+            <!-- Technical Report -->
+            <div class="technical-report">
+                <h3 class="section-title">Technical Report</h3>
+                <p class="text-center mb-4">View the complete technical documentation and research findings for this project.</p>
+                <iframe src="assets/imgs/cad/rov/Chase Bonfiglio Senior Project Paper (2).pdf" class="report-iframe">
+                    <p>Your browser does not support PDFs. <a href="assets/imgs/cad/rov/Chase Bonfiglio Senior Project Paper (2).pdf" target="_blank" class="btn btn-primary">Download Technical Report</a></p>
+                </iframe>
+                <div class="text-center mt-3">
+                    <a href="assets/imgs/cad/rov/Chase Bonfiglio Senior Project Paper (2).pdf" target="_blank" class="btn btn-outline-primary" style="border-color: #1c2e4a; color: #1c2e4a;">Download PDF</a>
+									 </div>
+							 </div>
+
+            <div class="separator"></div>
+
+            <!-- Project Components -->
+            <section class="components-section">
+                <h2 class="section-title">Project Components</h2>
+                <div class="row">
+                    <div class="col-lg-4 col-md-6">
+                        <div class="component-card">
+                            <div class="component-icon">
+                                <i class="ti-droplet"></i>
+									 </div>
+                            <h5>Water Sampling Mechanism</h5>
+                            <span class="status-badge status-incomplete">In Progress</span>
+                            <p>Custom-designed system for collecting intact water samples that accurately reflect the body of water where they were collected.</p>
+									 </div>
+							 </div>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="component-card">
+                            <div class="component-icon">
+                                <i class="ti-pulse"></i>
+						</div>
+                            <h5>CTD Sensor Package</h5>
+                            <span class="status-badge status-complete">Complete</span>
+                            <p>Conductivity, Temperature, and Depth sensors for comprehensive marine environment analysis and data collection.</p>
+					</div>
+				</div>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="component-card">
+                            <div class="component-icon">
+                                <i class="ti-signal"></i>
+						</div>
+                            <h5>Telemetry System</h5>
+                            <span class="status-badge status-complete">Complete</span>
+                            <p>RS485-based communication system with twisted tether cable for reliable data transmission over long distances.</p>
+					</div>
+				</div>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="component-card">
+                            <div class="component-icon">
+                                <i class="ti-settings"></i>
+						</div>
+                            <h5>Backend Software</h5>
+                            <span class="status-badge status-incomplete">In Progress</span>
+                            <p>Python-based data processing application with MatPlotLib, SciPy, and NumPy libraries for comprehensive analysis.</p>
+					</div>
+				</div>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="component-card">
+                            <div class="component-icon">
+                                <i class="ti-camera"></i>
+						</div>
+                            <h5>Photogrammetry System</h5>
+                            <span class="status-badge status-complete">Complete</span>
+                            <p>GoPro-based 3D modeling system for underwater environment documentation and analysis.</p>
+					</div>
+				</div>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="component-card">
+                            <div class="component-icon">
+                                <i class="ti-game"></i>
+						</div>
+                            <h5>Control System</h5>
+                            <span class="status-badge status-complete">Complete</span>
+                            <p>PlayStation controller integration with custom Arduino library for intuitive ROV operation.</p>
+					</div>
+					</div>
+				</div>
+            </section>
+
+            <div class="separator"></div>
+
+            <!-- Technical Challenges -->
+            <section class="technical-section">
+                <h2 class="section-title">Technical Challenges</h2>
+                <div class="row">
+                    <div class="col-12">
+                        <h4 class="mb-4">Key Technical Challenges</h4>
+                        <div class="tech-card">
+                            <h6 class="font-weight-bold">Telemetry System</h6>
+                            <p class="mb-0">RS485 modules with twisted tether cable for signal integrity and interference reduction over long distances.</p>
+						</div>
+                        <div class="tech-card">
+                            <h6 class="font-weight-bold">Control Interface</h6>
+                            <p class="mb-0">PlayStation controller integration with custom PWM range identification for precise joystick control and signal processing.</p>
+					</div>
+                        <div class="tech-card">
+                            <h6 class="font-weight-bold">Photogrammetry System</h6>
+                            <p class="mb-0">GoPro mounting and positioning for underwater 3D modeling and environment documentation.</p>
+					</div>
+                        <div class="tech-card">
+                            <h6 class="font-weight-bold">Sensor Programming</h6>
+                            <p class="mb-0">Arduino-based sensor integration for pressure, temperature, and conductivity measurements with real-time data processing.</p>
+				</div>
+                        <div class="tech-card">
+                            <h6 class="font-weight-bold">3D Printed Electronics Housings</h6>
+                            <p class="mb-0">Custom-designed waterproof enclosures for electronic components using SolidWorks and additive manufacturing.</p>
+			</div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="separator"></div>
+
+            <!-- Image Gallery -->
+            <section class="image-gallery">
+                <h2 class="section-title">Project Gallery</h2>
+                <div class="gallery-grid">
+                    <div class="gallery-item">
+                        <img src="assets/imgs/cad/rov/Front View 2.jpg" alt="ROV Front View">
+                        <div class="gallery-caption">
+                            <h5>ROV Front View</h5>
+                            <p>Complete underwater ROV assembly with propulsion system and sensor mounts</p>
+                        </div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="assets/imgs/cad/rov/Top View (2).jpg" alt="ROV Top View">
+                        <div class="gallery-caption">
+                            <h5>ROV Top View</h5>
+                            <p>Top-down perspective showing the overall system architecture</p>
+                </div>
+            </div>
+                    <div class="gallery-item">
+                        <img src="assets/imgs/cad/rov/IMG_5411 (1).JPG" alt="ROV Assembly">
+                        <div class="gallery-caption">
+                            <h5>ROV Assembly</h5>
+                            <p>Complete underwater ROV with PVC frame, thrusters, and sensor array</p>
+                        </div>
+        </div>
+                    <div class="gallery-item">
+                        <img src="assets/imgs/cad/rov/IMG_5412 (1).jpg" alt="ROV Electronics">
+                        <div class="gallery-caption">
+                            <h5>ROV Electronics</h5>
+                            <p>Internal wiring and electronics housing with waterproof enclosure</p>
+									</div>
+							</div>
+                    <div class="gallery-item">
+                        <img src="assets/imgs/cad/rov/IMG_5409.JPG" alt="ROV Overview">
+                        <div class="gallery-caption">
+                            <h5>ROV Overview</h5>
+                            <p>Wide-angle view of the complete ROV system with propulsion and control components</p>
+                        </div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="assets/imgs/cad/rov/controller wiring.png" alt="Controller Wiring">
+                        <div class="gallery-caption">
+                            <h5>Controller Integration</h5>
+                            <p>PlayStation controller wiring diagram for ROV control system</p>
+                    </div>
+                </div>
+                    <div class="gallery-item">
+                        <img src="assets/imgs/cad/rov/pressuresensor.png" alt="Pressure Sensor">
+                        <div class="gallery-caption">
+                            <h5>Pressure Sensor</h5>
+                            <p>Depth measurement sensor integration with Arduino control system</p>
+                </div>
+            </div>
+                    <div class="gallery-item">
+                        <img src="assets/imgs/cad/rov/temperaturesensor.png" alt="Temperature Sensor">
+                        <div class="gallery-caption">
+                            <h5>Temperature Sensor</h5>
+                            <p>Water temperature monitoring sensor for environmental data collection</p>
+                        </div>
+                            </div>
+                    <div class="gallery-item">
+                        <img src="assets/imgs/cad/rov/graph.png" alt="Real-time Data">
+                        <div class="gallery-caption">
+                            <h5>Real-time Sensor Data</h5>
+                            <p>Live Arduino sensor data visualization showing pressure and temperature readings</p>
+                        </div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="assets/imgs/cad/rov/rs-485_waveform.png" alt="RS485 Communication">
+                        <div class="gallery-caption">
+                            <h5>RS485 Communication</h5>
+                            <p>Digital signal waveforms for reliable telemetry data transmission</p>
+                        </div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="assets/imgs/cad/rov/Backupcamear.jpg" alt="Backup Camera">
+                        <div class="gallery-caption">
+                            <h5>Backup Camera System</h5>
+                            <p>Secondary camera feed for enhanced ROV control and monitoring</p>
+                </div>
+                            </div>
+                    <div class="gallery-item">
+                        <img src="assets/imgs/cad/rov/photogrammergyexample.png" alt="Photogrammetry Example">
+                        <div class="gallery-caption">
+                            <h5>Photogrammetry Output</h5>
+                            <p>3D model generated from underwater photographs for environment mapping</p>
+                        </div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="assets/imgs/cad/rov/photogrammetry.png" alt="Photogrammetry Software">
+                        <div class="gallery-caption">
+                            <h5>Photogrammetry Software Interface</h5>
+                            <p>RealityCapture software for processing underwater photographs into 3D models</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="separator"></div>
+
+            <!-- Results and Impact -->
+            <section class="results-section">
+                <div class="container">
+                    <h2 class="section-title text-white">Project Results & Impact</h2>
+                    <div class="row">
+                        <div class="col-lg-8 mx-auto">
+                            <div class="results-card">
+                                <h4 class="text-center mb-4">Project Success</h4>
+                                <p class="lead text-center mb-4">
+                                    The underwater ROV project was extremely successful, achieving all primary objectives and demonstrating the utility of budget-friendly DIY ROVs for marine research applications.
+                                </p>
+                                
+                                <div class="row mt-5">
+                                    <div class="col-md-6">
+                                        <h5 class="font-weight-bold">Key Achievements</h5>
+                                        <ul class="list-unstyled">
+                                            <li class="mb-2"><i class="ti-check text-success mr-2"></i>Successful pressure and temperature data collection</li>
+                                            <li class="mb-2"><i class="ti-check text-success mr-2"></i>Reliable telemetry system over 30ft tether</li>
+                                            <li class="mb-2"><i class="ti-check text-success mr-2"></i>Functional water sampling mechanism</li>
+                                            <li class="mb-2"><i class="ti-check text-success mr-2"></i>Real-time data display and analysis</li>
+                                            <li class="mb-2"><i class="ti-check text-success mr-2"></i>Intuitive PlayStation controller operation</li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h5 class="font-weight-bold">Research Impact</h5>
+                                        <ul class="list-unstyled">
+                                            <li class="mb-2"><i class="ti-check text-success mr-2"></i>Low-cost marine environment investigation</li>
+                                            <li class="mb-2"><i class="ti-check text-success mr-2"></i>Oyster farming decision support</li>
+                                            <li class="mb-2"><i class="ti-check text-success mr-2"></i>Educational tool for marine science</li>
+                                            <li class="mb-2"><i class="ti-check text-success mr-2"></i>Open-source design contribution</li>
+                                            <li class="mb-2"><i class="ti-check text-success mr-2"></i>Budget-friendly research platform</li>
+                                        </ul>
+                            </div>
+                        </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Contact Section -->
+            <section class="contact-section">
+                <div class="container">
+                    <h2 class="section-title">Get In Touch</h2>
+                    <p class="text-center lead mb-5">Interested in learning more about this project or collaborating on similar engineering challenges?</p>
+                    
+                    <div class="row justify-content-center">
+                        <div class="col-lg-8">
+                            <div class="row">
+                                <div class="col-md-4 mb-4">
+                                    <div class="contact-card">
+                                        <div class="contact-icon">
+                                            <i class="ti-email"></i>
+                                        </div>
+                                        <h5>Email</h5>
+                                        <p class="mb-0"><a href="mailto:chasebonfiglio@vt.edu">chasebonfiglio@vt.edu</a></p>
+				</div>
+		</div>
+                                <div class="col-md-4 mb-4">
+                                    <a href="https://www.linkedin.com/in/chase-bonfiglio" target="_blank" class="text-decoration-none" style="color: inherit;">
+                                        <div class="contact-card" style="cursor: pointer;">
+                                            <div class="contact-icon">
+                                                <i class="ti-linkedin"></i>
+                                            </div>
+                                            <h5>LinkedIn</h5>
+                                            <p class="mb-0">Connect for professional opportunities</p>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-md-4 mb-4">
+                                    <div class="contact-card">
+                                        <div class="contact-icon">
+                                            <i class="ti-github"></i>
+                                        </div>
+                                        <h5>GitHub</h5>
+                                        <p class="mb-0">View project code and documentation</p>
+		</div>
+</div>
+                </div>
+
+                            <div class="text-center mt-5">
+                                <a href="index.html#contact" class="btn btn-lg" style="background-color: #1c2e4a; color: white; border: none; border-radius: 25px; padding: 12px 30px; font-weight: 500; text-decoration: none; display: inline-block; margin-right: 15px;">Contact Me</a>
+                                <a href="projects.html" class="btn btn-lg" style="background-color: #1c2e4a; color: white; border: none; border-radius: 25px; padding: 12px 30px; font-weight: 500; text-decoration: none; display: inline-block;">View All Projects</a>
+            </div>
+        </div>
+                    </div>
+                </div>
+            </section>
+                </div>
+                </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-4">
+        <div class="container">
+            <p class="mb-0">&copy; 2025 Chase Bonfiglio. All rights reserved.</p>
+                            </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

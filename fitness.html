@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Physical Fitness — Chase Bonfiglio">
+<meta name="author" content="Chase Bonfiglio">
+<title>Physical Fitness · Chase Bonfiglio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Dosis:wght@400;500;600;700&family=Source+Sans+Pro:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#191919;
+    --soft:#555;
+    --faint:#9a9a9a;
+    --line:#e8e8e8;
+    --paper:#fbfbfa;
+    --accent:#9c7b38;      /* used sparingly — section index, arrows, links */
+    --navy:#1c2e4a; --tan:#cda35f; --tan-ink:#9c7b38; --muted:#6b7280;  /* global nav */
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font:400 17px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:620px;margin:0 auto;padding:0 24px}
+
+  /* global sticky nav (matches the rest of the site) */
+  .nav{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid var(--line);box-shadow:0 1px 0 rgba(0,0,0,.02)}
+  .nav__in{max-width:1180px;margin:0 auto;padding:.7rem clamp(16px,4vw,40px);display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+  .nav a{border-bottom:0}
+  .brand{display:flex;align-items:center;gap:.65rem;margin-right:auto}
+  .brand img{width:40px;height:40px;border-radius:50%;object-fit:cover;display:block}
+  .brand b{font-family:'Dosis','Source Sans Pro',sans-serif;font-weight:700;color:var(--navy);font-size:1.05rem;line-height:1.1}
+  .brand span{display:block;font-size:.72rem;color:var(--muted);font-weight:400}
+  .nav a.link{font-family:'Dosis','Source Sans Pro',sans-serif;font-weight:600;color:var(--navy);padding:.35rem .5rem;border-radius:6px;transition:color .2s;font-size:.98rem}
+  .nav a.link:hover{color:var(--tan-ink)}
+  .nav a.link.active{color:var(--navy)}
+  .nav a.link.active::after{content:"";display:block;height:2px;background:var(--tan);border-radius:2px;margin-top:2px}
+  @media(max-width:760px){.nav .brand span{display:none}}
+
+  header{padding:44px 0 4px}
+  h1{font-size:34px;font-weight:600;letter-spacing:-.02em;line-height:1.1}
+  .updated{color:var(--faint);font-size:13px;margin-top:10px}
+  .intro{color:var(--soft);font-size:18px;margin-top:20px;max-width:52ch}
+
+  a{color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(156,123,56,.3)}
+  a:hover{border-bottom-color:var(--accent)}
+
+  /* ---- section ---- */
+  .section{padding:46px 0;border-top:1px solid var(--line)}
+  .section:first-of-type{padding-top:40px}
+  .sec-head{display:flex;align-items:baseline;gap:13px;margin-bottom:18px}
+  .sec-head .idx{
+    font-family:ui-monospace,"SF Mono","Cascadia Code",Consolas,monospace;
+    font-size:13px;color:var(--accent);font-variant-numeric:tabular-nums;
+  }
+  .sec-head h2{font-size:23px;font-weight:600;letter-spacing:-.01em}
+
+  /* the paragraph you write */
+  .para{font-size:17px;color:var(--ink);margin-bottom:22px}
+  .para + .para{margin-top:-8px}
+
+  /* small supporting facts line */
+  .facts{
+    font-family:ui-monospace,"SF Mono","Cascadia Code",Consolas,monospace;
+    font-size:13.5px;color:var(--faint);line-height:1.9;
+  }
+  .facts b{color:var(--soft);font-weight:500}
+
+  /* lifts — plain aligned ladder */
+  .lifts{
+    font-family:ui-monospace,"SF Mono","Cascadia Code",Consolas,monospace;
+    font-size:15px;font-variant-numeric:tabular-nums;
+  }
+  .lifts .row{display:grid;grid-template-columns:70px 1fr;align-items:baseline;padding:7px 0}
+  .lifts .head span:last-child{color:var(--faint);font-size:12px;letter-spacing:.03em}
+  .lifts .name{color:var(--soft)}
+  .lifts .nums{color:var(--ink)}
+  .lifts .arw{color:var(--accent);padding:0 8px}
+  .lifts .goal{color:var(--faint)}
+  .lifts .total{border-top:1px solid var(--line);margin-top:6px;padding-top:12px}
+  .lifts .total .name{color:var(--ink)}
+
+  /* health metrics chart placeholder */
+  .chart-ph{
+    border:1px solid var(--line);border-radius:8px;
+    aspect-ratio:16/7;display:flex;align-items:center;justify-content:center;
+    color:var(--faint);font-size:13.5px;text-align:center;padding:1rem;
+    background:
+      repeating-linear-gradient(90deg,transparent,transparent 47px,rgba(0,0,0,.02) 47px,rgba(0,0,0,.02) 48px);
+  }
+
+  /* ---- charts (hand-rolled SVG) ---- */
+  .chart{margin-top:24px}
+  .chart svg{width:100%;height:auto;display:block;overflow:visible}
+  .legend{display:flex;flex-wrap:wrap;gap:8px 20px;margin-top:16px;
+    font-family:ui-monospace,"SF Mono","Cascadia Code",Consolas,monospace;
+    font-size:12.5px;color:var(--soft);font-variant-numeric:tabular-nums}
+  .legend .sw{display:inline-block;width:16px;border-top:2px solid;vertical-align:middle;margin-right:7px}
+  .legend .n{color:var(--ink);margin-right:6px}
+  .legend .g{color:var(--faint)}
+  .legend .a{color:var(--accent);padding:0 3px}
+  .cap{font-family:ui-monospace,"SF Mono","Cascadia Code",Consolas,monospace;
+    font-size:12px;color:var(--faint);margin-top:12px;line-height:1.5}
+
+  /* table + chart side by side */
+  .lift-row{display:flex;gap:26px;align-items:flex-start;margin-top:12px;flex-wrap:wrap}
+  .lift-row .lift-table{flex:0 0 auto}
+  .lift-row .lift-chart{flex:1 1 300px;min-width:0;position:relative}
+  .legend span{cursor:pointer;-webkit-user-select:none;user-select:none}
+  .legend span.off{opacity:.35}
+  .legend span.off .sw{border-top-style:dotted}
+  /* interactive chart tooltip */
+  .tip{position:fixed;z-index:30;pointer-events:none;display:none;
+    background:var(--ink);color:var(--paper);
+    font-family:ui-monospace,"SF Mono","Cascadia Code",Consolas,monospace;
+    font-size:11.5px;line-height:1.45;padding:6px 9px;border-radius:6px;white-space:nowrap;
+    box-shadow:0 4px 16px rgba(0,0,0,.2);transform:translate(-50%,calc(-100% - 10px))}
+  .tip b{color:#cda35f}
+
+  .spark-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(146px,1fr));
+    gap:22px 24px;margin-top:8px}
+  .spark .lab{font-family:ui-monospace,"SF Mono","Cascadia Code",Consolas,monospace;
+    font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--faint)}
+  .spark .val{font-family:ui-monospace,"SF Mono","Cascadia Code",Consolas,monospace;
+    font-size:20px;color:var(--ink);font-variant-numeric:tabular-nums;margin:3px 0 6px}
+  .spark .val small{font-size:11px;color:var(--faint);margin-left:2px}
+  .spark svg{width:100%;height:auto;display:block}
+  .spark .note{font-family:ui-monospace,"SF Mono","Cascadia Code",Consolas,monospace;
+    font-size:10px;color:var(--faint);margin-top:4px}
+
+  footer{padding:56px 0 80px;border-top:1px solid var(--line);margin-top:10px}
+  footer a{color:var(--faint);font-size:14px;text-decoration:none}
+  footer a:hover{color:var(--ink)}
+
+  @media(max-width:480px){
+    body{font-size:16px}
+    h1{font-size:28px}
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav__in">
+    <a class="brand" href="index.html">
+      <img src="assets/imgs/headshot.webp" alt="Chase Bonfiglio">
+      <b>Chase Bonfiglio<span>Mechanical Engineering · Virginia Tech</span></b>
+    </a>
+    <a class="link" href="index.html#home">Home</a>
+    <a class="link" href="index.html#about">About</a>
+    <a class="link" href="index.html#resume">Resume</a>
+    <a class="link" href="engineering.html">Projects</a>
+    <a class="link" href="index.html#photography">Photography</a>
+    <a class="link" href="index.html#contact">Contact</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <header>
+    <h1>Physical Fitness</h1>
+    <p class="updated">Updated July 2026</p>
+    <p class="intro">Notes on the physical side of my life — where each thing stands and where it's headed.</p>
+  </header>
+
+  <!-- ============ 01 · LIFTING ============ -->
+  <section class="section">
+    <div class="sec-head"><span class="idx">01</span><h2>Lifting</h2></div>
+
+    <p class="para">I've been lifting since around my sophomore year of high school, hitting a 315 squat in junior year and 225 bench in senior year. I typically run a PPL split but it can vary. I have recently been experimenting with higher volume on my SBD lifts to push nervous system adaptations for frequent and heavy loads. My current total is just over 1000, and I'm aiming to hit a 315 bench this winter and a 405 squat and deadlift this fall.</p>
+
+    <p class="facts" style="margin-bottom:2px">Squat, bench &amp; deadlift totals (lbs)</p>
+    <div class="lift-row">
+      <div class="lift-table">
+        <div class="lifts">
+          <div class="row head"><span></span><span>now&nbsp;&nbsp;·&nbsp;&nbsp;goal</span></div>
+          <div class="row"><span class="name">Squat</span><span><span class="nums">375</span><span class="arw">→</span><span class="goal">405</span></span></div>
+          <div class="row"><span class="name">Bench</span><span><span class="nums">265</span><span class="arw">→</span><span class="goal">315</span></span></div>
+          <div class="row"><span class="name">Dead</span><span><span class="nums">395</span><span class="arw">→</span><span class="goal">405</span></span></div>
+          <div class="row total"><span class="name">Total</span><span><span class="nums">1035</span><span class="arw">→</span><span class="goal">1125</span></span></div>
+        </div>
+      </div>
+      <div class="lift-chart">
+        <div class="chart" id="sbdChart"></div>
+      </div>
+    </div>
+    <div class="legend" id="sbdLegend"></div>
+    <p class="cap">Approximate 1-rep maxes from memory — dates are rough. Dashed lines are goals, not lifts I've hit. Hover a point for details; click a lift in the legend to toggle it.</p>
+  </section>
+
+  <!-- ============ 02 · SWIMMING ============ -->
+  <section class="section">
+    <div class="sec-head"><span class="idx">02</span><h2>Swimming</h2></div>
+
+    <p class="para">I've swam basically my entire life with the ABRC Mighty Bolts. I also swam with Tide and the Ocean Lakes high school team. While I enjoy the physical aspect to swimming, I've come to learn I'm also very passionate about coaching swim (or perhaps just sports), and have done so since I began high school. From the 4–5 yo "Building Bolts" program teaching kids to swim, to the 8u–10u age group stroke work, it's been very rewarding to see the impact I can make on future generations of swimmers.</p>
+
+    <p class="facts">
+      <b>Swam:</b> ABRC Mighty Bolts · Tide · Ocean Lakes HS<br>
+      <b>Coaching:</b> Building Bolts (4–5 yo) → 8u–10u age groups, since freshman year
+    </p>
+  </section>
+
+  <!-- ============ 03 · RUNNING ============ -->
+  <section class="section">
+    <div class="sec-head"><span class="idx">03</span><h2>Running <span style="color:var(--faint);font-weight:400">(and more…)</span></h2></div>
+
+    <p class="para">I've dabbled in distance running, primarily the annual Shamrock races down at the boardwalk. I ran the half marathon there in 5th grade and came back as a senior in high school to do the full marathon (quite slowly) after my swim season ended. I have mixed opinions about the sport, but I do have both a half and full Ironman on the bucket list — so I'll likely be back once I finish up my degree.</p>
+
+    <p class="facts">
+      <b>Shamrock:</b> half marathon (5th grade) · full marathon (senior year)<br>
+      <b>Bucket list:</b> half Ironman → full Ironman
+    </p>
+  </section>
+
+  <!-- ============ 04 · HEALTH METRICS ============ -->
+  <section class="section">
+    <div class="sec-head"><span class="idx">04</span><h2>Health Metrics</h2></div>
+
+    <!-- ↓↓ YOUR HEALTH-METRICS PARAGRAPH (rewrite freely) ↓↓ -->
+    <p class="para">I track recovery, strain, and sleep with a WHOOP. Below are the weekly trends since I started wearing it — resting heart rate, HRV, recovery, strain, and sleep — the stuff that actually tells me whether I'm training or just tired.</p>
+
+    <div class="spark-grid" id="whoopGrid"></div>
+    <p class="cap">Personal WHOOP data · weekly averages since Dec 2025.</p>
+  </section>
+
+  <footer>
+    <a href="index.html">← back to portfolio</a>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  var NS="http://www.w3.org/2000/svg";
+  function fx(s){var p=s.split('-');return +p[0]+(+p[1]-1)/12;}
+  function el(tag,attrs,parent){var e=document.createElementNS(NS,tag);
+    for(var k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e;}
+
+  /* ---------- SBD progression ---------- */
+  var lifts=[
+    {name:'Squat',color:'#191919',now:375,goal:405,
+      pts:[['2022-05',135],['2023-03',225],['2024-03',315],['2025-03',365],['2026-07',375]],
+      proj:[['2026-07',375],['2026-10',405]]},
+    {name:'Bench',color:'#707070',now:265,goal:315,
+      pts:[['2022-05',80],['2023-03',135],['2024-09',225],['2024-12',235],['2025-06',215],['2025-12',215],['2026-01',240],['2026-04',230],['2026-07',265]],
+      proj:[['2026-07',265],['2026-12',315]]},
+    {name:'Deadlift',color:'#9c7b38',now:395,goal:405,
+      pts:[['2022-05',185],['2023-03',225],['2024-06',315],['2025-03',385],['2026-07',395]],
+      proj:[['2026-07',395],['2026-10',405]]}
+  ];
+  var W=440,H=300,mL=30,mR=16,mT=16,mB=28;
+  var xMin=2022.0,xMax=2027.0,yMin=0,yMax=420;
+  function X(yr){return mL+(yr-xMin)/(xMax-xMin)*(W-mL-mR);}
+  function Y(lb){return mT+(1-(lb-yMin)/(yMax-yMin))*(H-mT-mB);}
+  var MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  function fmtD(s){var p=s.split('-');return MON[+p[1]-1]+' '+p[0];}
+  var host=document.getElementById('sbdChart');
+  if(host){
+    var svg=el('svg',{viewBox:'0 0 '+W+' '+H,role:'img','aria-label':'Squat, bench and deadlift progression, 2022 to 2026'});
+    [100,200,300,400].forEach(function(v){
+      el('line',{x1:mL,y1:Y(v),x2:W-mR,y2:Y(v),stroke:'#e8e8e8','stroke-width':1},svg);
+      var t=el('text',{x:mL-6,y:Y(v)+3.5,'text-anchor':'end',fill:'#9a9a9a','font-size':11,'font-family':'ui-monospace,Consolas,monospace'},svg);t.textContent=v;
+    });
+    [2022,2023,2024,2025,2026].forEach(function(yr){
+      var t=el('text',{x:X(yr+0.5),y:H-8,'text-anchor':'middle',fill:'#9a9a9a','font-size':11,'font-family':'ui-monospace,Consolas,monospace'},svg);t.textContent=yr;
+    });
+    var nx=X(2026.5);
+    el('line',{x1:nx,y1:mT,x2:nx,y2:H-mB,stroke:'#d2d2d2','stroke-width':1,'stroke-dasharray':'2 3'},svg);
+    var nt=el('text',{x:nx,y:mT+9,'text-anchor':'middle',fill:'#b3b3b3','font-size':10,'font-family':'ui-monospace,Consolas,monospace'},svg);nt.textContent='now';
+
+    var tip=document.createElement('div');tip.className='tip';document.body.appendChild(tip);
+    function moveTip(ev){tip.style.left=ev.clientX+'px';tip.style.top=ev.clientY+'px';}
+    function showTip(html,ev){tip.innerHTML=html;tip.style.display='block';moveTip(ev);}
+    function hideTip(){tip.style.display='none';}
+
+    var groups=[];
+    lifts.forEach(function(L){
+      var g=el('g',{},svg);
+      var d=L.pts.map(function(p){return X(fx(p[0]))+','+Y(p[1]);}).join(' ');
+      el('polyline',{points:d,fill:'none',stroke:L.color,'stroke-width':2,'stroke-linejoin':'round','stroke-linecap':'round'},g);
+      var pd=L.proj.map(function(p){return X(fx(p[0]))+','+Y(p[1]);}).join(' ');
+      el('polyline',{points:pd,fill:'none',stroke:L.color,'stroke-width':2,'stroke-linejoin':'round','stroke-dasharray':'4 4',opacity:0.4},g);
+      L.pts.forEach(function(p){
+        var cx=X(fx(p[0])),cy=Y(p[1]);
+        var dot=el('circle',{cx:cx,cy:cy,r:2.4,fill:L.color},g);
+        var hit=el('circle',{cx:cx,cy:cy,r:10,fill:'transparent',style:'cursor:pointer'},g);
+        hit.addEventListener('mouseenter',function(ev){dot.setAttribute('r',4.2);showTip('<b>'+L.name+'</b> · '+p[1]+' lbs<br>'+fmtD(p[0]),ev);});
+        hit.addEventListener('mousemove',moveTip);
+        hit.addEventListener('mouseleave',function(){dot.setAttribute('r',2.4);hideTip();});
+      });
+      var gp=L.proj[L.proj.length-1];var gcx=X(fx(gp[0])),gcy=Y(gp[1]);
+      var gdot=el('circle',{cx:gcx,cy:gcy,r:3,fill:'#fbfbfa',stroke:L.color,'stroke-width':1.5,opacity:0.7},g);
+      var ghit=el('circle',{cx:gcx,cy:gcy,r:10,fill:'transparent',style:'cursor:pointer'},g);
+      ghit.addEventListener('mouseenter',function(ev){gdot.setAttribute('r',4.5);showTip('<b>'+L.name+' goal</b> · '+gp[1]+' lbs<br>'+fmtD(gp[0]),ev);});
+      ghit.addEventListener('mousemove',moveTip);
+      ghit.addEventListener('mouseleave',function(){gdot.setAttribute('r',3);hideTip();});
+      groups.push(g);
+    });
+    host.appendChild(svg);
+
+    var lg=document.getElementById('sbdLegend');
+    lifts.forEach(function(L,idx){
+      var s=document.createElement('span');
+      s.setAttribute('role','button');s.setAttribute('tabindex','0');
+      s.innerHTML='<span class="sw" style="border-color:'+L.color+'"></span><span class="n">'+L.name+'</span>'+L.now+'<span class="a">&rarr;</span><span class="g">'+L.goal+'</span>';
+      function toggle(){var off=s.classList.toggle('off');groups[idx].style.display=off?'none':'';}
+      s.addEventListener('click',toggle);
+      s.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle();}});
+      lg.appendChild(s);
+    });
+  }
+
+  /* ---------- WHOOP weekly sparklines ---------- */
+  /* columns: strain, recovery%, resting HR, HRV ms, sleep% — weekly averages since 2025-12 */
+  var WK=[[8.2,86,49,112.2,87.7],[9.9,75.6,50.6,107.1,81.4],[9.1,69.1,50.7,106.5,88.7],[8.3,62.9,51.6,97.9,92],[10,55.3,54,90.6,81.5],[10.5,71.1,52.7,102.3,83],[9.2,75.6,51.3,113.7,88.4],[9,70,50.9,109.2,87.7],[8,66.4,51.9,105.9,90.6],[9.9,64.6,51.6,100.6,88.7],[8.5,79.6,49.6,112.6,90.7],[8,63.1,49.1,103,89.3],[8.4,66.6,53.4,97.4,89.1],[8.5,72.4,51.9,102.2,88.9],[8.6,79.7,49.9,110.3,89],[8.6,75.6,49.4,110.3,91.4],[7.7,71.7,50.3,106.4,84.2],[8.6,69.6,48.6,105.3,86.1],[8.1,79.9,48.4,115.9,87.3],[9.5,61.4,49.9,100.8,89.4],[11.6,64.3,50.3,103.6,85.6],[10.7,74,49.7,108.6,89.1],[10.6,65.2,49.2,106.6,92.7],[8.6,56.4,52.4,91.4,90.4],[10.5,66.6,51.3,99.7,86.6],[10.2,63.4,50.4,99.6,83.4],[9.6,44.7,51.9,92.6,84.6],[9.5,59.4,51.7,83.7,85.3],[7.8,79.4,49.6,100.1,85.3],[10,58.7,52.6,89.8,86],[8.1,80.1,49.3,110.2,86.3],[7.8,71.5,49.3,107.6,83.3]];
+  var metrics=[
+    {i:0,lab:'Strain',unit:'/21',dec:1},
+    {i:1,lab:'Recovery',unit:'%',dec:0},
+    {i:2,lab:'Resting HR',unit:'bpm',dec:0,note:'lower = better'},
+    {i:3,lab:'HRV',unit:'ms',dec:0},
+    {i:4,lab:'Sleep',unit:'%',dec:0}
+  ];
+  var grid=document.getElementById('whoopGrid');
+  if(grid){
+    var sw=160,sh=42,px=2,py=5;
+    metrics.forEach(function(m){
+      var vals=WK.map(function(r){return r[m.i];});
+      var mn=Math.min.apply(null,vals),mx=Math.max.apply(null,vals);
+      if(mn===mx){mn-=1;mx+=1;}
+      var pad=(mx-mn)*0.14;mn-=pad;mx+=pad;
+      function sx(idx){return px+idx/(vals.length-1)*(sw-2*px);}
+      function sy(v){return py+(1-(v-mn)/(mx-mn))*(sh-2*py);}
+      var pts=vals.map(function(v,idx){return sx(idx)+','+sy(v);}).join(' ');
+      var last=vals[vals.length-1];
+      var cur=m.dec?last.toFixed(1):String(Math.round(last));
+      var cell=document.createElement('div');cell.className='spark';
+      cell.innerHTML='<div class="lab">'+m.lab+'</div>'+
+        '<div class="val">'+cur+'<small>'+m.unit+'</small></div>'+
+        '<svg viewBox="0 0 '+sw+' '+sh+'" role="img" aria-label="'+m.lab+' weekly trend">'+
+          '<polyline points="'+pts+'" fill="none" stroke="#9c7b38" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>'+
+          '<circle cx="'+sx(vals.length-1).toFixed(1)+'" cy="'+sy(last).toFixed(1)+'" r="2.3" fill="#9c7b38"/>'+
+        '</svg>'+
+        (m.note?'<div class="note">'+m.note+'</div>':'');
+      grid.appendChild(cell);
+    });
+  }
+})();
+</script>
+
+</body>
+</html>

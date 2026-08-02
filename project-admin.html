@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Project Management Admin">
+    <meta name="author" content="Chase Bonfiglio">
+    <title>Project Management Admin</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .admin-header {
+            background: linear-gradient(135deg, #1c2e4a 0%, #2a3f5a 100%);
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, #1c2e4a 0%, #2a3f5a 100%);
+            color: white;
+            border-radius: 15px 15px 0 0 !important;
+            padding: 1.5rem;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #1c2e4a 0%, #2a3f5a 100%);
+            border: none;
+            border-radius: 25px;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #2a3f5a 0%, #1c2e4a 100%);
+            transform: translateY(-2px);
+        }
+        
+        .form-control, .form-select {
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+            padding: 0.75rem;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: #1c2e4a;
+            box-shadow: 0 0 0 0.2rem rgba(28, 46, 74, 0.25);
+        }
+        
+        .project-card {
+            transition: transform 0.3s ease;
+        }
+        
+        .project-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .project-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+        
+        .status-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        
+        .preview-image {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1><i class="fas fa-cogs"></i> Project Management Admin</h1>
+                    <p class="mb-0">Manage your projects for both the homepage and projects page</p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <a href="index.html" class="btn btn-outline-light me-2">
+                        <i class="fas fa-home"></i> View Homepage
+                    </a>
+                    <a href="projects.html" class="btn btn-outline-light">
+                        <i class="fas fa-project-diagram"></i> View Projects
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Add New Project Form -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="mb-0"><i class="fas fa-plus-circle"></i> Add New Project</h3>
+            </div>
+            <div class="card-body">
+                <form id="projectForm">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="title" class="form-label">Project Title *</label>
+                                <input type="text" class="form-control" id="title" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="category" class="form-label">Category *</label>
+                                <select class="form-select" id="category" required>
+                                    <option value="">Select Category</option>
+                                    <option value="Engineering">Engineering</option>
+                                    <option value="Robotics">Robotics</option>
+                                    <option value="CAD Design">CAD Design</option>
+                                    <option value="Manufacturing">Manufacturing</option>
+                                    <option value="Aerospace">Aerospace</option>
+                                    <option value="Biomedical">Biomedical</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="shortDescription" class="form-label">Short Description (for homepage tiles) *</label>
+                                <textarea class="form-control" id="shortDescription" rows="2" placeholder="Brief description that appears on homepage project tiles" required></textarea>
+                                <small class="text-muted">This shorter description appears on the homepage project cards</small>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Detailed Description (for project page) *</label>
+                                <textarea class="form-control" id="description" rows="4" placeholder="Comprehensive project description including goals, methodology, results, and conclusions" required></textarea>
+                                <small class="text-muted">This detailed description appears on the individual project page</small>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="image" class="form-label">Main Image Path *</label>
+                                <input type="text" class="form-control" id="image" placeholder="e.g., assets/imgs/project.jpg" required>
+                                <div id="imagePreview"></div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="thumbnail" class="form-label">Thumbnail Image Path *</label>
+                                <input type="text" class="form-control" id="thumbnail" placeholder="e.g., assets/imgs/project_thumb.jpg" required>
+                                <div id="thumbnailPreview"></div>
+                            </div>
+                            
+                            
+                            
+                            <div class="mb-3">
+                                <label for="technicalReport" class="form-label">Technical Report PDF Path</label>
+                                <input type="text" class="form-control" id="technicalReport" placeholder="e.g., assets/docs/underwater_rov_report.pdf">
+                                <small class="text-muted">Path to the PDF file for the download button and iframe viewer</small>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="startDate" class="form-label">Project Start Date</label>
+                                        <input type="date" class="form-control" id="startDate">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="endDate" class="form-label">Project End Date</label>
+                                        <input type="date" class="form-control" id="endDate">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="technologies" class="form-label">Technologies Used</label>
+                                <input type="text" class="form-control" id="technologies" placeholder="e.g., SolidWorks, Arduino, Python, 3D Printing">
+                                <small class="text-muted">Comma-separated list of technologies, tools, or skills used</small>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="projectStatus" class="form-label">Project Status</label>
+                                <select class="form-select" id="projectStatus">
+                                    <option value="completed">Completed</option>
+                                    <option value="in-progress">In Progress</option>
+                                    <option value="planned">Planned</option>
+                                    <option value="on-hold">On Hold</option>
+                                </select>
+                            </div>
+                            
+
+                            
+                            <div class="mb-3">
+                                <label for="authors" class="form-label">Authors Short List (for homepage) *</label>
+                                <input type="text" class="form-control" id="authors" placeholder="e.g., Chase Bonfiglio, John Doe" required>
+                                <small class="text-muted">Comma-separated list of author names for the homepage display</small>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="mentors" class="form-label">Mentors (optional)</label>
+                                <input type="text" class="form-control" id="mentors" placeholder="e.g., Dr. Smith, Prof. Johnson">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="featured" checked>
+                                    <label class="form-check-label" for="featured">
+                                        Featured on Homepage
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                                         </div>
+                     
+                     <!-- Individual Authors Management -->
+                     <div class="row mt-4">
+                         <div class="col-12">
+                             <div class="card">
+                                 <div class="card-header bg-light">
+                                     <h5 class="mb-0"><i class="fas fa-users"></i> Individual Author Details</h5>
+                                     <small class="text-muted">Add detailed information for each author. These will be displayed on the project detail page.</small>
+                                 </div>
+                                 <div class="card-body">
+                                     <div id="authorInputs">
+                                         <div class="author-input-row row mb-3" data-author-id="1">
+                                             <div class="col-md-4">
+                                                 <div class="mb-3">
+                                                     <label class="form-label">Author Name</label>
+                                                     <input type="text" class="form-control author-name" placeholder="e.g., Chase Bonfiglio">
+                                                 </div>
+                                             </div>
+                                             <div class="col-md-4">
+                                                 <div class="mb-3">
+                                                     <label class="form-label">Title/Role</label>
+                                                     <input type="text" class="form-control author-title" placeholder="e.g., Project Lead & Computer Vision">
+                                                 </div>
+                                             </div>
+                                             <div class="col-md-3">
+                                                 <div class="mb-3">
+                                                     <label class="form-label">Headshot Image Path</label>
+                                                     <input type="text" class="form-control author-headshot" placeholder="e.g., assets/imgs/authors/chase.jpg">
+                                                 </div>
+                                             </div>
+                                             <div class="col-md-1">
+                                                 <div class="mb-3">
+                                                     <label class="form-label">&nbsp;</label>
+                                                     <button type="button" class="btn btn-outline-danger btn-sm remove-author" onclick="projectAdmin.removeAuthor(this)" style="display: none;">
+                                                         <i class="fas fa-trash"></i>
+                                                     </button>
+                                                 </div>
+                                             </div>
+                                         </div>
+                                     </div>
+                                     <div class="mb-3">
+                                         <button type="button" class="btn btn-outline-primary" onclick="projectAdmin.addAuthor()">
+                                             <i class="fas fa-plus"></i> Add Another Author
+                                         </button>
+                                     </div>
+                                     
+                                     <div id="authorGallery" class="row">
+                                         <!-- Author previews will be displayed here -->
+                                     </div>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                     
+                     <!-- Photo Gallery Management -->
+                     <div class="row mt-4">
+                         <div class="col-12">
+                             <div class="card">
+                                 <div class="card-header bg-light">
+                                     <h5 class="mb-0"><i class="fas fa-images"></i> Project Photo Gallery</h5>
+                                     <small class="text-muted">Add photo paths for the project gallery. These will be displayed on the project detail page.</small>
+                                 </div>
+                                 <div class="card-body">
+                                     <div id="photoInputs">
+                                         <div class="photo-input-row row mb-3" data-photo-id="1">
+                                             <div class="col-md-8">
+                                                 <div class="mb-3">
+                                                     <label class="form-label">Photo Path</label>
+                                                     <input type="text" class="form-control photo-path" placeholder="e.g., assets/imgs/project/photo1.jpg">
+                                                 </div>
+                                             </div>
+                                             <div class="col-md-3">
+                                                 <div class="mb-3">
+                                                     <label class="form-label">Caption (optional)</label>
+                                                     <input type="text" class="form-control photo-caption" placeholder="e.g., Assembly Process">
+                                                 </div>
+                                             </div>
+                                             <div class="col-md-1">
+                                                 <div class="mb-3">
+                                                     <label class="form-label">&nbsp;</label>
+                                                     <button type="button" class="btn btn-outline-danger btn-sm remove-photo" onclick="projectAdmin.removePhoto(this)" style="display: none;">
+                                                         <i class="fas fa-trash"></i>
+                                                     </button>
+                                                 </div>
+                                             </div>
+                                         </div>
+                                     </div>
+                                     <div class="mb-3">
+                                         <button type="button" class="btn btn-outline-primary" onclick="projectAdmin.addPhoto()">
+                                             <i class="fas fa-plus"></i> Add Another Photo
+                                         </button>
+                                     </div>
+                                     
+                                     <div id="photoGallery" class="row">
+                                         <!-- Photos will be displayed here -->
+                                     </div>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                     
+                     <div class="text-end mt-4">
+                        <button type="button" class="btn btn-secondary me-2" onclick="clearForm()">
+                            <i class="fas fa-eraser"></i> Clear Form
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Save Project
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+                 <!-- Current Projects -->
+         <div class="card">
+             <div class="card-header">
+                 <h3 class="mb-0"><i class="fas fa-list"></i> Current Projects</h3>
+             </div>
+             <div class="card-body">
+                 <div class="row" id="projectsList">
+                     <!-- Projects will be loaded here -->
+                 </div>
+             </div>
+         </div>
+
+         <!-- Bio Information Management -->
+         <div class="card">
+             <div class="card-header">
+                 <h3 class="mb-0"><i class="fas fa-user-edit"></i> Bio Information Management</h3>
+                 <small class="text-muted">Update your personal information that appears across the website</small>
+             </div>
+             <div class="card-body">
+                 <form id="bioForm">
+                     <div class="row">
+                         <div class="col-md-6">
+                             <h5 class="mb-3"><i class="fas fa-graduation-cap"></i> Academic Information</h5>
+                             
+                             <div class="mb-3">
+                                 <label for="gpa" class="form-label">GPA</label>
+                                 <input type="text" class="form-control" id="gpa" placeholder="e.g., 3.95">
+                             </div>
+                             
+                             <div class="mb-3">
+                                 <label for="grade" class="form-label">Grade Level</label>
+                                 <input type="text" class="form-control" id="grade" placeholder="e.g., Senior">
+                             </div>
+                             
+                             <div class="mb-3">
+                                 <label for="school" class="form-label">School</label>
+                                 <input type="text" class="form-control" id="school" placeholder="e.g., Ocean Lakes Math and Science Academy">
+                             </div>
+                         </div>
+                         
+                         <div class="col-md-6">
+                             <h5 class="mb-3"><i class="fas fa-phone"></i> Contact Information</h5>
+                             
+                             <div class="mb-3">
+                                 <label for="email" class="form-label">Email</label>
+                                 <input type="email" class="form-control" id="email" placeholder="e.g., chasebonfiglio@gmail.com">
+                             </div>
+                             
+                             <div class="mb-3">
+                                 <label for="phone" class="form-label">Phone Number</label>
+                                 <input type="tel" class="form-control" id="phone" placeholder="e.g., (555) 123-4567">
+                             </div>
+                         </div>
+                     </div>
+                     
+                     <div class="row mt-4">
+                         <div class="col-md-6">
+                             <h5 class="mb-3"><i class="fas fa-dumbbell"></i> Personal Stats</h5>
+                             
+                             <div class="mb-3">
+                                 <label for="benchPress" class="form-label">Bench Press (lbs)</label>
+                                 <input type="number" class="form-control" id="benchPress" placeholder="e.g., 225">
+                             </div>
+                             
+                             <div class="mb-3">
+                                 <label for="cats" class="form-label">Number of Cats</label>
+                                 <input type="number" class="form-control" id="cats" placeholder="e.g., 2">
+                             </div>
+                             
+                             <div class="mb-3">
+                                 <label for="volunteerHours" class="form-label">Volunteer Hours</label>
+                                 <input type="number" class="form-control" id="volunteerHours" placeholder="e.g., 150">
+                             </div>
+                         </div>
+                         
+                         <div class="col-md-6">
+                             <h5 class="mb-3"><i class="fas fa-share-alt"></i> Social Media Links</h5>
+                             
+                             <div class="mb-3">
+                                 <label for="linkedin" class="form-label">LinkedIn</label>
+                                 <input type="url" class="form-control" id="linkedin" placeholder="e.g., https://linkedin.com/in/chasebonfiglio">
+                             </div>
+                             
+                             <div class="mb-3">
+                                 <label for="github" class="form-label">GitHub</label>
+                                 <input type="url" class="form-control" id="github" placeholder="e.g., https://github.com/chasebonfiglio">
+                             </div>
+                             
+                             <div class="mb-3">
+                                 <label for="instagram" class="form-label">Instagram</label>
+                                 <input type="url" class="form-control" id="instagram" placeholder="e.g., https://instagram.com/chasebonfiglio">
+                             </div>
+                             
+                             <div class="mb-3">
+                                 <label for="google" class="form-label">Google+</label>
+                                 <input type="url" class="form-control" id="google" placeholder="e.g., https://plus.google.com/chasebonfiglio">
+                             </div>
+                         </div>
+                     </div>
+                     
+                     <div class="text-end mt-4">
+                         <button type="button" class="btn btn-secondary me-2" onclick="bioAdmin.clearBioForm()">
+                             <i class="fas fa-eraser"></i> Clear Form
+                         </button>
+                         <button type="submit" class="btn btn-primary">
+                             <i class="fas fa-save"></i> Save Bio Information
+                         </button>
+                     </div>
+                 </form>
+             </div>
+         </div>
+    </div>
+
+    <!-- Project Manager Script -->
+    <script src="assets/js/projectManager.js"></script>
+    
+    <script>
+        // Admin functionality
+        class ProjectAdmin {
+            constructor() {
+                this.currentProjectId = null;
+                this.init();
+            }
+
+                         init() {
+                 this.loadProjects();
+                 this.setupEventListeners();
+                 
+                 // Initialize photo inputs with one empty row
+                 this.setPhotoData([]);
+                 
+                 // Initialize author inputs with one empty row
+                 this.setAuthorData([]);
+             }
+
+            setupEventListeners() {
+                // Form submission
+                document.getElementById('projectForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.saveProject();
+                });
+
+                // Image preview
+                document.getElementById('image').addEventListener('input', (e) => {
+                    this.showImagePreview(e.target.value, 'imagePreview');
+                });
+
+                document.getElementById('thumbnail').addEventListener('input', (e) => {
+                    this.showImagePreview(e.target.value, 'thumbnailPreview');
+                });
+            }
+
+            showImagePreview(imagePath, previewId) {
+                const preview = document.getElementById(previewId);
+                if (imagePath) {
+                    preview.innerHTML = `<img src="${imagePath}" class="preview-image" alt="Preview" onerror="this.style.display='none'">`;
+                } else {
+                    preview.innerHTML = '';
+                }
+            }
+
+            loadProjects() {
+                const projects = projectManager.getAllProjects();
+                const container = document.getElementById('projectsList');
+                
+                container.innerHTML = '';
+                
+                projects.forEach(project => {
+                    const card = this.createProjectCard(project);
+                    container.appendChild(card);
+                });
+            }
+
+            createProjectCard(project) {
+                const col = document.createElement('div');
+                col.className = 'col-md-6 col-lg-4 mb-4';
+                
+                col.innerHTML = `
+                    <div class="card project-card">
+                        <div class="position-relative">
+                            <img src="${project.image}" class="project-image" alt="${project.title}" onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
+                            <span class="badge ${project.featured ? 'bg-success' : 'bg-secondary'} status-badge">
+                                ${project.featured ? 'Featured' : 'Hidden'}
+                            </span>
+                        </div>
+                                                 <div class="card-body">
+                             <h5 class="card-title">${project.title}</h5>
+                             <p class="card-text text-muted">${project.category}</p>
+                             <p class="card-text">${project.shortDescription.substring(0, 100)}...</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">${project.authors.join(', ')}</small>
+                                <div>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="projectAdmin.editProject('${project.id}')">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger" onclick="projectAdmin.deleteProject('${project.id}')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                return col;
+            }
+
+            saveProject() {
+                const formData = this.getFormData();
+                
+                if (this.currentProjectId) {
+                    // Update existing project
+                    projectManager.updateProject(this.currentProjectId, formData);
+                } else {
+                    // Add new project
+                    projectManager.addProject(formData);
+                }
+                
+                // Generate project webpage
+                this.generateProjectWebpage(formData);
+                
+                this.loadProjects();
+                this.clearForm();
+                this.showAlert('Project saved successfully! Project webpage published.', 'success');
+            }
+
+                                     generateProjectWebpage(projectData) {
+                // Check for exceptions that should not generate new webpages
+                if (projectData.title === "Mass Production Nameplate" || projectData.title === "Flight Endurance Contest") {
+                    console.log(`Skipping webpage generation for existing project: ${projectData.title}`);
+                    return;
+                }
+                
+                // Generate filename based on project title
+                const safeTitle = projectData.title.toLowerCase()
+                    .replace(/[^a-z0-9]/g, '-')
+                    .replace(/-+/g, '-')
+                    .replace(/^-|-$/g, '');
+                
+                const filename = `project-${safeTitle}.html`;
+                
+                // Read the template file
+                fetch('project-template.html')
+                    .then(response => response.text())
+                    .then(templateContent => {
+                        // Replace template placeholders with project data
+                        let content = templateContent;
+                        
+                        // Basic project info
+                        content = content.replace(/Project Title/g, projectData.title);
+                        content = content.replace(/Project Description/g, projectData.description);
+                        content = content.replace(/Robotics & Computer Vision/g, projectData.category);
+                        
+                                                 // Set the project ID for dynamic loading
+                         content = content.replace(/id=([^&]*)/g, `id=${safeTitle}`);
+                        
+                        // Update technical report path if provided
+                        if (projectData.technicalReport) {
+                            content = content.replace(/assets\/docs\/placeholder_report\.pdf/g, projectData.technicalReport);
+                        }
+                        
+                        // Create the file in the website directory
+                        this.saveFileToWebsite(filename, content);
+                        
+                        console.log(`Project webpage generated: ${filename}`);
+                    })
+                    .catch(error => {
+                        console.error('Error generating project webpage:', error);
+                        this.showAlert('Error generating project webpage. Please check the console for details.', 'danger');
+                    });
+            }
+
+            saveFileToWebsite(filename, content) {
+                // Try to publish to server via API first
+                this.publishToServer(filename, content);
+            }
+
+            async publishToServer(filename, content) {
+                try {
+                    // Get the current project data
+                    const projectData = this.getFormData();
+                    
+                    const response = await fetch('api/publish-project.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            filename: filename,
+                            content: content,
+                            projectData: projectData
+                        })
+                    });
+                    
+                    const result = await response.json();
+                    if (result.success) {
+                        this.showAlert(`Project published successfully! View at: ${result.url}`, 'success');
+                        
+                        // Update the project manager with the published data
+                        if (this.currentProjectId) {
+                            projectManager.updateProject(this.currentProjectId, projectData);
+                        } else {
+                            projectManager.addProject(projectData);
+                        }
+                    } else {
+                        throw new Error(result.message);
+                    }
+                } catch (error) {
+                    console.error('Publishing error:', error);
+                    this.showAlert('Failed to publish to server. Falling back to download method.', 'warning');
+                    
+                    // Fallback to the old download method
+                    this.saveToCMSDirectory(filename, content);
+                }
+            }
+
+            saveToCMSDirectory(filename, content) {
+                // Define the CMS directory path (this would be your web server directory)
+                const cmsDirectory = './cms-projects/'; // This would be your actual web server path
+                
+                // Create a more robust file saving system
+                try {
+                    // Method 1: Try to use the File System Access API with directory access
+                    if ('showDirectoryPicker' in window) {
+                        this.saveToDirectoryAPI(filename, content, cmsDirectory);
+                    } 
+                    // Method 2: Try to save to a predefined directory
+                    else if (this.canAccessDirectory(cmsDirectory)) {
+                        this.saveToPredefinedDirectory(filename, content, cmsDirectory);
+                    }
+                    // Method 3: Fallback to download with instructions
+                    else {
+                        this.saveWithInstructions(filename, content);
+                    }
+                } catch (error) {
+                    console.error('Error saving to CMS directory:', error);
+                    this.saveWithInstructions(filename, content);
+                }
+            }
+
+            async saveToDirectoryAPI(filename, content, cmsDirectory) {
+                try {
+                    // Request permission to access the CMS directory
+                    const dirHandle = await window.showDirectoryPicker({
+                        mode: 'readwrite',
+                        startIn: cmsDirectory
+                    });
+                    
+                    // Create the file in the directory
+                    const fileHandle = await dirHandle.getFileHandle(filename, { create: true });
+                    const writable = await fileHandle.createWritable();
+                    await writable.write(content);
+                    await writable.close();
+                    
+                    this.showAlert(`Project published to CMS: ${filename}`, 'success');
+                    
+                    // Optionally trigger a site rebuild
+                    this.triggerSiteRebuild();
+                    
+                } catch (error) {
+                    console.error('Directory API error:', error);
+                    this.saveWithInstructions(filename, content);
+                }
+            }
+
+            saveToPredefinedDirectory(filename, content, cmsDirectory) {
+                // This would work if you have a local web server setup
+                const fullPath = `${cmsDirectory}${filename}`;
+                
+                // Create a download link that suggests the correct directory
+                const blob = new Blob([content], { type: 'text/html' });
+                const url = URL.createObjectURL(blob);
+                
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                a.setAttribute('data-cms-path', fullPath);
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                this.showAlert(`Project ready for CMS: ${filename}. Save to: ${cmsDirectory}`, 'info');
+            }
+
+            saveWithInstructions(filename, content) {
+                const blob = new Blob([content], { type: 'text/html' });
+                const url = URL.createObjectURL(blob);
+                
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                this.showAlert(`Project downloaded: ${filename}. Upload to your web server to publish.`, 'info');
+            }
+
+            canAccessDirectory(path) {
+                // Check if we can access a specific directory
+                // This would need to be configured for your specific setup
+                return false; // Default to false for security
+            }
+
+            triggerSiteRebuild() {
+                // This would trigger a static site rebuild if you're using a generator
+                console.log('Site rebuild triggered');
+                // You could make an API call here to trigger a rebuild
+            }
+
+                         getFormData() {
+                 return {
+                     title: document.getElementById('title').value,
+                     category: document.getElementById('category').value,
+                     description: document.getElementById('description').value,
+                     shortDescription: document.getElementById('shortDescription').value,
+                     image: document.getElementById('image').value,
+                     thumbnail: document.getElementById('thumbnail').value,
+
+                     technicalReport: document.getElementById('technicalReport').value,
+                     startDate: document.getElementById('startDate').value,
+                     endDate: document.getElementById('endDate').value,
+                     technologies: document.getElementById('technologies').value,
+                     projectStatus: document.getElementById('projectStatus').value,
+                     authors: document.getElementById('authors').value.split(',').map(a => a.trim()),
+                     mentors: document.getElementById('mentors').value ? document.getElementById('mentors').value.split(',').map(m => m.trim()) : [],
+                     featured: document.getElementById('featured').checked,
+                     photos: this.getPhotoData(),
+                     individualAuthors: this.getAuthorData()
+                 };
+             }
+
+            editProject(projectId) {
+                const project = projectManager.getProjectById(projectId);
+                if (!project) return;
+
+                this.currentProjectId = projectId;
+                
+                                 // Fill form with project data
+                 document.getElementById('title').value = project.title;
+                 document.getElementById('category').value = project.category;
+                 document.getElementById('description').value = project.description;
+                document.getElementById('shortDescription').value = project.shortDescription;
+                document.getElementById('image').value = project.image;
+                document.getElementById('thumbnail').value = project.thumbnail;
+                
+                document.getElementById('technicalReport').value = project.technicalReport || '';
+                document.getElementById('startDate').value = project.startDate || '';
+                document.getElementById('endDate').value = project.endDate || '';
+                document.getElementById('technologies').value = project.technologies || '';
+                document.getElementById('projectStatus').value = project.projectStatus || 'completed';
+                document.getElementById('authors').value = project.authors.join(', ');
+                document.getElementById('mentors').value = project.mentors ? project.mentors.join(', ') : '';
+                document.getElementById('featured').checked = project.featured;
+                
+                // Show image previews
+                this.showImagePreview(project.image, 'imagePreview');
+                this.showImagePreview(project.thumbnail, 'thumbnailPreview');
+                
+                                 // Load photo data
+                 this.setPhotoData(project.photos || []);
+                 
+                 // Load individual author data
+                 this.setAuthorData(project.individualAuthors || []);
+                 
+                 // Scroll to form
+                 document.getElementById('projectForm').scrollIntoView({ behavior: 'smooth' });
+            }
+
+            deleteProject(projectId) {
+                if (confirm('Are you sure you want to delete this project?')) {
+                    projectManager.deleteProject(projectId);
+                    this.loadProjects();
+                    this.showAlert('Project deleted successfully!', 'success');
+                }
+            }
+
+                         clearForm() {
+                 document.getElementById('projectForm').reset();
+                 this.currentProjectId = null;
+                 document.getElementById('imagePreview').innerHTML = '';
+                 document.getElementById('thumbnailPreview').innerHTML = '';
+                 
+                 // Reset photo inputs to one empty row
+                 this.setPhotoData([]);
+                 
+                 // Reset author inputs to one empty row
+                 this.setAuthorData([]);
+             }
+
+            showAlert(message, type) {
+                const alertDiv = document.createElement('div');
+                alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+                alertDiv.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+                alertDiv.innerHTML = `
+                    ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                `;
+                
+                document.body.appendChild(alertDiv);
+                
+                setTimeout(() => {
+                    alertDiv.remove();
+                }, 3000);
+            }
+
+            addPhoto() {
+                const photoInputs = document.getElementById('photoInputs');
+                const photoRows = photoInputs.querySelectorAll('.photo-input-row');
+                const newPhotoId = photoRows.length + 1;
+                
+                const newPhotoRow = document.createElement('div');
+                newPhotoRow.className = 'photo-input-row row mb-3';
+                newPhotoRow.setAttribute('data-photo-id', newPhotoId);
+                
+                newPhotoRow.innerHTML = `
+                    <div class="col-md-8">
+                        <div class="mb-3">
+                            <label class="form-label">Photo Path</label>
+                            <input type="text" class="form-control photo-path" placeholder="e.g., assets/imgs/project/photo${newPhotoId}.jpg">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mb-3">
+                            <label class="form-label">Caption (optional)</label>
+                            <input type="text" class="form-control photo-caption" placeholder="e.g., Assembly Process">
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <div class="mb-3">
+                            <label class="form-label">&nbsp;</label>
+                            <button type="button" class="btn btn-outline-danger btn-sm remove-photo" onclick="projectAdmin.removePhoto(this)">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                photoInputs.appendChild(newPhotoRow);
+                
+                // Show remove buttons for all rows except the first one
+                this.updateRemoveButtons();
+            }
+
+            removePhoto(button) {
+                const photoRow = button.closest('.photo-input-row');
+                photoRow.remove();
+                
+                // Update remove buttons visibility
+                this.updateRemoveButtons();
+            }
+
+            updateRemoveButtons() {
+                const photoRows = document.querySelectorAll('.photo-input-row');
+                const removeButtons = document.querySelectorAll('.remove-photo');
+                
+                // Show remove button for all rows except the first one
+                photoRows.forEach((row, index) => {
+                    const removeBtn = row.querySelector('.remove-photo');
+                    if (removeBtn) {
+                        removeBtn.style.display = index === 0 ? 'none' : 'inline-block';
+                    }
+                });
+            }
+
+            getPhotoData() {
+                const photos = [];
+                const photoRows = document.querySelectorAll('.photo-input-row');
+                
+                photoRows.forEach(row => {
+                    const pathInput = row.querySelector('.photo-path');
+                    const captionInput = row.querySelector('.photo-caption');
+                    
+                    if (pathInput && pathInput.value.trim()) {
+                        photos.push({
+                            path: pathInput.value.trim(),
+                            caption: captionInput ? captionInput.value.trim() : ''
+                        });
+                    }
+                });
+                
+                return photos;
+            }
+
+            setPhotoData(photos) {
+                // Clear existing photo inputs
+                const photoInputs = document.getElementById('photoInputs');
+                photoInputs.innerHTML = '';
+                
+                if (photos && photos.length > 0) {
+                    photos.forEach((photo, index) => {
+                        const photoRow = document.createElement('div');
+                        photoRow.className = 'photo-input-row row mb-3';
+                        photoRow.setAttribute('data-photo-id', index + 1);
+                        
+                        photoRow.innerHTML = `
+                            <div class="col-md-8">
+                                <div class="mb-3">
+                                    <label class="form-label">Photo Path</label>
+                                    <input type="text" class="form-control photo-path" value="${photo.path}" placeholder="e.g., assets/imgs/project/photo${index + 1}.jpg">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <label class="form-label">Caption (optional)</label>
+                                    <input type="text" class="form-control photo-caption" value="${photo.caption || ''}" placeholder="e.g., Assembly Process">
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <div class="mb-3">
+                                    <label class="form-label">&nbsp;</label>
+                                    <button type="button" class="btn btn-outline-danger btn-sm remove-photo" onclick="projectAdmin.removePhoto(this)" style="display: ${index === 0 ? 'none' : 'inline-block'};">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                        
+                        photoInputs.appendChild(photoRow);
+                    });
+                                 } else {
+                     // Add one empty photo input
+                     this.addPhoto();
+                 }
+             }
+
+             addAuthor() {
+                 const authorInputs = document.getElementById('authorInputs');
+                 const authorRows = authorInputs.querySelectorAll('.author-input-row');
+                 const newAuthorId = authorRows.length + 1;
+                 
+                 const newAuthorRow = document.createElement('div');
+                 newAuthorRow.className = 'author-input-row row mb-3';
+                 newAuthorRow.setAttribute('data-author-id', newAuthorId);
+                 
+                 newAuthorRow.innerHTML = `
+                     <div class="col-md-4">
+                         <div class="mb-3">
+                             <label class="form-label">Author Name</label>
+                             <input type="text" class="form-control author-name" placeholder="e.g., Chase Bonfiglio">
+                         </div>
+                     </div>
+                     <div class="col-md-4">
+                         <div class="mb-3">
+                             <label class="form-label">Title/Role</label>
+                             <input type="text" class="form-control author-title" placeholder="e.g., Project Lead & Computer Vision">
+                         </div>
+                     </div>
+                     <div class="col-md-3">
+                         <div class="mb-3">
+                             <label class="form-label">Headshot Image Path</label>
+                             <input type="text" class="form-control author-headshot" placeholder="e.g., assets/imgs/authors/chase.jpg">
+                         </div>
+                     </div>
+                     <div class="col-md-1">
+                         <div class="mb-3">
+                             <label class="form-label">&nbsp;</label>
+                             <button type="button" class="btn btn-outline-danger btn-sm remove-author" onclick="projectAdmin.removeAuthor(this)">
+                                 <i class="fas fa-trash"></i>
+                             </button>
+                         </div>
+                     </div>
+                 `;
+                 
+                 authorInputs.appendChild(newAuthorRow);
+                 
+                 // Show remove buttons for all rows except the first one
+                 this.updateRemoveAuthorButtons();
+             }
+
+             removeAuthor(button) {
+                 const authorRow = button.closest('.author-input-row');
+                 authorRow.remove();
+                 
+                 // Update remove buttons visibility
+                 this.updateRemoveAuthorButtons();
+             }
+
+             updateRemoveAuthorButtons() {
+                 const authorRows = document.querySelectorAll('.author-input-row');
+                 
+                 // Show remove button for all rows except the first one
+                 authorRows.forEach((row, index) => {
+                     const removeBtn = row.querySelector('.remove-author');
+                     if (removeBtn) {
+                         removeBtn.style.display = index === 0 ? 'none' : 'inline-block';
+                     }
+                 });
+             }
+
+             getAuthorData() {
+                 const authors = [];
+                 const authorRows = document.querySelectorAll('.author-input-row');
+                 
+                 authorRows.forEach(row => {
+                     const nameInput = row.querySelector('.author-name');
+                     const titleInput = row.querySelector('.author-title');
+                     const headshotInput = row.querySelector('.author-headshot');
+                     
+                     if (nameInput && nameInput.value.trim()) {
+                         authors.push({
+                             name: nameInput.value.trim(),
+                             title: titleInput ? titleInput.value.trim() : '',
+                             headshot: headshotInput ? headshotInput.value.trim() : ''
+                         });
+                     }
+                 });
+                 
+                 return authors;
+             }
+
+             setAuthorData(authors) {
+                 // Clear existing author inputs
+                 const authorInputs = document.getElementById('authorInputs');
+                 authorInputs.innerHTML = '';
+                 
+                 if (authors && authors.length > 0) {
+                     authors.forEach((author, index) => {
+                         const authorRow = document.createElement('div');
+                         authorRow.className = 'author-input-row row mb-3';
+                         authorRow.setAttribute('data-author-id', index + 1);
+                         
+                         authorRow.innerHTML = `
+                             <div class="col-md-4">
+                                 <div class="mb-3">
+                                     <label class="form-label">Author Name</label>
+                                     <input type="text" class="form-control author-name" value="${author.name}" placeholder="e.g., Chase Bonfiglio">
+                                 </div>
+                             </div>
+                             <div class="col-md-4">
+                                 <div class="mb-3">
+                                     <label class="form-label">Title/Role</label>
+                                     <input type="text" class="form-control author-title" value="${author.title || ''}" placeholder="e.g., Project Lead & Computer Vision">
+                                 </div>
+                             </div>
+                             <div class="col-md-3">
+                                 <div class="mb-3">
+                                     <label class="form-label">Headshot Image Path</label>
+                                     <input type="text" class="form-control author-headshot" value="${author.headshot || ''}" placeholder="e.g., assets/imgs/authors/chase.jpg">
+                                 </div>
+                             </div>
+                             <div class="col-md-1">
+                                 <div class="mb-3">
+                                     <label class="form-label">&nbsp;</label>
+                                     <button type="button" class="btn btn-outline-danger btn-sm remove-author" onclick="projectAdmin.removeAuthor(this)" style="display: ${index === 0 ? 'none' : 'inline-block'};">
+                                         <i class="fas fa-trash"></i>
+                                     </button>
+                                 </div>
+                             </div>
+                         `;
+                         
+                         authorInputs.appendChild(authorRow);
+                     });
+                 } else {
+                     // Add one empty author input
+                     this.addAuthor();
+                 }
+             }
+        }
+
+                 // Bio Information Management
+         class BioAdmin {
+             constructor() {
+                 this.init();
+             }
+             
+             init() {
+                 this.loadBioData();
+                 this.setupEventListeners();
+             }
+             
+             setupEventListeners() {
+                 // Bio form submission
+                 document.getElementById('bioForm').addEventListener('submit', (e) => {
+                     e.preventDefault();
+                     this.saveBioData();
+                 });
+             }
+             
+             loadBioData() {
+                 const bioData = this.getBioDataFromStorage();
+                 
+                 // Fill form with existing data
+                 document.getElementById('gpa').value = bioData.gpa || '';
+                 document.getElementById('grade').value = bioData.grade || '';
+                 document.getElementById('school').value = bioData.school || '';
+                 document.getElementById('email').value = bioData.email || '';
+                 document.getElementById('phone').value = bioData.phone || '';
+                 document.getElementById('benchPress').value = bioData.benchPress || '';
+                 document.getElementById('cats').value = bioData.cats || '';
+                 document.getElementById('volunteerHours').value = bioData.volunteerHours || '';
+                 document.getElementById('linkedin').value = bioData.linkedin || '';
+                 document.getElementById('github').value = bioData.github || '';
+                 document.getElementById('instagram').value = bioData.instagram || '';
+                 document.getElementById('google').value = bioData.google || '';
+             }
+             
+             saveBioData() {
+                 const bioData = this.getFormData();
+                 this.saveBioDataToStorage(bioData);
+                 this.showAlert('Bio information saved successfully!', 'success');
+             }
+             
+             getFormData() {
+                 return {
+                     gpa: document.getElementById('gpa').value,
+                     grade: document.getElementById('grade').value,
+                     school: document.getElementById('school').value,
+                     email: document.getElementById('email').value,
+                     phone: document.getElementById('phone').value,
+                     benchPress: document.getElementById('benchPress').value,
+                     cats: document.getElementById('cats').value,
+                     volunteerHours: document.getElementById('volunteerHours').value,
+                     linkedin: document.getElementById('linkedin').value,
+                     github: document.getElementById('github').value,
+                     instagram: document.getElementById('instagram').value,
+                     google: document.getElementById('google').value
+                 };
+             }
+             
+             getBioDataFromStorage() {
+                 if (typeof localStorage !== 'undefined') {
+                     const saved = localStorage.getItem('bioData');
+                     return saved ? JSON.parse(saved) : {};
+                 }
+                 return {};
+             }
+             
+             saveBioDataToStorage(bioData) {
+                 if (typeof localStorage !== 'undefined') {
+                     localStorage.setItem('bioData', JSON.stringify(bioData));
+                 }
+             }
+             
+             clearBioForm() {
+                 document.getElementById('bioForm').reset();
+                 this.showAlert('Bio form cleared!', 'info');
+             }
+             
+             showAlert(message, type) {
+                 const alertDiv = document.createElement('div');
+                 alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+                 alertDiv.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+                 alertDiv.innerHTML = `
+                     ${message}
+                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                 `;
+                 
+                 document.body.appendChild(alertDiv);
+                 
+                 setTimeout(() => {
+                     alertDiv.remove();
+                 }, 3000);
+             }
+         }
+         
+         // Initialize admin when page loads
+         let projectAdmin;
+         let bioAdmin;
+         document.addEventListener('DOMContentLoaded', () => {
+             projectAdmin = new ProjectAdmin();
+             bioAdmin = new BioAdmin();
+         });
+
+        // Global function for form clearing
+        function clearForm() {
+            projectAdmin.clearForm();
+        }
+    </script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
