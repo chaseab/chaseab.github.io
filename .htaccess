@@ -1,0 +1,2 @@
+RewriteEngine On
+RewriteRule ^projects/?$ projects.html [L]

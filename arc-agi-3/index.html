@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ARC-AGI-3 — a reasoning loop for unfamiliar games · Chase Bonfiglio</title>
+<meta name="description" content="A work-in-progress research log: a reasoning loop that routes the right facts to a small local model so it can reason through unfamiliar interactive games (ARC-AGI-3)." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800;900&family=Caveat:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css?v=13" />
+</head>
+<body>
+
+<!-- power-on boot / POST (skippable, shown once per browser) -->
+<div id="boot" class="boot">
+  <button class="boot__skip" id="boot-skip">skip ▸</button>
+  <div class="boot__screen">
+    <div class="boot__line" aria-hidden="true"></div>
+    <pre class="boot__post" id="boot-post" role="status"></pre>
+  </div>
+</div>
+
+<div class="grain" aria-hidden="true"></div>
+<div class="scanlines" aria-hidden="true"></div>
+
+<!-- sticky mini-nav -->
+<nav class="mininav" id="mininav" aria-label="site navigation">
+  <a class="mininav__brand" href="../index.html">Chase Bonfiglio</a>
+  <div class="mininav__links">
+    <a href="../index.html#home">Home</a>
+    <a href="../index.html#about">About</a>
+    <a href="../index.html#resume">Resume</a>
+    <a href="../projects.html">Projects</a>
+    <a href="../index.html#photography">Photography</a>
+    <a href="../index.html#contact">Contact</a>
+  </div>
+  <a href="#theater" class="mininav__cta">Skip&nbsp;to&nbsp;the&nbsp;work&nbsp;↓</a>
+</nav>
+
+<!-- ============ PROJECT ENTRY HEADER ============ -->
+<header class="entry" id="top">
+  <nav class="crumb" aria-label="breadcrumb">
+    <a href="https://chasebonfiglio.com">chasebonfiglio</a>
+    <span>/</span><a href="https://chasebonfiglio.com/projects.html">projects</a>
+    <span>/</span><b>arc-agi-3</b>
+  </nav>
+
+  <div class="entry__grid">
+    <div class="entry__lead">
+      <p class="kicker">Project log · started April 2026 · <span class="live" data-text="still running">still running</span></p>
+      <h1 class="entry__title">A reasoning loop for games a model has never&nbsp;played</h1>
+      <p class="entry__sub">
+        I'm building the scaffolding that lets a local vision-language model
+        perceive an unfamiliar interactive puzzle, guess what it's for, act, and
+        correct itself — the <a href="https://arcprize.org/arc-agi/3" target="_blank" rel="noopener">ARC-AGI-3</a>
+        benchmark, where humans score ~100% and the best public systems are still
+        near&nbsp;1%.
+      </p>
+      <div class="entry__links">
+        <a href="#theater">↓ watch it reason</a>
+        <a href="https://github.com/chaseab" data-fill="github" target="_blank" rel="noopener">↗ code</a>
+        <a href="mailto:chasebonfiglio@gmail.com">✉ email</a>
+      </div>
+    </div>
+
+    <div class="built" aria-label="what I built">
+      <div class="built__bar">
+        <span class="pixel">BUILD MANIFEST</span>
+        <span class="pixel built__count">4 SYSTEMS · SOLO</span>
+      </div>
+      <ol class="built__list">
+        <li style="--c:var(--arc-8)">
+          <span class="built__ix">01</span>
+          <div><b>Evaluation harness</b><p>Reimplemented the official RHAE scorer — matches it 91% across 340 human replays.</p></div>
+        </li>
+        <li style="--c:var(--arc-1)">
+          <span class="built__ix">02</span>
+          <div><b>The reasoning loop</b><p>Perceive → understand → hypothesize → plan → act → reflect, frame by frame.</p></div>
+        </li>
+        <li style="--c:var(--arc-6)">
+          <span class="built__ix">03</span>
+          <div><b>Instruments</b><p>Replay viewers, CoT diagrams, and forensics that grade the agent's frames — not its story.</p></div>
+        </li>
+        <li style="--c:var(--arc-3)">
+          <span class="built__ix">04</span>
+          <div><b>Generalization gating</b><p>A fix only counts if it holds on games it was never tuned on.</p></div>
+        </li>
+      </ol>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- ============ GAME MARQUEE (standalone band) ============ -->
+<section class="band" id="games" aria-label="the 25 games — real first frames">
+  <div class="gallery" id="gallery"></div>
+</section>
+
+<!-- ============ WHAT IS ARC-AGI-3 ============ -->
+<section class="sec" id="about">
+  <div class="sec__head">
+    <span class="sec__num">01</span>
+    <h2 class="sec__title">What ARC-AGI-3 is</h2>
+  </div>
+  <div class="about">
+    <div class="about__text">
+      <p>
+        ARC — the <b>Abstraction and Reasoning Corpus</b>, from François
+        Chollet — tests <em>fluid intelligence</em>: solving problems you've
+        never seen before, not recalling facts you memorised.
+        <b>ARC-AGI-3</b> is the interactive version — an agent is dropped into an
+        unfamiliar grid mini-game with <b>no instructions</b> and has to work out
+        the rules by acting.
+      </p>
+      <p class="about__punch">People figure it out almost every time. Today's best AI models solve under&nbsp;1%.</p>
+    </div>
+    <figure class="infer">
+      <div class="infer__row">
+        <div class="infcell"><canvas class="infgrid" data-panel="a" width="120" height="120"></canvas><span>you're given this</span></div>
+        <span class="infarrow">→</span>
+        <div class="infcell"><canvas class="infgrid" data-panel="b" width="120" height="120"></canvas><span>you act — it changes</span></div>
+        <span class="infarrow">→</span>
+        <div class="infcell infcell--q"><canvas class="infgrid" data-panel="c" width="120" height="120"></canvas><span>infer the rule</span></div>
+      </div>
+      <figcaption>No tutorial, no manual — act, observe, infer.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============ HOW IT'S SCORED + LEADERBOARD ============ -->
+<section class="sec" id="metric">
+  <div class="sec__head">
+    <span class="sec__num">02</span>
+    <h2 class="sec__title">How it's scored</h2>
+  </div>
+  <div class="scoring">
+    <div class="scoring__left">
+      <p class="scoring__lead">You're graded on <em>efficiency vs a real person</em> — not just whether you finish.</p>
+      <div class="formula2">
+        score = min<span class="fp">(</span>
+        <span class="frac"><span class="frac__n">human actions</span><span class="frac__d">agent actions</span></span>
+        , 1<span class="fp">)</span><sup>2</sup>
+      </div>
+      <p class="scoring__note">
+        Finish a level in as few moves as a human and you approach 100. Take more,
+        you fall off fast — it's squared. Don't finish the level at all, and you
+        score nothing for it.
+      </p>
+      <div class="honestpin">
+        <b>I've completed 0 levels so far — so my honest score is 0.</b>
+        The point of this project isn't the number. It's the diagnosis of
+        <em>why</em> small models fail.
+      </div>
+    </div>
+    <div class="scoring__right">
+      <canvas id="curve" width="520" height="380" aria-label="efficiency curve with an honest zero pin"></canvas>
+    </div>
+  </div>
+
+  <div class="lb">
+    <div class="lb__head"><span class="pixel">WHERE EVERYONE ACTUALLY IS</span><span class="lb__scale pixel">0–100 SCALE</span></div>
+    <div class="lb__rows">
+      <div class="lb__row"><span class="lb__lab">Humans</span><div class="lb__track"><i style="width:100%;--c:var(--arc-3)"></i></div><span class="lb__val">~100</span></div>
+      <div class="lb__row"><span class="lb__lab">Best public AI · Tufa Labs</span><div class="lb__track"><i style="width:1.21%;--c:var(--arc-7)"></i></div><span class="lb__val">~1.21</span></div>
+      <div class="lb__row"><span class="lb__lab">This project</span><div class="lb__track"><i class="lb__zero" style="--c:var(--arc-2)"></i></div><span class="lb__val">0</span></div>
+    </div>
+    <div class="lb__zoom">
+      <span class="lb__zoomtag pixel">FRONTIER ZOOM · ×50 · 0–2 slice</span>
+      <div class="lb__rows">
+        <div class="lb__row"><span class="lb__lab">Tufa Labs</span><div class="lb__track"><i style="width:60%;--c:var(--arc-7)"></i></div><span class="lb__val">1.21</span></div>
+        <div class="lb__row"><span class="lb__lab">This project</span><div class="lb__track"><i class="lb__zero" style="--c:var(--arc-2)"></i></div><span class="lb__val">0</span></div>
+      </div>
+    </div>
+    <p class="foot">
+      The scale is brutal: the best public AI (~1.21) and a human (~100) differ by
+      ~80×. Drawn linearly so the gap stays honest — the tiny bars <em>are</em>
+      the point. This is an unsolved frontier, and everyone is near the start line.
+    </p>
+  </div>
+</section>
+
+<!-- ============ THESIS ============ -->
+<section class="sec sec--thesis" id="thesis">
+  <div class="sec__head">
+    <span class="sec__num">03</span>
+    <h2 class="sec__title">My solution</h2>
+  </div>
+  <div class="thesis">
+    <div class="solution">
+      <div class="solution__prose">
+        <p>
+          LLMs today interpret MRIs better than doctors, crack proofs that stump
+          experts, and surface zero-day bugs that went unnoticed for years. Drop
+          one into a simple game with novel-but-intuitive mechanics, though, and
+          it struggles with — <em>well</em> — intuition. That gap is what
+          ARC-AGI-3 measures, and I've been fascinated by it since February.
+        </p>
+        <p>
+          I think the key is reasoning like a human. The model can already
+          reason — the bottleneck is the
+          <span class="hl hl--magenta">flow of information</span>. Hand it clean,
+          well-worded facts about a scene and it does fine; make it gather those
+          facts itself across a hundred noisy frames and it drowns.
+        </p>
+        <p>
+          So I sat down and solved the games myself, and tried to pin down how I
+          actually did it — <em>how do I know what I control? how do I read walls
+          or place-specific mechanics? how do I derive a goal, and adapt when
+          things don't match what I expected?</em> The loop is my attempt to give
+          the model those same steps, over and over.
+        </p>
+      </div>
+
+      <figure class="loopfig">
+        <div class="loopfig__frame" id="loop-hand">
+          <img src="assets/loop.png" alt="Hand-drawn diagram of the reasoning loop: perceive, understand, hypothesize, plan, act, reflect — connected in a cycle with the questions the agent asks at each stage." />
+        </div>
+        <figcaption>
+          The loop, in my own hand — the questions I ask myself at each stage are
+          the questions I'm trying to route to the model.
+        </figcaption>
+      </figure>
+    </div>
+
+    <div class="modelsplit">
+      <div><span class="pixel">MODELS</span> a 32B vision-language model does the perceiving; a 27B-class model judges progress — all local, no internet at evaluation.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ REPLAY THEATER ============ -->
+<section class="sec sec--theater" id="theater">
+  <div class="sec__head">
+    <span class="sec__num">04</span>
+    <h2 class="sec__title">Replay theater</h2>
+  </div>
+  <p class="sec__intro">
+    Real episodes from the latest run. Click through the <em>highlighted
+    moments</em> — I've annotated what matters at each one so you don't have to
+    read every frame. The grid is re-derived ground truth (the real engine
+    frames); the reasoning shown is the loop's own words.
+  </p>
+
+  <div class="theater" id="theater-app">
+    <button class="epnav epnav--prev" id="ep-prev" aria-label="previous replay">‹</button>
+    <button class="epnav epnav--next" id="ep-next" aria-label="next replay">›</button>
+
+    <div class="theater__tabs" id="episode-tabs" role="tablist"><!-- filled by JS --></div>
+    <div class="theater__caption" id="episode-caption"></div>
+
+    <div class="theater__main">
+      <div class="theater__left">
+        <div class="crt" id="crt">
+          <div class="board">
+            <canvas id="board" width="512" height="512"></canvas>
+            <div class="board__hud">
+              <span class="pixel" id="hud-env">—</span>
+              <span class="pixel" id="hud-step">STEP 0</span>
+              <span class="pixel" id="hud-action">—</span>
+            </div>
+            <div class="board__verdict" id="hud-verdict"></div>
+            <div class="crt-scan" aria-hidden="true"></div>
+            <div class="crt-glare" aria-hidden="true"></div>
+            <div class="crt-static" aria-hidden="true"></div>
+            <div class="crt-vig" aria-hidden="true"></div>
+          </div>
+          <div class="crt-plate" aria-hidden="true">
+            <span class="crt-brand pixel">ARCTRON&nbsp;64</span>
+            <span class="crt-led" id="crt-led"></span>
+          </div>
+        </div>
+        <div class="transport">
+          <button id="btn-play" class="tbtn" aria-label="play">▶</button>
+          <button id="btn-back" class="tbtn" aria-label="step back">⏴</button>
+          <button id="btn-fwd" class="tbtn" aria-label="step forward">⏵</button>
+          <input type="range" id="scrub" min="0" max="0" value="0" />
+          <label class="toggle"><input type="checkbox" id="toggle-overlay" /> <span>facts overlay</span></label>
+        </div>
+      </div>
+
+      <div class="theater__right">
+        <div class="guide">
+          <div class="guide__rail" id="chapter-rail" role="tablist"><!-- chapter dots --></div>
+          <div class="guide__card">
+            <span class="guide__ix pixel" id="chapter-ix">—</span>
+            <h4 id="chapter-title">—</h4>
+            <p id="chapter-note">—</p>
+            <div class="guide__nav">
+              <button id="ch-prev" class="tbtn" aria-label="previous moment">‹</button>
+              <span id="chapter-count" class="pixel">—</span>
+              <button id="ch-next" class="tbtn" aria-label="next moment">›</button>
+            </div>
+          </div>
+          <details class="guide__raw">
+            <summary>the agent's raw reasoning at this exact frame ▾</summary>
+            <div class="mind">
+              <div class="mind__block mind__goal">
+                <span class="mind__tag pixel" data-arc="1">GOAL</span>
+                <p id="mind-goal">—</p>
+              </div>
+              <div class="mind__block mind__cot" id="mind-cot-wrap">
+                <span class="mind__tag pixel" data-arc="8">REASONING</span>
+                <div id="mind-cot"></div>
+              </div>
+              <div class="mind__block mind__judge" id="mind-judge-wrap">
+                <span class="mind__tag pixel" data-arc="6">JUDGE</span>
+                <p id="mind-judge">—</p>
+              </div>
+              <div class="mind__marker" id="mind-marker"></div>
+            </div>
+          </details>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============ THE WALL ============ -->
+<section class="sec sec--wall" id="wall">
+  <div class="sec__head">
+    <span class="sec__num">05</span>
+    <h2 class="sec__title">Where the flow still breaks</h2>
+  </div>
+  <p class="sec__intro">
+    Each failure mode is a fact that didn't route cleanly — and it shows up as a
+    <em>shape</em>. Below, the controllable object's actual path across the board
+    (re-derived from the saved frames, not the model's claims), tinted by the
+    judge's live verdict. Three episodes, three unmistakable signatures.
+  </p>
+  <div class="tracelegend">
+    <span><i class="lg lg--t"></i> judge: toward goal</span>
+    <span><i class="lg lg--a"></i> away</span>
+    <span><i class="lg lg--n"></i> no change</span>
+    <span><i class="lg lg--s"></i> start</span>
+    <span><i class="lg lg--e"></i> end</span>
+  </div>
+  <div class="wall">
+    <div class="wall__row" data-arc="4">
+      <canvas class="trace" data-env="wa30" width="400" height="400" aria-label="wa30 path trace"></canvas>
+      <div class="wall__txt">
+        <span class="wall__env pixel">wa30 — overshoot &amp; oscillate</span>
+        <p>
+          The loop closes the gap and the judge confirms it's moving the right
+          object the right way — then it overshoots and swings back and forth
+          (28 TOWARD / 24 AWAY), never landing the exact alignment. The trace
+          <em>buzzes</em> across the target instead of settling.
+        </p>
+      </div>
+    </div>
+    <div class="wall__row" data-arc="2">
+      <canvas class="trace" data-env="tu93" width="400" height="400" aria-label="tu93 path trace"></canvas>
+      <div class="wall__txt">
+        <span class="wall__env pixel">tu93 — direction tunnelling</span>
+        <p>
+          Clean step-by-step navigation reasoning — but the executor presses
+          RIGHT twenty-one times and re-probes the same tiny corridor, never
+          taking the untried downward path toward the goal. The path collapses
+          into a knot: <em>the frontier fact never reaches the planner.</em>
+        </p>
+      </div>
+    </div>
+    <div class="wall__row wall__row--key" data-arc="6">
+      <canvas class="trace" data-env="re86" width="400" height="400" aria-label="re86 path trace"></canvas>
+      <div class="wall__txt">
+        <span class="wall__env pixel">re86 — a fact mangled in transit <span class="tag">the thesis, live</span></span>
+        <p>
+          Correct goal. Correct target. But the plan says <q>moving <b>up</b> with
+          button&nbsp;4 will advance the group</q> — and button&nbsp;4 goes
+          <b>right</b>. The reasoning is sound; a fact got corrupted between
+          perception and language, and the whole plan follows it off a cliff.
+          <em>Not a reasoning failure — a routing failure.</em>
+        </p>
+      </div>
+    </div>
+  </div>
+  <p class="wall__next">
+    → Next: tighten the perception-to-language handoff so direction facts survive
+    the trip, and give the planner the untried-frontier fact it's currently blind to.
+  </p>
+</section>
+
+</main>
+
+<footer class="foot-sec">
+  <div class="foot-sec__inner">
+    <p class="pixel">// WHAT I TOOK FROM IT SO FAR</p>
+    <h2>The score isn't the story yet — the diagnosis is.</h2>
+    <ul class="takeaways">
+      <li><b>Facts, not the model, are the lever.</b> The same 7B reasons far better when I hand it clean, well-worded facts — so the win is in the plumbing, not a bigger model.</li>
+      <li><b>The wall is last-mile fidelity.</b> The loop perceives, forms sound goals, and moves toward them — then a direction word gets mangled or a frontier fact never reaches the planner.</li>
+      <li><b>Never trust the model's own account.</b> Grading frames instead of rationale caught confabulations I'd otherwise have believed — and it's how I keep the whole loop honest.</li>
+    </ul>
+    <div class="foot-sec__links">
+      <a class="btn btn--ghost" href="https://github.com/chaseab" data-fill="github" target="_blank" rel="noopener">Code&nbsp;↗</a>
+      <a class="btn btn--ghost" href="mailto:chasebonfiglio@gmail.com">Email&nbsp;✉</a>
+      <a class="btn btn--ghost" href="https://arcprize.org/arc-agi/3" target="_blank" rel="noopener">About ARC-AGI-3&nbsp;↗</a>
+    </div>
+    <p class="foot-sec__by"><a href="https://chasebonfiglio.com" class="foot-sec__home">← chasebonfiglio.com</a> · ARC Prize 2026 · updated 2026</p>
+  </div>
+</footer>
+
+<script src="app.js?v=7"></script>
+</body>
+</html>

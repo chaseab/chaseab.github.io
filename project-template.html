@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Project Template - Engineering Portfolio">
+    <meta name="author" content="Chase Bonfiglio">
+    <title>Project Template - Engineering Portfolio</title>
+    
+    <!-- font icons -->
+    <link rel="stylesheet" href="assets/vendors/themify-icons/css/themify-icons.css">
+    <!-- Bootstrap + JohnDoe main styles -->
+    <link rel="stylesheet" href="assets/css/johndoe.css">
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #fff;
+            font-family: "Source Sans Pro", sans-serif;
+        }
+        
+        .navbar {
+            background: white !important;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .navbar-nav.brand {
+            flex: 0 0 auto;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        .navbar-nav.mr-auto {
+            flex: 1;
+            justify-content: space-around;
+        }
+        
+        .navbar-nav.ml-auto {
+            flex: 1;
+            justify-content: space-around;
+        }
+        
+        .project-header {
+            background: linear-gradient(135deg, #1c2e4a 0%, #2a3f5a 100%);
+            color: white;
+            padding: 4rem 0;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+        
+        .portfolio-badge {
+            position: absolute;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            padding: 0.75rem 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        .portfolio-text {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .project-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .project-subtitle {
+            font-size: 1.2rem;
+            opacity: 1;
+            color: #ffffff;
+            margin-bottom: 2rem;
+        }
+        
+        .project-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .meta-item i {
+            font-size: 1.2rem;
+        }
+        
+        .project-main-image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin-bottom: 3rem;
+        }
+        
+        .section {
+            margin-bottom: 4rem;
+        }
+        
+        .section-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #1c2e4a;
+            margin-bottom: 1.5rem;
+            border-bottom: 3px solid #1c2e4a;
+            padding-bottom: 0.5rem;
+        }
+        
+        .contributors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .contributor-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .contributor-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 1rem;
+            border: 3px solid #1c2e4a;
+        }
+        
+        .contributor-name {
+            font-weight: 600;
+            color: #1c2e4a;
+            margin-bottom: 0.5rem;
+        }
+        
+        .contributor-role {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #1c2e4a;
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+            padding-left: 2rem;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -0.5rem;
+            top: 0.5rem;
+            width: 1rem;
+            height: 1rem;
+            background: #1c2e4a;
+            border-radius: 50%;
+        }
+        
+        .timeline-date {
+            font-weight: 600;
+            color: #1c2e4a;
+            margin-bottom: 0.5rem;
+        }
+        
+        .timeline-content {
+            color: #6c757d;
+        }
+        
+        .tech-specs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .spec-item {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid #1c2e4a;
+        }
+        
+        .spec-label {
+            font-weight: 600;
+            color: #1c2e4a;
+            margin-bottom: 0.25rem;
+        }
+        
+        .spec-value {
+            color: #6c757d;
+        }
+        
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .gallery-item {
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            cursor: pointer;
+        }
+        
+        .gallery-item img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+        
+        .gallery-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(28, 46, 74, 0.9);
+            color: white;
+            padding: 1rem;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .gallery-item:hover .gallery-caption {
+            transform: translateY(0);
+        }
+        
+        .pdf-download {
+            background: linear-gradient(135deg, #1c2e4a 0%, #2a3f5a 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .pdf-download h3 {
+            margin-bottom: 1rem;
+        }
+        
+        .pdf-download p {
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+        
+        .btn-download {
+            background: white;
+            color: #1c2e4a;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-download:hover {
+            background: #f8f9fa;
+            transform: translateY(-2px);
+            text-decoration: none;
+            color: #1c2e4a;
+        }
+        
+        .pdf-download-section {
+            text-align: center;
+            margin-top: 1.5rem;
+            padding: 1rem;
+        }
+        
+        .challenges-solutions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .challenge-card, .solution-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .challenge-card {
+            border-left: 4px solid #dc3545;
+        }
+        
+        .solution-card {
+            border-left: 4px solid #28a745;
+        }
+        
+        .card-title {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .challenge-card .card-title {
+            color: #dc3545;
+        }
+        
+        .solution-card .card-title {
+            color: #28a745;
+        }
+        
+        .results-section {
+            background: #f8f9fa;
+            padding: 3rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+        }
+        
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .result-item {
+            text-align: center;
+        }
+        
+        .result-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1c2e4a;
+            margin-bottom: 0.5rem;
+        }
+        
+        .result-label {
+            color: #6c757d;
+            font-weight: 600;
+        }
+        
+        .back-to-projects {
+            text-align: center;
+            margin: 3rem 0;
+        }
+        
+        .btn-back {
+            background: #1c2e4a;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-back:hover {
+            background: #2a3f5a;
+            transform: translateY(-2px);
+            text-decoration: none;
+            color: white;
+        }
+        
+        /* Section Separator */
+        .section-separator {
+            padding: 3rem 0;
+            text-align: center;
+        }
+        
+        .separator-line {
+            width: 70%;
+            height: 3px;
+            background: linear-gradient(135deg, #1c2e4a 0%, #2a3f5a 100%);
+            margin: 0 auto;
+            border-radius: 2px;
+        }
+        
+        /* Custom Footer Styles */
+        .custom-footer {
+            background: linear-gradient(135deg, #1c2e4a 0%, #2a3f5a 100%);
+            color: white;
+            padding: 3rem 0 1rem;
+            margin-top: 4rem;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .footer-section h5 {
+            color: #ffffff;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            border-bottom: 2px solid #ffffff;
+            padding-bottom: 0.5rem;
+            display: inline-block;
+        }
+        
+        .footer-section p {
+            color: #e0e0e0;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+        
+        .footer-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-link:hover {
+            color: #ffd700;
+            text-decoration: none;
+        }
+        
+        .footer-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-links a {
+            color: #e0e0e0;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: #ffd700;
+            text-decoration: none;
+        }
+        
+        .contact-info p {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .contact-info i {
+            color: #ffd700;
+            font-size: 1.1rem;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .social-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border-radius: 50%;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .social-link:hover {
+            background: #ffd700;
+            color: #1c2e4a;
+            transform: translateY(-2px);
+            text-decoration: none;
+        }
+        
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding-top: 1rem;
+            text-align: center;
+        }
+        
+        .footer-bottom p {
+            color: #b0b0b0;
+            margin: 0;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .project-title {
+                font-size: 2rem;
+            }
+            
+            .project-meta {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .challenges-solutions {
+                grid-template-columns: 1fr;
+            }
+            
+            .contributors-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .social-links {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-white">
+        <div class="container">
+            <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse mt-sm-20 navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a href="index.html#home" class="nav-link">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="index.html#about" class="nav-link">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="index.html#resume" class="nav-link">Resume</a>
+                    </li>
+                </ul>
+                                 <ul class="navbar-nav brand">
+                     <li class="brand-txt">
+                         <h5 class="brand-title portfolio-logo">Chase Bonfiglio's Portfolio</h5>
+                     </li>
+                 </ul>
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a href="index.html#engineering" class="nav-link">Engineering</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="index.html#photography" class="nav-link">Photography</a>
+                    </li>
+                    <li class="nav-item last-item">
+                        <a href="index.html#contact" class="nav-link">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+         <!-- Project Header -->
+     <div class="project-header">
+         <div class="container">
+             <h1 class="project-title">Advanced Autonomous Drone System</h1>
+            <p class="project-subtitle">A comprehensive autonomous drone system with computer vision, path planning, and real-time obstacle avoidance capabilities</p>
+            
+            <div class="project-meta">
+                <div class="meta-item">
+                    <i class="ti-calendar"></i>
+                    <span>January 2024 - March 2024</span>
+                </div>
+                <div class="meta-item">
+                    <i class="ti-tag"></i>
+                    <span id="projectCategory">Category</span>
+                </div>
+                <div class="meta-item">
+                    <i class="ti-user"></i>
+                    <span id="teamSize">Team</span>
+                </div>
+                <div class="meta-item">
+                    <i class="ti-location-pin"></i>
+                    <span>Virginia Tech</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Main Project Image -->
+        <img src="https://via.placeholder.com/1200x400/1c2e4a/ffffff?text=Main+Project+Image" alt="Project Main Image" class="project-main-image">
+
+        <!-- Project Description -->
+        <div class="section">
+            <h2 class="section-title">Project Overview</h2>
+            <p>This project involved the development of an advanced autonomous drone system capable of navigating complex environments using computer vision and machine learning algorithms. The system integrates multiple sensors including cameras, LiDAR, and IMU to provide comprehensive environmental awareness and precise control.</p>
+            
+            <p>The drone features real-time obstacle detection and avoidance, autonomous path planning, and the ability to perform complex maneuvers in confined spaces. The project demonstrates advanced robotics principles including sensor fusion, control systems, and artificial intelligence integration.</p>
+            
+            <p>Key achievements include successful autonomous flight in obstacle-rich environments, development of custom computer vision algorithms, and integration of multiple sensor systems for robust navigation.</p>
+        </div>
+
+        <!-- Contributors -->
+        <div class="section">
+            <h2 class="section-title">Project Team</h2>
+            <div class="contributors-grid" id="contributorsGrid">
+                <!-- Contributors will be dynamically loaded here -->
+            </div>
+        </div>
+
+        <!-- Technical Specifications -->
+        <div class="section">
+            <h2 class="section-title">Technical Specifications</h2>
+            <div class="tech-specs">
+                <div class="spec-item">
+                    <div class="spec-label">Frame Size</div>
+                    <div class="spec-value">450mm diagonal</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-label">Weight</div>
+                    <div class="spec-value">1.2kg</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-label">Flight Time</div>
+                    <div class="spec-value">25 minutes</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-label">Max Speed</div>
+                    <div class="spec-value">15 m/s</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-label">Sensors</div>
+                    <div class="spec-value">Camera, LiDAR, IMU, GPS</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-label">Processing Unit</div>
+                    <div class="spec-value">NVIDIA Jetson Nano</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Project Timeline -->
+        <div class="section">
+            <h2 class="section-title">Project Timeline</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-date">Week 1-2: Research & Planning</div>
+                    <div class="timeline-content">Conducted extensive research on autonomous drone systems, defined project requirements, and created detailed project plan with milestones.</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">Week 3-4: Hardware Assembly</div>
+                    <div class="timeline-content">Assembled drone frame, integrated motors and electronic speed controllers, and installed flight controller and sensors.</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">Week 5-6: Software Development</div>
+                    <div class="timeline-content">Developed computer vision algorithms for obstacle detection, implemented path planning algorithms, and created control system software.</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">Week 7-8: Integration & Testing</div>
+                    <div class="timeline-content">Integrated all software components, conducted extensive testing in controlled environments, and refined algorithms based on test results.</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">Week 9-10: Final Testing & Documentation</div>
+                    <div class="timeline-content">Performed final flight tests in complex environments, documented all systems and procedures, and prepared final presentation.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Challenges & Solutions -->
+        <div class="section">
+            <h2 class="section-title">Challenges & Solutions</h2>
+            <div class="challenges-solutions">
+                <div class="challenge-card">
+                    <div class="card-title">
+                        <i class="ti-alert"></i>
+                        Major Challenges
+                    </div>
+                    <ul>
+                        <li>Real-time obstacle detection in varying lighting conditions</li>
+                        <li>Precise control system tuning for stable autonomous flight</li>
+                        <li>Integration of multiple sensor systems with different data rates</li>
+                        <li>Battery life optimization for extended flight times</li>
+                        <li>Reliable communication between ground station and drone</li>
+                    </ul>
+                </div>
+                <div class="solution-card">
+                    <div class="card-title">
+                        <i class="ti-check"></i>
+                        Innovative Solutions
+                    </div>
+                    <ul>
+                        <li>Developed adaptive computer vision algorithms using machine learning</li>
+                        <li>Implemented PID control loops with automatic tuning capabilities</li>
+                        <li>Created sensor fusion algorithms for robust data integration</li>
+                        <li>Optimized power management system with intelligent battery monitoring</li>
+                        <li>Designed redundant communication protocols for reliability</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results & Achievements -->
+        <div class="section">
+            <h2 class="section-title">Results & Achievements</h2>
+            <div class="results-section">
+                <p>The project successfully achieved all primary objectives and exceeded several performance targets. The autonomous drone system demonstrated exceptional reliability and performance in complex environments.</p>
+                
+                <div class="results-grid">
+                    <div class="result-item">
+                        <div class="result-number">95%</div>
+                        <div class="result-label">Obstacle Detection Accuracy</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-number">25 min</div>
+                        <div class="result-label">Autonomous Flight Time</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-number">15 m/s</div>
+                        <div class="result-label">Maximum Speed Achieved</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-number">100%</div>
+                        <div class="result-label">Mission Success Rate</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Technical Report Viewer -->
+        <div class="section">
+            <h2 class="section-title">Technical Documentation</h2>
+            <div class="pdf-viewer-container">
+                <div class="pdf-iframe-container">
+                    <iframe src="https://via.placeholder.com/800x600/1c2e4a/ffffff?text=PDF+Technical+Report" 
+                            title="Technical Report PDF" 
+                            class="pdf-iframe">
+                    </iframe>
+                </div>
+                <div class="pdf-download-section">
+                    <a href="#" class="btn-download">
+                        <i class="ti-download"></i>
+                        Download PDF
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Photo Gallery -->
+        <div class="section">
+            <h2 class="section-title">Project Gallery</h2>
+            <div class="gallery-grid">
+                <div class="gallery-item">
+                    <img src="https://via.placeholder.com/400x250/1c2e4a/ffffff?text=Assembly+Process" alt="Assembly Process">
+                    <div class="gallery-caption">Initial drone assembly and component integration</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="https://via.placeholder.com/400x250/2a3f5a/ffffff?text=Testing+Setup" alt="Testing Setup">
+                    <div class="gallery-caption">Testing environment setup and calibration</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="https://via.placeholder.com/400x250/6c757d/ffffff?text=Flight+Test" alt="Flight Test">
+                    <div class="gallery-caption">Autonomous flight testing in controlled environment</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="https://via.placeholder.com/400x250/28a745/ffffff?text=Final+Product" alt="Final Product">
+                    <div class="gallery-caption">Completed drone system ready for deployment</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="https://via.placeholder.com/400x250/dc3545/ffffff?text=Team+Photo" alt="Team Photo">
+                    <div class="gallery-caption">Project team with completed autonomous drone</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="https://via.placeholder.com/400x250/ffc107/ffffff?text=Code+Interface" alt="Code Interface">
+                    <div class="gallery-caption">Software interface and control system</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Back to Projects -->
+        <div class="back-to-projects">
+            <a href="projects.html" class="btn-back">
+                <i class="ti-arrow-left"></i>
+                Back to All Projects
+            </a>
+        </div>
+    </div>
+
+    <!-- Separator Line -->
+    <div class="section-separator">
+        <div class="separator-line"></div>
+    </div>
+
+    <!-- Contact Section -->
+    <section id="contact" class="text-center">
+        <div class="container">
+            <h1>CONTACT ME</h1>
+            <p class="mb-5">If you have any questions or comments please let me know.</p>
+
+            <!-- Contact form -->
+            <form class="contact-form col-md-11 col-lg-9 mx-auto">
+                <div class="form-row">
+                    <div class="col form-group">
+                        <input type="text" class="form-control" placeholder="Name">
+                    </div>
+                    <div class="col form-group">
+                        <input type="email" class="form-control" placeholder="Email">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <textarea name="" id="" cols="30" rows="5" class="form-control" placeholder="Your Message"></textarea>
+                </div>
+                <div class="form-group">
+                    <input type="submit" class="btn btn-primary btn-block" value="Send Message">
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Custom Footer -->
+    <footer class="custom-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h5>About</h5>
+                    <p>Engineering is my passion. Through the engineering strand at ATC, I've explored the engineering design process, civil and structural engineering, aerospace engineering, mass production, and 3D part modeling and creation.</p>
+                    <a href="index.html#engineering" class="footer-link">View Engineering Portfolio</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h5>Quick Links</h5>
+                    <ul class="footer-links">
+                        <li><a href="index.html#home">Home</a></li>
+                        <li><a href="index.html#about">About</a></li>
+                        <li><a href="index.html#resume">Resume</a></li>
+                        <li><a href="projects.html">Projects</a></li>
+                        <li><a href="index.html#photography">Photography</a></li>
+                        <li><a href="index.html#contact">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h5>Contact Information</h5>
+                    <div class="contact-info">
+                        <p><i class="ti-location-pin"></i> Ocean Lakes Math and Science Academy</p>
+                        <p><i class="ti-email"></i> chasebonfiglio@gmail.com</p>
+                        <p><i class="ti-mobile"></i> Available for opportunities</p>
+                    </div>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="ti-google"></i></a>
+                        <a href="#" class="social-link"><i class="ti-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="ti-github"></i></a>
+                        <a href="#" class="social-link"><i class="ti-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; <script>document.write(new Date().getFullYear())</script> Chase Bonfiglio. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- core  -->
+    <script src="assets/vendors/jquery/jquery-3.4.1.js"></script>
+    <script src="assets/vendors/bootstrap/bootstrap.bundle.js"></script>
+    <script src="assets/vendors/bootstrap/bootstrap.affix.js"></script>
+    <script src="assets/vendors/isotope/isotope.pkgd.js"></script>
+    <script src="assets/js/johndoe.js"></script>
+    
+    <!-- Project Manager Script -->
+    <script src="assets/js/projectManager.js"></script>
+    
+    <script>
+        // Function to load project data dynamically
+        function loadProjectData() {
+            // Get project ID from URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const projectId = urlParams.get('id');
+            
+            if (!projectId) {
+                console.log('No project ID provided, using template data');
+                return;
+            }
+            
+            // Get project data from project manager
+            const project = projectManager.getProjectById(projectId);
+            
+            if (!project) {
+                console.log('Project not found:', projectId);
+                return;
+            }
+            
+            // Update page title
+            document.title = `${project.title} - Engineering Portfolio`;
+            
+            // Update project header
+            document.querySelector('.project-title').textContent = project.title;
+            document.querySelector('.project-subtitle').textContent = project.description;
+            
+            // Update category
+            document.getElementById('projectCategory').textContent = project.category;
+            
+            // Update team size
+            const teamSize = project.individualAuthors ? project.individualAuthors.length : project.authors.length;
+            document.getElementById('teamSize').textContent = `Team of ${teamSize}`;
+            
+            // Update main project image
+            const mainImage = document.querySelector('.project-main-image');
+            mainImage.src = project.image;
+            mainImage.alt = project.title;
+            
+            // Update technical report if provided
+            if (project.technicalReport) {
+                const pdfIframe = document.querySelector('.pdf-iframe');
+                const downloadLink = document.querySelector('.btn-download');
+                
+                if (pdfIframe) {
+                    pdfIframe.src = project.technicalReport;
+                }
+                if (downloadLink) {
+                    downloadLink.href = project.technicalReport;
+                }
+            }
+            
+            // Load contributors
+            loadContributors(project);
+            
+            // Load photo gallery if available
+            loadPhotoGallery(project);
+        }
+        
+        // Function to load contributors
+        function loadContributors(project) {
+            const contributorsGrid = document.getElementById('contributorsGrid');
+            contributorsGrid.innerHTML = '';
+            
+            const authors = project.individualAuthors || project.authors;
+            
+            if (authors && authors.length > 0) {
+                authors.forEach((author, index) => {
+                    const contributorCard = document.createElement('div');
+                    contributorCard.className = 'contributor-card';
+                    
+                    // Handle both individual author objects and simple author strings
+                    const authorName = typeof author === 'object' ? author.name : author;
+                    const authorTitle = typeof author === 'object' ? author.title : '';
+                    const authorHeadshot = typeof author === 'object' ? author.headshot : '';
+                    
+                    // Generate initials for placeholder
+                    const initials = authorName.split(' ').map(n => n[0]).join('').toUpperCase();
+                    
+                    contributorCard.innerHTML = `
+                        <img src="${authorHeadshot || `https://via.placeholder.com/80x80/1c2e4a/ffffff?text=${initials}`}" 
+                             alt="${authorName}" 
+                             class="contributor-avatar"
+                             onerror="this.src='https://via.placeholder.com/80x80/1c2e4a/ffffff?text=${initials}'">
+                        <div class="contributor-name">${authorName}</div>
+                        <div class="contributor-role">${authorTitle || 'Team Member'}</div>
+                    `;
+                    
+                    contributorsGrid.appendChild(contributorCard);
+                });
+            } else {
+                // Fallback if no authors data
+                contributorsGrid.innerHTML = '<p>No team information available.</p>';
+            }
+        }
+        
+        // Function to load photo gallery
+        function loadPhotoGallery(project) {
+            const galleryGrid = document.querySelector('.gallery-grid');
+            
+            if (!galleryGrid || !project.photos || project.photos.length === 0) {
+                return;
+            }
+            
+            galleryGrid.innerHTML = '';
+            
+            project.photos.forEach(photo => {
+                const galleryItem = document.createElement('div');
+                galleryItem.className = 'gallery-item';
+                
+                galleryItem.innerHTML = `
+                    <img src="${photo.path}" alt="${photo.caption || 'Project photo'}">
+                    <div class="gallery-caption">${photo.caption || ''}</div>
+                `;
+                
+                galleryGrid.appendChild(galleryItem);
+            });
+        }
+        
+        // Load project data when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            loadProjectData();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,128 @@
+{
+  "wa30": [
+    {
+      "i": 0,
+      "step": 1,
+      "title": "First look",
+      "note": "The agent opens by pressing buttons at random to feel out the controls, with no goal in mind yet -- it's just poking the world to see what moves."
+    },
+    {
+      "i": 13,
+      "step": 14,
+      "title": "Goal locked",
+      "note": "It settles on a plan: 'aligning the movable pair of objects... with the static charcoal squares... by moving them into the same' column -- essentially, slide the piece onto the target square."
+    },
+    {
+      "i": 16,
+      "step": 17,
+      "title": "First real move",
+      "note": "The judge confirms genuine progress for the first time: two presses of button 1 produced measured travel '[-4,+0] = UP', closing part of the gap toward the target row."
+    },
+    {
+      "i": 31,
+      "step": 32,
+      "title": "First wrong turn",
+      "note": "The judge flags the first AWAY move: a button-4 press drifted the piece '[+0,+3] = RIGHT', past the column it needed, the earliest sign it can't stop on the exact cell."
+    },
+    {
+      "i": 57,
+      "step": 58,
+      "title": "So close",
+      "note": "The agent believes it has arrived -- its own plan reads 'Already at goal position (38,34), no movement needed' -- yet it is one cell off and about to nudge itself back out of place."
+    },
+    {
+      "i": 58,
+      "step": 59,
+      "title": "The overshoot",
+      "note": "Instead of landing, it presses DOWN and travels '[+7,+0]', shooting past the target; the judge calls it AWAY. This begins the oscillation that never resolves."
+    },
+    {
+      "i": 119,
+      "step": 120,
+      "title": "Out of time",
+      "note": "After 120 steps of stepping toward the square and then overshooting it (28 TOWARD vs 24 AWAY presses), the episode simply ends -- still hovering near the target, never exactly on it."
+    }
+  ],
+  "tu93": [
+    {
+      "i": 0,
+      "step": 1,
+      "title": "First look",
+      "note": "The agent starts by repeatedly pressing button 1, probing the controls before it has any idea what the game wants."
+    },
+    {
+      "i": 20,
+      "step": 15,
+      "title": "Reads a maze",
+      "note": "It forms a goal: 'navigating the controllable object through a maze of static barriers to reach a specific target location' -- correctly seeing this as a path-finding puzzle."
+    },
+    {
+      "i": 22,
+      "step": 17,
+      "title": "First real move",
+      "note": "The judge confirms progress: two UP presses moved the object '[-8,+0] = UP', a promising start toward the target it just located."
+    },
+    {
+      "i": 34,
+      "step": 29,
+      "title": "Locks the target",
+      "note": "It pins down where to go -- 'move the controllable object... to the target location at [46,40]' -- so the destination is known; from here the failure is purely how it tries to get there."
+    },
+    {
+      "i": 80,
+      "step": 75,
+      "title": "Tunnel vision",
+      "note": "The tell-tale rut: the object sits at column 23 with the goal at column 16 (to its LEFT), yet it reasons 'pressing RIGHT (button 4) may move it toward the goal' -- committing to the wrong direction."
+    },
+    {
+      "i": 88,
+      "step": 83,
+      "title": "Knows, still can't",
+      "note": "The agent openly states the contradiction: 'to reach goal we need to move left, however, since RIGHT is the only confirmed directional button... we are at [16,23]' -- so it keeps mashing RIGHT anyway."
+    },
+    {
+      "i": 124,
+      "step": 119,
+      "title": "Stuck in the corridor",
+      "note": "By the end it has pressed RIGHT 75 of 126 times, re-probing the same blocked corridor to the last step -- never once trying the downward path that would have reached the target."
+    }
+  ],
+  "re86": [
+    {
+      "i": 0,
+      "step": 1,
+      "title": "First look",
+      "note": "The agent begins with warm-up presses, testing each button to learn how the group of objects responds before committing to a goal."
+    },
+    {
+      "i": 13,
+      "step": 14,
+      "title": "Goal locked",
+      "note": "It reaches a sound plan: 'aligning the movable group of 5 objects... with one of the static' blue-dot groups -- the correct objective, honestly stated."
+    },
+    {
+      "i": 22,
+      "step": 23,
+      "title": "First real move",
+      "note": "The judge confirms strong progress: six UP presses moved the whole group '[-18,+0] = UP', hauling it a long way toward the alignment target."
+    },
+    {
+      "i": 27,
+      "step": 28,
+      "title": "Wrong direction word",
+      "note": "The crux: its plan says 'Moving up with button 4 will advance the movable group toward the... blue dots', but button 4 goes RIGHT and this leg actually measured '[+0,-15] = LEFT' -- the words no longer match the physics."
+    },
+    {
+      "i": 29,
+      "step": 30,
+      "title": "Chasing the mismatch",
+      "note": "Working from that corrupted direction map, it re-abduces a fresh goal and presses UP -- and the judge measures the group moving AWAY, because its labels for the buttons are inverted."
+    },
+    {
+      "i": 99,
+      "step": 100,
+      "title": "Level reset",
+      "note": "After long runs of presses that never land the alignment, the level gives up and resets ('level retry'); the agent restarts with the same broken direction words and the same result."
+    }
+  ]
+}

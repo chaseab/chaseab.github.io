@@ -1,0 +1,1355 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Chase Bonfiglio's Portfolio">
+    <meta name="author" content="Chase Bonfiglio">
+    <title>Chase Bonfiglio's Portfolio</title>
+    <!-- font icons -->
+    <link rel="stylesheet" href="assets/vendors/themify-icons/css/themify-icons.css">
+    <!-- Bootstrap + JohnDoe main styles -->
+	<link rel="stylesheet" href="assets/css/johndoe.css">
+	
+	<style>
+		/* Project Card Styles - Replicating Admin Layout */
+		.project-card {
+			border: none;
+			border-radius: 15px;
+			box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+			transition: transform 0.3s ease, box-shadow 0.3s ease;
+			overflow: hidden;
+			height: 100%;
+		}
+		
+		.project-card:hover {
+			transform: translateY(-5px);
+			box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+		}
+		
+		.project-image {
+			width: 100%;
+			height: 200px;
+			object-fit: cover;
+			border-radius: 0;
+		}
+		
+		.status-badge {
+			position: absolute;
+			top: 10px;
+			right: 10px;
+			font-size: 0.75rem;
+			font-weight: 600;
+			padding: 0.4rem 0.8rem;
+			border-radius: 20px;
+		}
+		
+		.card-body {
+			padding: 1.5rem;
+		}
+		
+		.card-title {
+			font-size: 1.1rem;
+			font-weight: 600;
+			color: #1c2e4a;
+			margin-bottom: 0.5rem;
+		}
+		
+		.card-text.text-muted {
+			font-size: 0.85rem;
+			font-weight: 500;
+			margin-bottom: 0.75rem;
+		}
+		
+		.card-text:not(.text-muted) {
+			font-size: 0.9rem;
+			line-height: 1.5;
+			color: #666;
+			margin-bottom: 1rem;
+		}
+		
+		.btn-outline-primary {
+			border-color: #1c2e4a;
+			color: #1c2e4a;
+			border-radius: 20px;
+			font-size: 0.8rem;
+			font-weight: 500;
+			padding: 0.4rem 1rem;
+			transition: all 0.3s ease;
+		}
+		
+		.btn-outline-primary:hover {
+			background-color: #1c2e4a;
+			border-color: #1c2e4a;
+			color: white;
+			transform: translateY(-1px);
+		}
+		
+		/* Responsive adjustments */
+		@media (max-width: 768px) {
+			.project-image {
+				height: 180px;
+			}
+			
+			.card-body {
+				padding: 1.25rem;
+			}
+			
+			.card-title {
+				font-size: 1rem;
+			}
+		}
+		
+		/* Portfolio styling for Isotope */
+		.portfolio-container {
+			margin: 0 -10px;
+		}
+		
+		.portfolio-item {
+			position: relative;
+			overflow: hidden;
+			border-radius: 8px;
+			box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+			transition: transform 0.3s ease, box-shadow 0.3s ease;
+			margin-bottom: 20px;
+		}
+		
+		.portfolio-item:hover {
+			transform: translateY(-5px);
+			box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+		}
+		
+		.portfolio-item img {
+			width: 100%;
+			height: auto;
+			display: block;
+			transition: transform 0.3s ease;
+		}
+		
+		.portfolio-item:hover img {
+			transform: scale(1.05);
+		}
+		
+		/* Filter buttons styling */
+		.filters {
+			text-align: center;
+			margin-bottom: 30px;
+		}
+		
+		.filters a {
+			display: inline-block;
+			padding: 8px 20px;
+			margin: 0 5px;
+			text-decoration: none;
+			color: #666;
+			border: 2px solid transparent;
+			border-radius: 0;
+			transition: all 0.3s ease;
+			font-weight: 500;
+		}
+		
+		.filters a:hover,
+		.filters a.active {
+			color: #dc3545;
+			border-color: #dc3545;
+			background-color: rgba(220, 53, 69, 0.1);
+		}
+	</style>
+</head>
+<body data-spy="scroll" data-target=".navbar" data-offset="40" id="home">
+    <!--<a href="components.html" class="btn btn-primary btn-component" data-spy="affix" data-offset-top="600"><i class="ti-shift-left-alt"></i> Components</a>-->
+    <header class="header">
+        <div class="container">
+            <ul class="social-icons pt-3">
+                <li class="social-item"><a class="social-link text-light" target="blank" href="#"><i class="ti-google" aria-hidden="true"></i></a></li>
+                <li class="social-item"><a class="social-link text-light" target="blank" href="https://www.instagram.com/chaseabon/"><i class="ti-instagram" target="blank" aria-hidden="true"></i></a></li>
+                <li class="social-item"><a class="social-link text-light" target="blank" href="https://github.com/chaseab"><i class="ti-github"  aria-hidden="true"></i></a></li>
+            </ul>
+            <div class="header-content">
+                <h4 class="header-subtitle" >Hello, I am</h4>
+                <h1 class="header-title">Chase Bonfiglio</h1>
+                <h6 class="header-mono" >Mechanical Engineering | Student | Photographer</h6>
+                <button class="btn btn-primary btn-rounded"><i class="ti-printer pr-2"></i><a href="assets/Chase_Bonfiglio_Resume.pdf" class="white" target="assets/Chase_Bonfiglio_Resume.pdf" download="Chase_Bonfiglio_Resume">Download My Resume</a></button>
+            </div>
+        </div>
+    </header>
+    <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-white" data-spy="affix" data-offset-top="510">
+        <div class="container">
+            <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse mt-sm-20 navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a href="#home" class="nav-link">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#about" class="nav-link">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#resume" class="nav-link">Resume</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav brand">
+                    <img src="assets/imgs/headshot.webp" alt="" class="brand-img">
+                    <li class="brand-txt">
+                        <h5 class="brand-title">Chase Bonfiglio</h5>
+                        <div class="brand-subtitle">Mechanical Engineering Student | Photographer</div>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a href="projects.html" class="nav-link">Projects</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#photography" class="nav-link">Photography</a>
+                    </li>
+                    <li class="nav-item last-item">
+                        <a href="#contact" class="nav-link">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container-fluid">
+        <div id="about" class="row about-section">
+            <div class="col-lg-4 about-card">
+                <h3 class="font-weight-light">Who am I ?</h3>
+                <span class="line mb-5"></span>
+                <h5 class="mb-3">A Student, Engineer, and Photographer</h5>
+                <p class="mt-20">Hey I'm Chase, a mechanical engineering student (@VT 2028) specializing in robotics and AI reasoning / safety.
+                  <br>In my free time, I enjoy weightlifting, coaching swim, or tinkering with something.</p>
+                <button class="btn btn-outline-danger"><i class="icon-down-circled2 "></i><a href="assets/Chase_Bonfiglio_Resume.pdf" target="assets/Chase_Bonfiglio_Resume.pdf" download="Chase_Bonfiglio_Resume">Download My Resume</a></button>
+            </div>
+            <div class="col-lg-4 about-card">
+                <h3 class="font-weight-light">Personal Info</h3>
+                <span class="line mb-5"></span>
+                <ul class="mt40 info list-unstyled">
+                    <!-- <li><span>Birthdate</span> : 09/13/1996</li> -->
+                                            <li><span>Email</span> : chasebonfiglio@vt.edu</li>
+                    <li><span>Phone</span> : +1 (757) 663-6188</li>
+                    <li><span>Class</span> : 2028</li>
+                    <li><span>GPA</span> : 3.57 / 4.0</li>
+                  <!--  <li><span>Address</span> :  12345 Fake ST NoWhere AB Country.</li>  -->
+                </ul>
+                <ul class="social-icons pt-3">
+                    <li class="social-item"><a class="social-link" target="blank" href="#"><i class="ti-google" aria-hidden="true"></i></a></li>
+                    <li class="social-item"><a class="social-link" target="blank" href="https://www.instagram.com/chaseabon/"><i class="ti-instagram"  aria-hidden="true"></i></a></li>
+                    <li class="social-item"><a class="social-link" target="blank" href="https://github.com/chaseab"><i class="ti-github"  aria-hidden="true"></i></a></li>
+                </ul>
+            </div>
+            <div class="col-lg-4 about-card">
+                <h3 class="font-weight-light">My Expertise</h3>
+                <span class="line mb-5"></span>
+                <div class="row">
+                    <div class="col-1 text-danger pt-1"><i class="ti-settings icon-lg"></i></div>
+                    <div class="col-10 ml-auto mr-3">
+                        <h6>Robotics</h6>
+                        <p class="subtitle">Researching shape-memory-alloy actuators for biomimetic robotic ankle systems at VT's Hume Center, and prototyping a UAV camera-tracking module at <b>MacHworks</b>. Currently at the very start of a robotic arm project of my own.</p>
+                        <hr>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-1 text-danger pt-1"><i class="ti-pulse icon-lg"></i></div>
+                    <div class="col-10 ml-auto mr-3">
+                        <h6>AI Systems</h6>
+                        <p class="subtitle">Interested in how reasoning models perceive and act in unfamiliar environments, and in building that reasoning safely — currently building a <a href="arc-agi-3/index.html"><b>reasoning loop for the ARC-AGI-3 benchmark</b></a> that lets a small local model perceive, hypothesize, act, and self-correct in games it's never seen.</p>
+                        <hr>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-1 text-danger pt-1"><i class="ti-camera icon-lg"></i></div>
+                    <div class="col-10 ml-auto mr-3">
+                        <h6>Photography</h6>
+                        <p class="subtitle"> Primarily shoots landscapes, portraits, and my family's (slightly absurd) variety of cats and dogs. Currently experiementing with 35mm film photography and developing.</p>
+                        <hr>
+                    </div>
+                </div>
+                <!--<div class="row">
+                    <div class="col-1 text-danger pt-1"><i class="ti-stats-up icon-lg"></i></div>
+                    <div class="col-10 ml-auto mr-3">
+                        <h6>TBD</h6>
+                        <p class="subtitle">voluptate commodi illo voluptatib.</p>
+                        <hr>
+                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Resume Section-->
+    <section class="section" id="resume">
+        <div class="container">
+            <h2 class="mb-5"><span class="text-danger">My</span> Resume</h2>
+            <div class="row">
+                <div class="col-md-6 col-lg-4">
+                    <div class="card">
+                       <div class="card-header">
+                            <div class="mt-2">
+                                <h4>Engineering Experience</h4>
+                                <span class="line"></span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="title text-danger">Undergraduate Research</h6>
+                            <P>Nov 2025 - Present</P>
+                            <P class="subtitle">Undergraduate Student Researcher at VT's Hume Center, in Dr. Scott Kennedy's Intelligent Materials for Biomimetic Sensors and Actuators Lab. I design, test, and analyze shape-memory-alloy-actuated robotic ankle systems, building a test rig to characterize parallel Flexinol wire arrays and presenting the results at the VT Hume Colloquium.</P>
+                            <hr>
+                            <h6 class="title text-danger"><a href="https://mwvt.org/" target="_blank" rel="noopener">MachWorks</a></h6>
+                            <P>Sep 2025 - Present</P>
+                            <P class="subtitle">Currently on the Avionics subteam working on servo harnessing and stress testing. Previously developed a camera module to track the Icarus UAV and other RC planes using a DSLR and Ronin gimbal, tested Kalman filters to fuse the UAV's IMU and GPS data, and ran computer vision models on a Jetson Xavier.</P>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="card">
+                       <div class="card-header">
+                            <div class="mt-2">
+                                <h4>Education</h4>
+                                <span class="line"></span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="title text-danger">Virginia Tech</h6>
+                            <P>2025 - Present</P>
+                            <P class="subtitle">Pursuing a B.S. in Mechanical Engineering, Class of 2028. Cumulative GPA: 3.57/4.0. Currently taking Mechanics of Deformable Bodies and Dynamics. <a href="#coursework" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="coursework"><b>View coursework</b></a></P>
+                            <div class="collapse" id="coursework">
+                                <p class="subtitle mb-0"><b>Completed:</b> Statics, Elements of Materials Engineering, Engineering Analysis &amp; Numerical Methods, Applied Electrical Theory, Foundations of Engineering Practice.<br><b>In progress:</b> Mechanics of Deformable Bodies, Dynamics, Thermodynamics, Fluid Dynamics, Mechanical Vibrations, Engineering Design &amp; Economics, Statistics for Engineering Applications.</p>
+                            </div>
+                            <hr>
+                            <h6 class="title text-danger">Engineering Technology</h6>
+                            <P>2021 - 2024</P>
+                            <P class="subtitle">I took three years of Engineering Technology at the Advanced Technology Center. This taught me about the engineering design process and the different fields of engineering. In my final year, I worked on a personal capstone project(an underwater ROV). Engineering projects done in this course can be found<a href="#engineering"><b> here. </b></a> </P>
+                            <hr>
+                            <h6 class="title text-danger">Ocean Lakes Math and Science Academy</h6>
+                            <P>2021-2025</P>
+                            <P class="subtitle">I previously attended the Math and Science Academy at Ocean Lakes High School. Some notable subjects taken include Multivariable Calculus and Differential Equations, Physics C Electricity and Magnetism, Physics C Mechanics, AP Chemistry, and AP Computer Science A.</P>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="card">
+                       <div class="card-header">
+                            <div class="mt-2">
+                                <h4>Job Experience</h4>
+                                <span class="line"></span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="title text-danger">Lifeguard Manager</h6>
+                            <P>Summer 2022 - 2026</P>
+                            <P class="subtitle">I worked as a lifeguard in 2022 and was promoted to manager after obtaining a Pool Operators Certification. Duties include maintaining the pool's PH and Chlorine levels, managing the lifeguards, and interacting with guests.
+</P>
+                            <hr>
+                            <h6 class="title text-danger">Swim Coach</h6>
+                            <P>Summer 2021 - 2026</P>
+                            <P class="subtitle">For several years, I have helped to coach my neighborhood swim team the Alanton Bolts. I help manage the kids and assist them with their swimming technique.
+</P>
+                            <hr>
+                            <h6 class="title text-danger">ODS Leadership Workshop Coordinator</h6>
+                            <P>2021 - 2025</P>
+                            <P class="subtitle">As an alumni of Brickell Academy(ODS), I helped staff the annual Leadership Workshops of 2023 and 2024 over the months leading up to the workshop. Throughout the camp, the students learn how to work with each other and build their leadership skills. As the 2025 coordinator, I was responsible for leading the middle school staff(~40 volunteers) in preparing material for the camp.</P>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section bg-dark text-center">
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-md-6 col-lg-3">
+                    <div class="row ">
+                        <div class="col-5 text-right text-light border-right py-3">
+                            <div class="m-auto"><svg width="56" height="56" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="6" y1="22" x2="58" y2="22"/><rect x="2" y="14" width="8" height="16" rx="2"/><rect x="54" y="14" width="8" height="16" rx="2"/><path d="M22 22 L22 34 L32 44 L42 34 L42 22"/></svg></div>
+                        </div>
+                        <div class="col-7 text-left py-3">
+                            <h1 class="text-light font-weight-bold font40">375</h1>
+                            <p class="text-light mb-1">Squat (lbs)</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="row">
+                        <div class="col-5 text-right text-light border-right py-3">
+                            <div class="m-auto"><svg width="56" height="56" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="6" y1="20" x2="58" y2="20"/><rect x="2" y="12" width="8" height="16" rx="2"/><rect x="54" y="12" width="8" height="16" rx="2"/><rect x="16" y="38" width="32" height="8" rx="2"/><line x1="20" y1="46" x2="20" y2="56"/><line x1="44" y1="46" x2="44" y2="56"/></svg></div>
+                        </div>
+                        <div class="col-7 text-left py-3">
+                            <h1 class="text-light font-weight-bold font40">265</h1>
+                            <p class="text-light mb-1">Bench (lbs)</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="row">
+                        <div class="col-5 text-right text-light border-right py-3">
+                            <div class="m-auto"><svg width="56" height="56" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="6" y1="46" x2="58" y2="46"/><rect x="2" y="38" width="8" height="16" rx="2"/><rect x="54" y="38" width="8" height="16" rx="2"/><line x1="32" y1="30" x2="32" y2="8"/><polyline points="26,14 32,8 38,14"/></svg></div>
+                        </div>
+                        <div class="col-7 text-left py-3">
+                            <h1 class="text-light font-weight-bold font40">395</h1>
+                            <p class="text-light mb-1">Deadlift (lbs)</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="row">
+                        <div class="col-5 text-right text-light border-right py-3">
+                            <div class="m-auto"><i class="ti-medall-alt icon-xl"></i></div>
+                        </div>
+                        <div class="col-7 text-left py-3">
+                            <h1 class="text-light font-weight-bold font40">1035</h1>
+                            <p class="text-light mb-1">SBD Total (lbs)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 text-center mt-4">
+                    <a href="fitness.html" class="text-light"><b>Read the full training log &raquo;</b></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!--Engineering Projects Section-->
+    <section class="section" id="engineering">
+        <div class="container">
+            <h2 class="mb-5">Engineering <span class="text-danger">Projects</span></h2>
+            <div class="row">
+                <!-- Logic Frame Co. -->
+                <div class="col-12 mb-5">
+                    <div class="card project-card-wide">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <div class="project-image-wide">
+                                    <img src="assets/imgs/logic-frame-co-cover.png" alt="Framed hand-wired 4-bit inspired breadboard circuit art" class="img-fluid">
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <h4 class="card-title">Logic Frame Co.</h4>
+                                    </div>
+                                    <p class="card-text text-muted mb-2">Hardware / Entrepreneurship · Still Running</p>
+                                    <p class="card-description">Hand-wired 4-bit computer-inspired circuit art that started as a winter break build and turned into a real product test — an Instagram page, an Etsy shop, one sale. Now building a second, functionally-real version and researching how to automate the wiring itself.</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small class="text-muted">By: Chase Bonfiglio</small>
+                                        <a href="logic-frame-co/index.html" class="btn btn-outline-primary">
+                                            <i class="ti-angle-double-right"></i> View Project
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ARC-AGI-3 Reasoning Loop -->
+                <div class="col-12 mb-5">
+                    <div class="card project-card-wide">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <div class="project-image-wide">
+                                    <img src="assets/imgs/arc-agi-3-cover.jpg" alt="ARC-AGI-3 game cover / title screen" class="img-fluid">
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <h4 class="card-title">ARC-AGI-3 Reasoning Loop</h4>
+                                    </div>
+                                    <p class="card-text text-muted mb-2">AI Research · Still Running</p>
+                                    <p class="card-description">A work-in-progress research log building a reasoning loop that lets a small local vision-language model perceive, hypothesize, act, and self-correct in unfamiliar interactive games from the ARC-AGI-3 benchmark, where humans score ~100% and the best public systems are still near 1%.</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small class="text-muted">By: Chase Bonfiglio</small>
+                                        <a href="arc-agi-3/index.html" class="btn btn-outline-primary">
+                                            <i class="ti-angle-double-right"></i> View Project
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Underwater ROV -->
+                <div class="col-12 mb-5">
+                    <div class="card project-card-wide">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <div class="project-image-wide">
+                                    <img src="assets/imgs/rov_top.JPG" alt="Underwater ROV Project" class="img-fluid">
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <h4 class="card-title">Underwater ROV</h4>
+                                    </div>
+                                    <p class="card-text text-muted mb-2">Robotics & Marine Engineering</p>
+                                    <p class="card-description">Senior project designing and building an underwater ROV with telemetry system for marine environment analysis and oyster farming decisions. This comprehensive project involved mechanical design, electrical systems, and software development for underwater exploration and data collection.</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small class="text-muted">By: Chase Bonfiglio</small>
+                                        <a href="underwaterrov.html" class="btn btn-outline-primary">
+                                            <i class="ti-angle-double-right"></i> View Project
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            
+            <!-- View All Projects Button -->
+            <div class="row mt-5">
+                <div class="col-12 text-center">
+                    <a href="projects.html" class="btn btn-primary btn-lg">
+                        <i class="ti-files"></i> View All Engineering Projects
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="section" id="service">
+        <div class="container">
+            <h2 class="mb-5 pb-4"><span class="text-danger">Interests</span></h2>
+            <div class="row">
+                <div class="col-md-4 col-sm-6">
+                    <div class="card mb-5">
+                       <div class="card-header has-icon">
+                            <i class="ti-stats-up text-danger" aria-hidden="true"></i>
+                        </div>
+                        <div class="card-body px-4 py-3">
+                            <h5 class="mb-3 card-title text-dark">Weightlifting</h5>
+                            <P class="subtitle">In my free time, I enjoy weightlifting with my good buddies. My current total stands at 1035 with a 375 lb squat, 265 lb bench, and 395 lb deadlift. I'm aiming for a 315 lb bench this winter and a 405 lb squat and deadlift this fall for a 1125 total. <a href="fitness.html"> My full training log can be found <b>here. </b></a></P>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6">
+                    <div class="card mb-5">
+                       <div class="card-header has-icon">
+                            <i class="ti-camera text-danger" aria-hidden="true"></i>
+                        </div>
+                        <div class="card-body px-4 py-3">
+                            <h5 class="mb-3 card-title text-dark">Photography</h5>
+                            <P class="subtitle">One of my biggest hobbies is photography. I have enjoy being able to capture and frame moments in a single frame. My experience is limited to the handful of family trips over the past 5 years as well as photography using both myself and my pets as subjects. <a href="#photography"> My photography portfolio can be found <b>here. </b></a></P>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6">
+                    <div class="card mb-5">
+                       <div class="card-header has-icon">
+                            <i class="ti-cloud text-danger" aria-hidden="true"></i>
+                        </div>
+                        <div class="card-body px-4 py-3">
+                            <h5 class="mb-3 card-title text-dark">Aviation</h5>
+                            <P class="subtitle">As another possible career path, becoming a pilot has always interested me. While I am current limited to flying drones, I hope to one day get my pilots licence and fly  recreationally or potentially professionaly.</P>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+<!--
+    <section class="section bg-custom-gray" id="price">
+        <div class="container">
+            <h1 class="mb-5"><span class="text-danger">Packs</span> Pricing</h1>
+            <div class="row align-items-center">
+                <div class="col-md-6 col-lg-3">
+                    <div class="price-card text-center mb-4">
+                        <h3 class="price-card-title">Free</h3>
+                        <div class="price-card-cost">
+                            <sup class="ti-money"></sup>
+                            <span class="num">0</span>
+                            <span class="date">MO</span>
+                        </div>
+                        <ul class="list">
+                            <li class="list-item">5 <span class="text-muted">Project</span></li>
+                            <li class="list-item">1GB <span class="text-muted">Storage</span></li>
+                            <li class="list-item"><span class="text-muted">No Domain</span></li>
+                            <li class="list-item">1 <span class="text-muted">User</span></li>
+                        </ul>
+                        <button class="btn btn-primary btn-rounded w-lg">Subscribe</button>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="price-card text-center mb-4">
+                        <h3 class="price-card-title">Basic</h3>
+                        <div class="price-card-cost">
+                            <sup class="ti-money"></sup>
+                            <span class="num">10</span>
+                            <span class="date">MO</span>
+                        </div>
+                        <ul class="list">
+                            <li class="list-item">50 <span class="text-muted">Project</span></li>
+                            <li class="list-item">10GB <span class="text-muted">Storage</span></li>
+                            <li class="list-item">1<span class="text-muted">Domain</span></li>
+                            <li class="list-item">5 <span class="text-muted">User</span></li>
+                        </ul>
+                        <button class="btn btn-primary btn-rounded w-lg">Subscribe</button>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="price-card text-center price-card-requried mb-4">
+                        <h3 class="price-card-title">Exclusive</h3>
+                        <div class="price-card-cost">
+                            <sup class="ti-money"></sup>
+                            <span class="num">25</span>
+                            <span class="date">MO</span>
+                        </div>
+                        <ul class="list">
+                            <li class="list-item">150 <span class="text-muted">Project</span></li>
+                            <li class="list-item">15GB <span class="text-muted">Storage</span></li>
+                            <li class="list-item">5<span class="text-muted"> Domain</span></li>
+                            <li class="list-item">15<span class="text-muted">User</span></li>
+                        </ul>
+                        <button class="btn btn-primary btn-rounded w-lg">Subscribe</button>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="price-card text-center mb-4">
+                        <h3 class="price-card-title">Pro</h3>
+                        <div class="price-card-cost">
+                            <sup class="ti-money"></sup>
+                            <span class="num">99</span>
+                            <span class="date">MO</span>
+                        </div>
+                        <ul class="list">
+                            <li class="list-item">500 <span class="text-muted">Project</span></li>
+                            <li class="list-item">1000GB <span class="text-muted">Storage</span></li>
+                            <li class="list-item">10<span class="text-muted"> Domain</span></li>
+                            <li class="list-item">Unlimite<span class="text-muted">User</span></li>
+                        </ul>
+                        <button class="btn btn-primary btn-rounded w-lg">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>-->
+    <section class="section bg-dark py-5">
+        <div class="container text-center">
+            <h3 class="text-light mb-5 font-weight-normal"></h3>
+            <!--<button class="btn bg-primary w-lg" >Hire me</button>-->
+        </div>
+    </section>
+
+
+        <section class="section bg-dark py-5">
+        <div class="container text-center">
+            <h3 class="text-light mb-5 font-weight-normal"></h3>
+            <!--<button class="btn bg-primary w-lg" >Hire me</button>-->
+        </div>
+    </section>
+
+    <section class="section bg-custom-gray" id="photography">
+        <div class="container">
+            <h1 class="mb-5"><span class="text-danger">My</span> Photography Portfolio</h1>
+            <div class="portfolio">
+                <div class="filters">
+                    <a href="#" data-filter=".new" class="active">
+                        Travel
+                    </a>
+                    <a href="#" data-filter=".nature">
+                        Nature
+                    </a>
+                    <a href="#" data-filter=".friends">
+                        Friends
+                    </a>
+										<a href="#" data-filter=".pets">
+												Pets
+										</a>
+
+                    <!--<a href="#" data-filter=".misc">
+                        Misc.
+                    </a>-->
+                </div>
+                <div class="portfolio-container">
+									<!-- Stable Isotope column sizer: never filtered/hidden, so masonry
+									     always measures a correct column width for every category. -->
+									<div class="col-md-6 col-lg-4 grid-sizer"></div>
+									<div class="col-md-6 col-lg-4 new">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/travel/show/sunnyroad.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 new">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/travel/show/rowerdude.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 new">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/travel/show/fatherinthesnow.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 new">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/travel/show/reflectionsailboat.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 new">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/travel/show/darkapartments.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 new">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/travel/show/newyorkskyline.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 new">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/travel/show/guysonaboatbutsmaller.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 new">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/travel/show/sanfransicoskyline.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 new">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/travel/show/sunnyroad.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 new">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/travel/show/rubbercement.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 new">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/travel/show/guysonboat.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 new">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/travel/show/halfaplane.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 new">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/travel/show/happyfamily.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 new">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/travel/show/redboatinwater.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 new">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/travel/show/carunderlight.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 new">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/travel/show/greentruckincanopy.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 new">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/travel/show/flowersandhouse.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 new">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/travel/show/blueandwhitehouse.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 new">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/travel/show/fancywhitehouse.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 new">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/travel/show/fatherandadog.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 new">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/travel/show/boatonthewater.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 nature">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/nature/samaflower.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 nature">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/nature/yosemiteriverbrown.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 nature">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/nature/beachhousesunset.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 nature">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/nature/resortview.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 nature">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/nature/kayaksunset.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 nature">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/nature/flowerunderside.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 nature">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/nature/closeupstream.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 nature">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/nature/monkey.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 nature">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/nature/stormsky.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 nature">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/nature/houseflowers.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 friends">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/friends/domonkayak.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 friends">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/friends/firefriends.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 friends">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/friends/cinamaticchess.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 friends">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/friends/paintingkayak.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 friends">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/friends/alexunderlegs.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 friends">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/friends/friendsonroof.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 friends">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/friends/basketballdefense.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 friends">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/friends/reflectionspikeball.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 friends">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/friends/bluehourwater.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 friends">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/friends/winningchess.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 friends">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/friends/fitzonshoulders.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 friends">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/friends/sittingdownghost.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 friends">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/friends/mirrorphotographer.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 friends">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/friends/verticalkayakingdom.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 friends">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/friends/youngmirrorphotographer.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 friends">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/friends/adenspiking.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 friends">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/friends/midairfootball.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 pets">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/pets/handsomecosmo.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 pets">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/pets/karlosbywindow.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+
+									<div class="col-md-6 col-lg-4 pets">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/pets/crazykitty.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 pets">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/pets/circlebodie.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+
+									<div class="col-md-6 col-lg-4 pets">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/pets/cosmoinfront.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 pets">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/pets/karlosandleo.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 pets">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/pets/wide3cat.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 pets">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/pets/tiredkitty.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 pets">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/pets/karlosinbed.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 pets">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/pets/kittyinbed.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 pets">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/pets/lyingdogs.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 pets">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/pets/maverickwithtoy.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 pets">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/pets/3cat.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 pets">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/pets/karlosinfront.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 pets">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/pets/cutefosters.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 pets">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/pets/babycosmo.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 pets">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/pets/3cats.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 pets">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/pets/cutefoster.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 pets">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/pets/xmasdogs.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+									<div class="col-md-6 col-lg-4 pets">
+											<div class="portfolio-item">
+													<img data-src="/assets/imgs/pets/leoinbed.JPG" class="img-fluid gallery-photo" alt="Picture of a tiny stream" loading="lazy">
+											</div>
+									</div>
+
+
+
+
+
+                </div>
+                <div class="row mt-4">
+                    <div class="col-12 text-center">
+                        <button type="button" id="photo-see-more" class="btn btn-primary btn-lg">
+                            <i class="ti-plus"></i> See More
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End of portfolio section -->
+
+    <div class="section contact" id="contact">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                  <link href="contact-form.css" rel="stylesheet">
+
+<div class="fcf-body">
+
+  <div id="fcf-form">
+  <h3 class="fcf-h3">Contact me</h3>
+
+  <form id="fcf-form-id" class="fcf-form-class" method="post" action="contact-form-process.php">
+
+      <div class="fcf-form-group">
+          <label for="Name" class="fcf-label">Name</label>
+          <div class="fcf-input-group">
+              <input type="text" id="Name" name="Name" class="fcf-form-control" required>
+          </div>
+      </div>
+
+      <div class="fcf-form-group">
+          <label for="Email" class="fcf-label">Email Address</label>
+          <div class="fcf-input-group">
+              <input type="email" id="Email" name="Email" class="fcf-form-control" required>
+          </div>
+      </div>
+
+      <div class="fcf-form-group">
+          <label for="Message" class="fcf-label">Your message</label>
+          <div class="fcf-input-group">
+              <textarea id="Message" name="Message" class="fcf-form-control" rows="6" maxlength="3000" required></textarea>
+          </div>
+      </div>
+
+      <div class="fcf-form-group">
+          <button type="submit" id="fcf-button" class="fcf-btn fcf-btn-primary fcf-btn-lg fcf-btn-block">Send Message :)</button>
+      </div>
+
+  </form>
+  </div>
+
+</div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="contact-info-card">
+                        <h4 class="contact-title">Get in touch</h4>
+                        <div class="row mb-2">
+                            <div class="col-1 pt-1 mr-1">
+                                <i class="ti-mobile icon-md"></i>
+                            </div>
+                            <div class="col-10 ">
+                                <h6 class="d-inline">Phone: <br> <span class="text-muted">+1 (757) 663-6188</span></h6>
+                            </div>
+                        </div>
+												<div class="row mb-2">
+                            <div class="col-1 pt-1 mr-1">
+                                <i class="ti-envelope icon-md"></i>
+                            </div>
+                            <div class="col-10">
+                                <h6 class="d-inline">Email:<br> <span class="text-muted">chasebonfiglio@vt.edu</span></h6>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-1 pt-1 mr-1">
+                                <i class="ti-pencil icon-md"></i>
+                            </div>
+                            <div class="col-10">
+                                <h6 class="d-inline">School:<br> <span class="text-muted">Virginia Tech</span></h6>
+                            </div>
+                        </div>
+                        <ul class="social-icons pt-4">
+                            <li class="social-item"><a class="social-link text-dark" target="blank" href="#"><i class="ti-google" aria-hidden="true"></i></a></li>
+                            <li class="social-item"><a class="social-link text-dark" target="blank" href="https://www.instagram.com/chaseabon/"><i class="ti-instagram"  aria-hidden="true"></i></a></li>
+                            <li class="social-item"><a class="social-link text-dark" target="blank" href="https://github.com/chaseab"><i class="ti-github"  aria-hidden="true"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <footer class="footer py-3">
+        <div class="container">
+            <p class="small mb-0 text-light">
+                &copy; <script>document.write(new Date().getFullYear())</script> Created by Chase A. Bonfiglio
+            </p>
+        </div>
+    </footer>
+
+	<!-- core  -->
+    <script src="assets/vendors/jquery/jquery-3.4.1.js"></script>
+	    <script src="assets/vendors/bootstrap/bootstrap.bundle.js"></script>
+
+    <!-- bootstrap 3 affix -->
+    <script src="assets/vendors/bootstrap/bootstrap.affix.js"></script>
+
+    <!-- Isotope  -->
+    <script src="assets/vendors/isotope/isotope.pkgd.js"></script>
+
+    <!-- Google mpas -->
+
+    <!-- Project Card Styling -->
+    <style>
+        .project-card-wide {
+            border: none;
+            border-radius: 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+        
+        .project-card-wide:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+        
+        .project-image-wide {
+            height: 250px;
+            overflow: hidden;
+            position: relative;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .project-image-wide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+            display: block;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .project-card-wide:hover .project-image-wide img {
+            transform: scale(1.02);
+        }
+        
+        .project-card-wide .card-body {
+            padding: 1.5rem;
+        }
+        
+        .project-card-wide .card-title {
+            font-size: 1.3rem;
+            font-weight: 500;
+            color: #1c2e4a;
+            margin-bottom: 0.5rem;
+        }
+        
+        .project-card-wide .card-text {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .project-card-wide .card-description {
+            color: #555;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+        
+        .project-card-wide .btn-outline-primary {
+            border-color: #1c2e4a;
+            color: #1c2e4a;
+            border-radius: 0;
+            padding: 0.5rem 1.2rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .project-card-wide .btn-outline-primary:hover {
+            background-color: #1c2e4a;
+            border-color: #1c2e4a;
+            color: white;
+            transform: translateY(-1px);
+        }
+    </style>
+
+    <!-- JohnDoe js -->
+    <script src="assets/js/johndoe.js"></script>
+    
+
+
+    <script>
+        // Function to load and update bio information from localStorage
+        function loadBioData() {
+            if (typeof localStorage !== 'undefined') {
+                const saved = localStorage.getItem('bioData');
+                
+                if (saved) {
+                    const bioData = JSON.parse(saved);
+                    
+                    // Update bench press - find the specific element with bench press text
+                    if (bioData.benchPress) {
+                        const allH1Elements = document.querySelectorAll('h1.text-light.font-weight-bold.font40');
+                        allH1Elements.forEach(element => {
+                            const nextElement = element.nextElementSibling;
+                            if (nextElement && nextElement.textContent.includes('Bench Press')) {
+                                element.textContent = bioData.benchPress;
+                            }
+                        });
+                    }
+                    
+                    // Update GPA
+                    if (bioData.gpa) {
+                        const allH1Elements = document.querySelectorAll('h1.text-light.font-weight-bold.font40');
+                        allH1Elements.forEach(element => {
+                            const nextElement = element.nextElementSibling;
+                            if (nextElement && nextElement.textContent.includes('Grade Point Average')) {
+                                element.textContent = bioData.gpa;
+                            }
+                        });
+                    }
+                    
+                    // Update cats
+                    if (bioData.cats) {
+                        const allH1Elements = document.querySelectorAll('h1.text-light.font-weight-bold.font40');
+                        allH1Elements.forEach(element => {
+                            const nextElement = element.nextElementSibling;
+                            if (nextElement && nextElement.textContent.includes('Cats')) {
+                                element.textContent = bioData.cats;
+                            }
+                        });
+                    }
+                    
+                    // Update volunteer hours
+                    if (bioData.volunteerHours) {
+                        const allH1Elements = document.querySelectorAll('h1.text-light.font-weight-bold.font40');
+                        allH1Elements.forEach(element => {
+                            const nextElement = element.nextElementSibling;
+                            if (nextElement && nextElement.textContent.includes('Volunteer Hours')) {
+                                element.textContent = bioData.volunteerHours;
+                            }
+                        });
+                    }
+                    
+                    // Update contact information
+                    if (bioData.email) {
+                        const emailElements = document.querySelectorAll('.contact-info-card .text-muted');
+                        emailElements.forEach(element => {
+                            if (element.textContent.includes('chasebonfiglio@vt.edu')) {
+                                element.textContent = bioData.email;
+                            }
+                        });
+                    }
+                    
+                    if (bioData.phone) {
+                        const phoneElements = document.querySelectorAll('.contact-info-card .text-muted');
+                        phoneElements.forEach(element => {
+                            if (element.textContent.includes('+1 (757) 663-6188')) {
+                                element.textContent = bioData.phone;
+                            }
+                        });
+                    }
+                    
+                    if (bioData.school) {
+                        const schoolElements = document.querySelectorAll('.contact-info-card .text-muted');
+                        schoolElements.forEach(element => {
+                            if (element.textContent.includes('Ocean Lakes Math and Science Academy')) {
+                                element.textContent = bioData.school;
+                            }
+                        });
+                    }
+                }
+            }
+        }
+        
+        // Load bio data when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            loadBioData();
+        });
+    </script>
+
+    <!-- Back-to-top button -->
+    <button id="backToTop" aria-label="Back to top" title="Back to top">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
+            <path d="M12 5l-7 7h4v7h6v-7h4z" fill="currentColor"/>
+        </svg>
+    </button>
+    <style>
+        #backToTop{
+            position:fixed; right:22px; bottom:22px; z-index:1050;
+            width:48px; height:48px; padding:0;
+            display:flex; align-items:center; justify-content:center;
+            border:none; border-radius:50%; cursor:pointer;
+            background:#1c2e4a; color:#fff;
+            box-shadow:0 4px 14px rgba(0,0,0,.25);
+            opacity:0; visibility:hidden; transform:translateY(16px);
+            transition:opacity .25s ease, transform .25s ease, background .2s ease;
+        }
+        #backToTop.show{ opacity:1; visibility:visible; transform:translateY(0); }
+        #backToTop:hover{ background:#2a4166; }
+        #backToTop:focus{ outline:2px solid #fff; outline-offset:2px; }
+        @media (max-width:575px){
+            #backToTop{ right:16px; bottom:16px; width:44px; height:44px; }
+        }
+    </style>
+    <script>
+        (function(){
+            var btn = document.getElementById('backToTop');
+            if(!btn){ return; }
+            var toggle = function(){
+                if(window.pageYOffset > 300){ btn.classList.add('show'); }
+                else{ btn.classList.remove('show'); }
+            };
+            window.addEventListener('scroll', toggle, {passive:true});
+            toggle();
+            btn.addEventListener('click', function(){
+                if (window.jQuery) {
+                    window.jQuery('html, body').animate({ scrollTop: 0 }, 600);
+                } else {
+                    window.scrollTo(0, 0);
+                }
+            });
+        })();
+    </script>
+
+</body>
+</html>

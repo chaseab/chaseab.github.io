@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="ASM Failure Analysis - Eisenman Camp 2024 | Material Science Investigation">
+    <meta name="author" content="Chase Bonfiglio">
+    <title>ASM Failure Analysis - Eisenman Camp 2024 | Chase Bonfiglio</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Themify Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lykmapipo/themify-icons@0.1.2/css/themify-icons.css">
+    
+    <!-- Custom CSS -->
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        /* Header Styles */
+        .navbar {
+            background: linear-gradient(135deg, #1c2e4a 0%, #2a3f5a 100%);
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .navbar-nav.mr-auto {
+            justify-content: space-around;
+        }
+        
+        .navbar-nav.ml-auto {
+            justify-content: space-around;
+        }
+        
+        .navbar-nav.brand {
+            flex: 0 0 auto;
+        }
+        
+        .navbar-brand {
+            color: #fff !important;
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+        
+        .nav-link {
+            color: #fff !important;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            color: #ffd700 !important;
+            transform: translateY(-2px);
+        }
+        
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, #1c2e4a 0%, #2a3f5a 100%);
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+        }
+        
+        .project-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .project-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+        
+                 /* Main Content */
+         .main-content {
+             padding: 6rem 0 4rem 0; /* Added top padding to account for fixed navbar */
+         }
+        
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1c2e4a;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: #666;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        /* Project Cards */
+                 .project-card {
+             border: none;
+             border-radius: 0;
+             box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+             transition: transform 0.3s ease, box-shadow 0.3s ease;
+             overflow: hidden;
+             height: 100%;
+             margin-bottom: 2rem;
+         }
+        
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        }
+        
+        .project-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 0;
+        }
+        
+        .card-body {
+            padding: 1.5rem;
+        }
+        
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1c2e4a;
+            margin-bottom: 0.5rem;
+        }
+        
+        .card-text {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+        
+        /* Team Section */
+        .team-member {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .team-member img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 1rem;
+            border: 4px solid #1c2e4a;
+        }
+        
+        .team-member h5 {
+            color: #1c2e4a;
+            font-weight: 600;
+        }
+        
+        .team-member p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+                 /* Photo Gallery */
+         .photo-gallery {
+             margin: 3rem 0;
+         }
+         
+         .gallery-grid {
+             display: grid;
+             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+             gap: 2rem;
+             margin-top: 2rem;
+         }
+         
+         .gallery-item {
+             background: #fff;
+             border-radius: 0;
+             overflow: hidden;
+             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+             transition: transform 0.3s ease;
+         }
+         
+         .gallery-item:hover {
+             transform: translateY(-10px);
+         }
+         
+         .gallery-item img {
+             width: 100%;
+             height: 250px;
+             object-fit: cover;
+         }
+         
+         .gallery-caption {
+             padding: 1.5rem;
+         }
+         
+         .gallery-caption h5 {
+             color: #1c2e4a;
+             font-weight: 600;
+             margin-bottom: 0.5rem;
+         }
+         
+         .gallery-caption p {
+             color: #666;
+             font-size: 0.9rem;
+         }
+         
+         /* Main group photos - taller for people */
+         .main-group-photos .gallery-item img {
+             height: 400px;
+         }
+         
+         /* Remove hover effect from main group photos */
+         .main-group-photos .gallery-item:hover {
+             transform: none;
+         }
+        
+        /* PDF Embed */
+                 .pdf-container {
+             background: #f8f9fa;
+             border-radius: 0;
+             padding: 2rem;
+             margin: 2rem 0;
+             text-align: center;
+         }
+         
+         .pdf-container iframe {
+             width: 100%;
+             height: 600px;
+             border: none;
+             border-radius: 0;
+             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+         }
+        
+                 /* Back to Home Button */
+         .back-btn {
+             background: linear-gradient(135deg, #1c2e4a 0%, #2a3f5a 100%);
+             color: white;
+             border: none;
+             padding: 12px 30px;
+             border-radius: 0;
+             font-weight: 600;
+             text-decoration: none;
+             display: inline-block;
+             transition: all 0.3s ease;
+             margin-top: 2rem;
+         }
+         
+         .back-btn:hover {
+             color: white;
+             transform: translateY(-2px);
+             box-shadow: 0 4px 15px rgba(28, 46, 74, 0.3);
+         }
+         
+         /* Contact Section */
+         .contact-section {
+             background: #f8f9fa;
+             padding: 3rem 0;
+         }
+         
+         .contact-card {
+             background: #fff;
+             border-radius: 0;
+             padding: 2rem;
+             text-align: center;
+             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+             transition: transform 0.3s ease;
+         }
+         
+         .contact-card:hover {
+             transform: translateY(-5px);
+         }
+         
+         .contact-icon {
+             font-size: 2rem;
+             color: #1c2e4a;
+             margin-bottom: 1rem;
+         }
+         
+         /* Separator */
+         .separator {
+             height: 2px;
+             background: linear-gradient(90deg, transparent, #1c2e4a, transparent);
+             margin: 3rem auto;
+             width: 70%;
+         }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .project-title {
+                font-size: 2rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .project-image {
+                height: 180px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">Chase Bonfiglio</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="projects.html">Projects</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="cad-projects.html">CAD Projects</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html#contact">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+         <!-- Main Content -->
+     <div class="main-content">
+         <div class="container">
+                           <!-- Group Photos -->
+              <section class="mb-5 main-group-photos">
+                  <h2 class="section-title">ASM Failure Analysis Project</h2>
+                  <p class="section-subtitle">Eisenman Camp 2024 - Material Science Investigation</p>
+                  <div class="row">
+                      <div class="col-lg-6">
+                          <div class="gallery-item">
+                              <img src="assets/imgs/cad/asmfailure/smallgroup.jpg" alt="Small Group at Eisenman Camp">
+                          </div>
+                      </div>
+                      <div class="col-lg-6">
+                          <div class="gallery-item">
+                              <img src="assets/imgs/cad/asmfailure/asm_group.jpg" alt="Full ASM Group">
+                          </div>
+                      </div>
+                  </div>
+              </section>
+
+             <!-- Project Overview -->
+             <section class="mb-5">
+                 <h2 class="section-title">Project Overview</h2>
+                 <div class="row">
+                     <div class="col-lg-8 mx-auto">
+                         <div class="card project-card">
+                             <div class="card-body">
+                                 <h3 class="card-title">The Challenge</h3>
+                                 <p class="card-text">
+                                     At Eisenman Camp 2024, our team was presented with a real-world engineering failure: 
+                                     <strong>a tire fell off a garbage truck while driving, and all the studs holding the tire broke.</strong> 
+                                     The tire with the other half of the studs was stolen, leaving us with critical evidence to analyze.
+                                 </p>
+                                 <p class="card-text">
+                                     We were given 3 broken studs, 3 slices of the fracture points, an exemplar stud, and samples of 
+                                     different grades of steel to conduct a comprehensive failure analysis.
+                                 </p>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+             </section>
+
+                           <!-- Photo Gallery -->
+              <section class="mb-5">
+                  <h2 class="section-title">Photo Gallery</h2>
+                                     <div class="gallery-grid">
+                       <div class="gallery-item">
+                           <img src="assets/imgs/cad/asmfailure/1.jpg" alt="Fracture Surface Analysis">
+                           <div class="gallery-caption">
+                               <h5>Fracture Surface 1</h5>
+                               <p>Initial fracture analysis showing granular metallic surface</p>
+                           </div>
+                       </div>
+                       <div class="gallery-item">
+                           <img src="assets/imgs/cad/asmfailure/2.jpg" alt="Fracture Surface Analysis">
+                           <div class="gallery-caption">
+                               <h5>Fracture Surface 2</h5>
+                               <p>Linear striation patterns in fracture surface</p>
+                           </div>
+                       </div>
+                       <div class="gallery-item">
+                           <img src="assets/imgs/cad/asmfailure/3.jpg" alt="Fracture Surface Analysis">
+                           <div class="gallery-caption">
+                               <h5>Fracture Surface 3</h5>
+                               <p>Central fracture area with rust discoloration</p>
+                           </div>
+                       </div>
+                       <div class="gallery-item">
+                           <img src="assets/imgs/cad/asmfailure/4.jpg" alt="Fracture Surface Analysis">
+                           <div class="gallery-caption">
+                               <h5>Fracture Surface 4</h5>
+                               <p>Complex fracture pattern with varying textures</p>
+                           </div>
+                       </div>
+                       <div class="gallery-item">
+                           <img src="assets/imgs/cad/asmfailure/5.jpg" alt="Fracture Surface Analysis">
+                           <div class="gallery-caption">
+                               <h5>Fracture Surface 5</h5>
+                               <p>Jagged break pattern with reflective surfaces</p>
+                           </div>
+                       </div>
+                       <div class="gallery-item">
+                           <img src="assets/imgs/cad/asmfailure/IMG_4076.JPG" alt="Broken Stud Analysis">
+                           <div class="gallery-caption">
+                               <h5>Broken Stud Sample</h5>
+                               <p>Threaded bolt with corrosion and wear patterns</p>
+                           </div>
+                       </div>
+                       <div class="gallery-item">
+                           <img src="assets/imgs/cad/asmfailure/IMG_4077.JPG" alt="Cross Section Analysis">
+                           <div class="gallery-caption">
+                               <h5>Cross Section View</h5>
+                               <p>Fractured end with machined surface reference</p>
+                           </div>
+                       </div>
+                       <div class="gallery-item">
+                           <img src="assets/imgs/cad/asmfailure/IMG_4083.JPG" alt="Material Analysis">
+                           <div class="gallery-caption">
+                               <h5>Material Analysis</h5>
+                               <p>Scale reference with millimeter measurements</p>
+                           </div>
+                       </div>
+                       <div class="gallery-item">
+                           <img src="assets/imgs/cad/asmfailure/IMG_4085.JPG" alt="Detailed Analysis">
+                           <div class="gallery-caption">
+                               <h5>Detailed Analysis</h5>
+                               <p>Complete stud with threaded and smooth sections</p>
+                           </div>
+                       </div>
+                       <div class="gallery-item">
+                           <img src="assets/imgs/cad/asmfailure/IMG_6729.jpg" alt="Technical Discussion">
+                           <div class="gallery-caption">
+                               <h5>Technical Discussion</h5>
+                               <p>Whiteboard with analysis notes and calculations</p>
+                           </div>
+                       </div>
+                       <div class="gallery-item">
+                           <img src="assets/imgs/cad/asmfailure/IMG_6849.jpg" alt="Research Documentation">
+                           <div class="gallery-caption">
+                               <h5>Research Documentation</h5>
+                               <p>Technical report with stress-strain curves</p>
+                           </div>
+                       </div>
+                       <div class="gallery-item">
+                           <img src="assets/imgs/cad/asmfailure/IMG_6854.jpg" alt="Presentation Materials">
+                           <div class="gallery-caption">
+                               <h5>Presentation Materials</h5>
+                               <p>Schematic diagrams with colored annotations</p>
+                           </div>
+                       </div>
+                       <div class="gallery-item">
+                           <img src="assets/imgs/cad/asmfailure/IMG_6862.jpg" alt="3D Model Analysis">
+                           <div class="gallery-caption">
+                               <h5>3D Model Analysis</h5>
+                               <p>Computer visualization of fracture surface</p>
+                           </div>
+                       </div>
+                       <div class="gallery-item">
+                           <img src="assets/imgs/cad/asmfailure/screwTop1.jpg" alt="Screw Top Analysis">
+                           <div class="gallery-caption">
+                               <h5>Screw Top Analysis 1</h5>
+                               <p>Top view of bolt head with central hole</p>
+                           </div>
+                       </div>
+                       <div class="gallery-item">
+                           <img src="assets/imgs/cad/asmfailure/screwTop2.jpg" alt="Screw Top Analysis 2">
+                           <div class="gallery-caption">
+                               <h5>Screw Top Analysis 2</h5>
+                               <p>Cleaner top view with defined features</p>
+                           </div>
+                       </div>
+                       <div class="gallery-item">
+                           <img src="assets/imgs/cad/asmfailure/screwBottom1.jpg" alt="Screw Bottom Analysis">
+                           <div class="gallery-caption">
+                               <h5>Screw Bottom Analysis 1</h5>
+                               <p>Bottom view showing fracture fragments</p>
+                           </div>
+                       </div>
+                       <div class="gallery-item">
+                           <img src="assets/imgs/cad/asmfailure/screwBottom2.jpg" alt="Screw Bottom Analysis 2">
+                           <div class="gallery-caption">
+                               <h5>Screw Bottom Analysis 2</h5>
+                               <p>Hexagonal bolt head with fractured core</p>
+                           </div>
+                       </div>
+                       <div class="gallery-item">
+                           <img src="assets/imgs/cad/asmfailure/IMG_4102.JPG" alt="Scale Reference">
+                           <div class="gallery-caption">
+                               <h5>Scale Reference</h5>
+                               <p>Fracture fragment with millimeter scale</p>
+                           </div>
+                       </div>
+                   </div>
+            </section>
+
+                         <!-- Back to Home -->
+             <section class="text-center">
+                 <a href="index.html" class="back-btn">
+                     <i class="ti-home"></i> Back to Home
+                 </a>
+             </section>
+         </div>
+     </div>
+
+     <!-- Contact Section -->
+     <section class="contact-section">
+         <div class="container">
+             <h2 class="section-title">Get In Touch</h2>
+             <p class="text-center lead mb-5">Interested in learning more about this project or collaborating on similar engineering challenges?</p>
+             
+             <div class="row justify-content-center">
+                 <div class="col-lg-8">
+                     <div class="row">
+                         <div class="col-md-4 mb-4">
+                             <div class="contact-card">
+                                 <div class="contact-icon">
+                                     <i class="ti-email"></i>
+                                 </div>
+                                 <h5>Email</h5>
+                                 <p class="mb-0"><a href="mailto:chasebonfiglio@vt.edu">chasebonfiglio@vt.edu</a></p>
+                             </div>
+                         </div>
+                         <div class="col-md-4 mb-4">
+                             <a href="https://www.linkedin.com/in/chase-bonfiglio" target="_blank" class="text-decoration-none" style="color: inherit;">
+                                 <div class="contact-card" style="cursor: pointer;">
+                                     <div class="contact-icon">
+                                         <i class="ti-linkedin"></i>
+                                     </div>
+                                     <h5>LinkedIn</h5>
+                                     <p class="mb-0">Connect for professional opportunities</p>
+                                 </div>
+                             </a>
+                         </div>
+                         <div class="col-md-4 mb-4">
+                             <div class="contact-card">
+                                 <div class="contact-icon">
+                                     <i class="ti-github"></i>
+                                 </div>
+                                 <h5>GitHub</h5>
+                                 <p class="mb-0">View project code and documentation</p>
+                             </div>
+                         </div>
+                     </div>
+
+                     <div class="text-center mt-5">
+                         <a href="index.html#contact" class="btn btn-lg" style="background-color: #1c2e4a; color: white; border: none; border-radius: 0; padding: 12px 30px; font-weight: 500; text-decoration: none; display: inline-block; margin-right: 15px;">Contact Me</a>
+                         <a href="cad-projects.html" class="btn btn-lg" style="background-color: #1c2e4a; color: white; border: none; border-radius: 0; padding: 12px 30px; font-weight: 500; text-decoration: none; display: inline-block;">View All Projects</a>
+                     </div>
+                 </div>
+             </div>
+         </div>
+     </section>
+
+     <!-- Footer -->
+     <footer class="bg-dark text-white text-center py-4">
+         <div class="container">
+             <p class="mb-0">&copy; 2025 Chase Bonfiglio. All rights reserved.</p>
+         </div>
+     </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Font Awesome JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+</body>
+</html>

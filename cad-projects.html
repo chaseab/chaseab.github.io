@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="CAD Projects Portfolio">
+    <meta name="author" content="Chase Bonfiglio">
+    <title>CAD Projects - Chase Bonfiglio</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Themify Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lykmapipo/themify-icons@0.1.2/css/themify-icons.css">
+    
+    <!-- Custom CSS -->
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        /* Header Styles */
+        .navbar {
+            background: linear-gradient(135deg, #1c2e4a 0%, #2a3f5a 100%);
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .navbar-nav.mr-auto {
+            justify-content: space-around;
+        }
+        
+        .navbar-nav.ml-auto {
+            justify-content: space-around;
+        }
+        
+        .navbar-nav.brand {
+            flex: 0 0 auto;
+        }
+        
+        .navbar-brand {
+            color: #fff !important;
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+        
+        .nav-link {
+            color: #fff !important;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            color: #ffd700 !important;
+            transform: translateY(-2px);
+        }
+        
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, #1c2e4a 0%, #2a3f5a 100%);
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+        }
+        
+        .project-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .project-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding: 4rem 0;
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1c2e4a;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: #666;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        /* Project Images */
+        .main-image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 2rem;
+        }
+        
+        .small-images {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .small-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .small-image:hover {
+            transform: scale(1.05);
+        }
+        
+        /* Competition Details */
+        .competition-details {
+            background: #f8f9fa;
+            padding: 3rem;
+            border-radius: 15px;
+            margin-bottom: 3rem;
+        }
+        
+        .competition-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #1c2e4a;
+            margin-bottom: 1rem;
+        }
+        
+        .competition-description {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #555;
+        }
+        
+        /* CAD Gallery */
+        .cad-gallery {
+            background: #fff;
+            padding: 3rem 0;
+        }
+        
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .gallery-item {
+            background: #fff;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .gallery-item:hover {
+            transform: translateY(-10px);
+        }
+        
+                 .gallery-item img,
+         .gallery-item video,
+         .gallery-item iframe,
+         .gallery-item object {
+             width: 100%;
+             height: 250px;
+             object-fit: cover;
+         }
+         
+         .gallery-media {
+             width: 100%;
+             height: 250px;
+             object-fit: cover;
+             border-radius: 15px 15px 0 0;
+         }
+         
+         .gallery-pdf {
+             width: 100%;
+             height: 250px;
+             border: none;
+             border-radius: 15px 15px 0 0;
+         }
+        
+        .gallery-caption {
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .gallery-caption h5 {
+            font-weight: 600;
+            color: #1c2e4a;
+            margin-bottom: 0.5rem;
+        }
+        
+        .gallery-caption p {
+            color: #666;
+            margin: 0;
+        }
+        
+        /* Contact Section */
+        .contact-section {
+            background: linear-gradient(135deg, #1c2e4a 0%, #2a3f5a 100%);
+            color: white;
+            padding: 4rem 0;
+            margin-top: 4rem;
+        }
+        
+        .contact-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .contact-info {
+            text-align: center;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .contact-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .contact-link {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .contact-link:hover {
+            color: #ffd700;
+        }
+        
+        /* Separator Line */
+        .separator {
+            width: 70%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #1c2e4a, transparent);
+            margin: 3rem auto;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .project-title {
+                font-size: 2rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .main-image {
+                height: 250px;
+            }
+            
+            .small-images {
+                grid-template-columns: 1fr;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">Chase Bonfiglio's Portfolio</a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                                 <ul class="navbar-nav mr-auto">
+                                           <li class="nav-item">
+                          <a class="nav-link" href="index.html">Home</a>
+                      </li>
+                                           <li class="nav-item">
+                          <a class="nav-link" href="index.html#resume">Resume</a>
+                      </li>
+                 </ul>
+                
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="projects.html">Projects</a>
+                    </li>
+                                         <li class="nav-item">
+                         <a class="nav-link" href="index.html#photography">Photography</a>
+                     </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <h1 class="project-title">CAD Projects Portfolio</h1>
+            <p class="project-subtitle">Computer-Aided Design Projects and Competition Work</p>
+        </div>
+    </section>
+
+         <!-- Main Content -->
+     <section class="main-content">
+         <div class="container">
+                           <!-- CSWP Certification Section -->
+              <div class="row">
+                  <div class="col-12">
+                      <div class="competition-details">
+                          <h3 class="competition-title">CSWP - Certified SolidWorks Professional</h3>
+                                                     <p class="competition-description">
+                               I obtained my CSWP in the fall of 2023, a globally recognized certification that validates advanced 
+                               proficiency in SolidWorks software. The CSWP certification demonstrates expertise in complex part modeling, 
+                               advanced assembly techniques, and detailed drawing creation. This certification requires passing rigorous 
+                               exams covering advanced modeling techniques, design tables, configurations, and best practices for 
+                               professional CAD work. The CSWP designation is highly valued by employers and represents the highest 
+                               level of SolidWorks competency in the industry.
+                           </p>
+                          <div class="text-center mt-4">
+                              <iframe src="assets/certificate.pdf" width="100%" height="600px" style="border: 2px solid #1c2e4a; border-radius: 10px;">
+                                  <p>Your browser does not support PDFs. <a href="assets/certificate.pdf" target="_blank" class="btn btn-primary">View Certificate</a></p>
+                              </iframe>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+              <!-- Separator -->
+              <div class="separator"></div>
+
+              <!-- Competition Details -->
+              <div class="row">
+                  <div class="col-12">
+                      <div class="competition-details">
+                          <h3 class="competition-title" id="competitionTitle">TSA CAD Engineering Competition</h3>
+                                                     <p class="competition-description" id="competitionDescription">
+                               This project was completed as part of the Technology Student Association (TSA) CAD Engineering competition. 
+                               The timed competition challenged participants to design and model complex mechanical assemblies using SolidWorks, 
+                               demonstrating proficiency in advanced CAD techniques including parametric modeling, assembly design, 
+                               and technical documentation. The project required creating detailed engineering drawings, 
+                               bill of materials, and assembly instructions while meeting strict design constraints and tolerances within the time limit.
+                           </p>
+                      </div>
+                  </div>
+              </div>
+ 
+                          <!-- Separator -->
+             <div class="separator"></div>
+ 
+             <!-- TSA Nationals Project Gallery -->
+             <section class="cad-gallery">
+                 <div class="container">
+                                           <h2 class="section-title">TSA National and State Competitions</h2>
+                      <p class="section-subtitle">Photos, videos, and technical drawings from TSA CAD Engineering competitions</p>
+                     
+                                                                 <div class="gallery-grid">
+                          <!-- Original TSA Competition Files -->
+                          <div class="gallery-item">
+                              <img src="assets/imgs/cad/tsa_2004/2004011_Image_1.JPG" alt="TSA Project Image 1" onerror="this.src='https://via.placeholder.com/300x250?text=TSA+Image+1'">
+                              <div class="gallery-caption">
+                                  <h5>TSA Project Image 1</h5>
+                                  <p>CAD design and modeling work</p>
+                              </div>
+                          </div>
+                          
+                          <div class="gallery-item">
+                              <img src="assets/imgs/cad/tsa_2004/2004011_Image_2.JPG" alt="TSA Project Image 2" onerror="this.src='https://via.placeholder.com/300x250?text=TSA+Image+2'">
+                              <div class="gallery-caption">
+                                  <h5>TSA Project Image 2</h5>
+                                  <p>Technical documentation and drawings</p>
+                              </div>
+                          </div>
+                          
+                          <div class="gallery-item">
+                              <img src="assets/imgs/cad/tsa_2004/2004011_Use_Case_Image.PNG" alt="TSA Use Case Image" onerror="this.src='https://via.placeholder.com/300x250?text=TSA+Use+Case'">
+                              <div class="gallery-caption">
+                                  <h5>TSA Use Case Image</h5>
+                                  <p>Use case visualization and analysis</p>
+                              </div>
+                          </div>
+                          
+                                                     
+                          
+                          <div class="gallery-item">
+                              <iframe src="assets/imgs/cad/tsa_2004/2004011_Drawing.pdf" class="gallery-pdf" title="TSA Drawing">
+                                  <p>Your browser does not support PDFs. <a href="assets/imgs/cad/tsa_2004/2004011_Drawing.pdf" target="_blank">Download PDF</a></p>
+                              </iframe>
+                              <div class="gallery-caption">
+                                  <h5>TSA Technical Drawing</h5>
+                                  <p>Complete technical documentation and drawings</p>
+                              </div>
+                          </div>
+                          
+                          <!-- New Nationals PDF Files -->
+                          <div class="gallery-item">
+                              <iframe src="assets/imgs/cad/tsanationals/FACE PLATE.pdf" class="gallery-pdf" title="Face Plate">
+                                  <p>Your browser does not support PDFs. <a href="assets/imgs/cad/tsanationals/FACE PLATE.pdf" target="_blank">Download PDF</a></p>
+                              </iframe>
+                              <div class="gallery-caption">
+                                  <h5>Face Plate</h5>
+                                  <p>Technical drawing and specifications</p>
+                              </div>
+                          </div>
+                          
+                          <div class="gallery-item">
+                              <iframe src="assets/imgs/cad/tsanationals/FINAL LATCH ASSEMBLY.pdf" class="gallery-pdf" title="Final Latch Assembly">
+                                  <p>Your browser does not support PDFs. <a href="assets/imgs/cad/tsanationals/FINAL LATCH ASSEMBLY.pdf" target="_blank">Download PDF</a></p>
+                              </iframe>
+                              <div class="gallery-caption">
+                                  <h5>Final Latch Assembly</h5>
+                                  <p>Complete assembly documentation</p>
+                              </div>
+                          </div>
+                          
+                          <div class="gallery-item">
+                              <iframe src="assets/imgs/cad/tsanationals/HANDLE-1.pdf" class="gallery-pdf" title="Handle 1">
+                                  <p>Your browser does not support PDFs. <a href="assets/imgs/cad/tsanationals/HANDLE-1.pdf" target="_blank">Download PDF</a></p>
+                              </iframe>
+                              <div class="gallery-caption">
+                                  <h5>Handle 1</h5>
+                                  <p>Handle component design</p>
+                              </div>
+                          </div>
+                          
+                          <div class="gallery-item">
+                              <iframe src="assets/imgs/cad/tsanationals/HANDLE-2.pdf" class="gallery-pdf" title="Handle 2">
+                                  <p>Your browser does not support PDFs. <a href="assets/imgs/cad/tsanationals/HANDLE-2.pdf" target="_blank">Download PDF</a></p>
+                              </iframe>
+                              <div class="gallery-caption">
+                                  <h5>Handle 2</h5>
+                                  <p>Secondary handle component</p>
+                              </div>
+                          </div>
+                          
+                          <div class="gallery-item">
+                              <iframe src="assets/imgs/cad/tsanationals/LATCH PLATE.pdf" class="gallery-pdf" title="Latch Plate">
+                                  <p>Your browser does not support PDFs. <a href="assets/imgs/cad/tsanationals/LATCH PLATE.pdf" target="_blank">Download PDF</a></p>
+                              </iframe>
+                              <div class="gallery-caption">
+                                  <h5>Latch Plate</h5>
+                                  <p>Latch plate specifications</p>
+                              </div>
+                          </div>
+                          
+                          <div class="gallery-item">
+                              <iframe src="assets/imgs/cad/tsanationals/LATCH SUBASSEMBLY.pdf" class="gallery-pdf" title="Latch Subassembly">
+                                  <p>Your browser does not support PDFs. <a href="assets/imgs/cad/tsanationals/LATCH SUBASSEMBLY.pdf" target="_blank">Download PDF</a></p>
+                              </iframe>
+                              <div class="gallery-caption">
+                                  <h5>Latch Subassembly</h5>
+                                  <p>Subassembly documentation</p>
+                              </div>
+                          </div>
+                          
+                          <div class="gallery-item">
+                              <iframe src="assets/imgs/cad/tsanationals/LATCH.pdf" class="gallery-pdf" title="Latch">
+                                  <p>Your browser does not support PDFs. <a href="assets/imgs/cad/tsanationals/LATCH.pdf" target="_blank">Download PDF</a></p>
+                              </iframe>
+                              <div class="gallery-caption">
+                                  <h5>Latch</h5>
+                                  <p>Main latch component</p>
+                              </div>
+                          </div>
+                          
+                          <div class="gallery-item">
+                              <iframe src="assets/imgs/cad/tsanationals/LOCKING MECHNISM.pdf" class="gallery-pdf" title="Locking Mechanism">
+                                  <p>Your browser does not support PDFs. <a href="assets/imgs/cad/tsanationals/LOCKING MECHNISM.pdf" target="_blank">Download PDF</a></p>
+                              </iframe>
+                              <div class="gallery-caption">
+                                  <h5>Locking Mechanism</h5>
+                                  <p>Locking system design</p>
+                              </div>
+                          </div>
+                          
+                          <div class="gallery-item">
+                              <iframe src="assets/imgs/cad/tsanationals/ROSE COVER 1.pdf" class="gallery-pdf" title="Rose Cover 1">
+                                  <p>Your browser does not support PDFs. <a href="assets/imgs/cad/tsanationals/ROSE COVER 1.pdf" target="_blank">Download PDF</a></p>
+                              </iframe>
+                              <div class="gallery-caption">
+                                  <h5>Rose Cover 1</h5>
+                                  <p>Primary rose cover design</p>
+                              </div>
+                          </div>
+                          
+                          <div class="gallery-item">
+                              <iframe src="assets/imgs/cad/tsanationals/ROSE COVER-2.pdf" class="gallery-pdf" title="Rose Cover 2">
+                                  <p>Your browser does not support PDFs. <a href="assets/imgs/cad/tsanationals/ROSE COVER-2.pdf" target="_blank">Download PDF</a></p>
+                              </iframe>
+                              <div class="gallery-caption">
+                                  <h5>Rose Cover 2</h5>
+                                  <p>Secondary rose cover design</p>
+                              </div>
+                          </div>
+                      </div>
+                 </div>
+             </section>
+ 
+             <!-- Separator -->
+             <div class="separator"></div>
+ 
+             <!-- CAD Projects and Renders Gallery -->
+             <section class="cad-gallery">
+                 <div class="container">
+                     <h2 class="section-title">Additional CAD Projects & Renders</h2>
+                     <p class="section-subtitle">A collection of various CAD projects, renders, and design work</p>
+                     
+                                           <div class="gallery-grid">
+                          <div class="gallery-item">
+                              <img src="assets/imgs/cad/parts/brace.jpg" alt="Brace Component" onerror="this.src='https://via.placeholder.com/300x250?text=Brace+Component'">
+                              <div class="gallery-caption">
+                                  <h5>Brace Component</h5>
+                                  <p>Structural support and reinforcement design</p>
+                              </div>
+                          </div>
+                          
+                          <div class="gallery-item">
+                              <img src="assets/imgs/cad/parts/conveyor.jpg" alt="Conveyor System" onerror="this.src='https://via.placeholder.com/300x250?text=Conveyor+System'">
+                              <div class="gallery-caption">
+                                  <h5>Conveyor System</h5>
+                                  <p>Material handling and transport mechanism</p>
+                              </div>
+                          </div>
+                          
+                          <div class="gallery-item">
+                              <img src="assets/imgs/cad/parts/cross.jpg" alt="Cross Assembly" onerror="this.src='https://via.placeholder.com/300x250?text=Cross+Assembly'">
+                              <div class="gallery-caption">
+                                  <h5>Cross Assembly</h5>
+                                  <p>Intersecting component design and assembly</p>
+                              </div>
+                          </div>
+                          
+                          <div class="gallery-item">
+                              <img src="assets/imgs/cad/parts/pacemaker.jpg" alt="Pacemaker Design" onerror="this.src='https://via.placeholder.com/300x250?text=Pacemaker+Design'">
+                              <div class="gallery-caption">
+                                  <h5>Pacemaker Design</h5>
+                                  <p>Medical device component and housing</p>
+                              </div>
+                          </div>
+                          
+                                                     <div class="gallery-item">
+                               <img src="assets/imgs/cad/parts/part1.jpg" alt="Mechanical Linkage Component" onerror="this.src='https://via.placeholder.com/300x250?text=Mechanical+Linkage'">
+                               <div class="gallery-caption">
+                                   <h5>Mechanical Linkage Component</h5>
+                                   <p>Complex curved linkage with mounting features and structural cutouts</p>
+                               </div>
+                           </div>
+                          
+                                                     <div class="gallery-item">
+                               <img src="assets/imgs/cad/parts/part2.jpg" alt="Mounting Block Component" onerror="this.src='https://via.placeholder.com/300x250?text=Mounting+Block'">
+                               <div class="gallery-caption">
+                                   <h5>Mounting Block Component</h5>
+                                   <p>Rectangular mounting block with multiple holes and attachment features</p>
+                               </div>
+                           </div>
+                          
+                                                     <div class="gallery-item">
+                               <img src="assets/imgs/cad/parts/part3.jpg" alt="Gripper Jaw Component" onerror="this.src='https://via.placeholder.com/300x250?text=Gripper+Jaw'">
+                               <div class="gallery-caption">
+                                   <h5>Gripper Jaw Component</h5>
+                                   <p>Claw-like gripper with three prongs for grasping and holding</p>
+                               </div>
+                           </div>
+                          
+                                                     <div class="gallery-item">
+                               <img src="assets/imgs/cad/parts/part4.jpg" alt="Decorative Housing Component" onerror="this.src='https://via.placeholder.com/300x250?text=Decorative+Housing'">
+                               <div class="gallery-caption">
+                                   <h5>Decorative Housing Component</h5>
+                                   <p>Yellow rectangular housing with wave-like decorative cutouts</p>
+                               </div>
+                           </div>
+                          
+                                                     <div class="gallery-item">
+                               <img src="assets/imgs/cad/parts/part5.jpg" alt="Multi-Port Manifold Component" onerror="this.src='https://via.placeholder.com/300x250?text=Multi-Port+Manifold'">
+                               <div class="gallery-caption">
+                                   <h5>Multi-Port Manifold Component</h5>
+                                   <p>Dark gray block with multiple cylindrical protrusions for fluid routing</p>
+                               </div>
+                           </div>
+                          
+                                                     <div class="gallery-item">
+                               <img src="assets/imgs/cad/parts/part6.jpg" alt="U-Bend Pipe Assembly" onerror="this.src='https://via.placeholder.com/300x250?text=U-Bend+Pipe'">
+                               <div class="gallery-caption">
+                                   <h5>U-Bend Pipe Assembly</h5>
+                                   <p>Blue U-shaped pipe connected by light gray central bracket</p>
+                               </div>
+                           </div>
+                          
+                                                     <div class="gallery-item">
+                               <img src="assets/imgs/cad/parts/part7.jpg" alt="Vented Cover Component" onerror="this.src='https://via.placeholder.com/300x250?text=Vented+Cover'">
+                               <div class="gallery-caption">
+                                   <h5>Vented Cover Component</h5>
+                                   <p>Red circular disc with radial spokes and ventilation slots</p>
+                               </div>
+                           </div>
+                          
+                                                     <div class="gallery-item">
+                               <img src="assets/imgs/cad/parts/part8.jpg" alt="Key/Handle Component" onerror="this.src='https://via.placeholder.com/300x250?text=Key+Handle'">
+                               <div class="gallery-caption">
+                                   <h5>Key/Handle Component</h5>
+                                   <p>Golden-yellow key-like part with rounded top and horizontal grooves</p>
+                               </div>
+                           </div>
+                          
+                                                     <div class="gallery-item">
+                               <img src="assets/imgs/cad/parts/part9.jpg" alt="Sensor/Light Housing Component" onerror="this.src='https://via.placeholder.com/300x250?text=Sensor+Housing'">
+                               <div class="gallery-caption">
+                                   <h5>Sensor/Light Housing Component</h5>
+                                   <p>Dark gray housing with curved protrusion and red glowing sensor</p>
+                               </div>
+                           </div>
+                          
+                                                     <div class="gallery-item">
+                               <img src="assets/imgs/cad/parts/part10.jpg" alt="Star-Shaped Connector" onerror="this.src='https://via.placeholder.com/300x250?text=Star+Connector'">
+                               <div class="gallery-caption">
+                                   <h5>Star-Shaped Connector</h5>
+                                   <p>Bright yellow star-shaped connector with four arms and blue caps</p>
+                               </div>
+                           </div>
+                          
+                                                     <div class="gallery-item">
+                               <img src="assets/imgs/cad/parts/part11.jpg" alt="Gearbox/Drive Assembly" onerror="this.src='https://via.placeholder.com/300x250?text=Gearbox+Assembly'">
+                               <div class="gallery-caption">
+                                   <h5>Gearbox/Drive Assembly</h5>
+                                   <p>Complex light gray assembly with gears, shafts, and mounting points</p>
+                               </div>
+                           </div>
+                          
+                                                     <div class="gallery-item">
+                               <img src="assets/imgs/cad/parts/part12.jpg" alt="L-Bracket Support" onerror="this.src='https://via.placeholder.com/300x250?text=L-Bracket+Support'">
+                               <div class="gallery-caption">
+                                   <h5>L-Bracket Support</h5>
+                                   <p>Light gray L-shaped bracket with cylindrical bore and mounting holes</p>
+                               </div>
+                           </div>
+                          
+                                                     <div class="gallery-item">
+                               <img src="assets/imgs/cad/parts/part13.jpg" alt="Electrical Plug" onerror="this.src='https://via.placeholder.com/300x250?text=Electrical+Plug'">
+                               <div class="gallery-caption">
+                                   <h5>Electrical Plug</h5>
+                                   <p>White electrical power plug with three prongs for North American connection</p>
+                               </div>
+                           </div>
+                          
+                                                     <div class="gallery-item">
+                               <img src="assets/imgs/cad/parts/part14.jpg" alt="Radial Piston Assembly" onerror="this.src='https://via.placeholder.com/300x250?text=Radial+Piston'">
+                               <div class="gallery-caption">
+                                   <h5>Radial Piston Assembly</h5>
+                                   <p>Blue star-shaped hub with five radiating arms and golden-yellow pistons</p>
+                               </div>
+                           </div>
+                          
+                                                     <div class="gallery-item">
+                               <img src="assets/imgs/cad/parts/part15.jpg" alt="Scissor Jack" onerror="this.src='https://via.placeholder.com/300x250?text=Scissor+Jack'">
+                               <div class="gallery-caption">
+                                   <h5>Scissor Jack</h5>
+                                   <p>Gray scissor jack mechanism in partially extended position</p>
+                               </div>
+                           </div>
+                          
+                          <div class="gallery-item">
+                              <img src="assets/imgs/cad/parts/wheel.jpg" alt="Wheel Assembly" onerror="this.src='https://via.placeholder.com/300x250?text=Wheel+Assembly'">
+                              <div class="gallery-caption">
+                                  <h5>Wheel Assembly</h5>
+                                  <p>Rotational component and bearing system</p>
+                              </div>
+                          </div>
+                      </div>
+                 </div>
+             </section>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact-section">
+        <div class="container">
+            <h2 class="contact-title">Get In Touch</h2>
+            <div class="contact-info">
+                <p>Interested in my CAD work or have a project in mind?</p>
+                <p>Let's discuss how I can help bring your ideas to life.</p>
+            </div>
+            <div class="contact-links">
+                <a href="mailto:bonfigliochase@gmail.com" class="contact-link">
+                    <i class="fas fa-envelope"></i> Email
+                </a>
+                <a href="https://linkedin.com/in/chasebonfiglio" class="contact-link" target="_blank">
+                    <i class="fab fa-linkedin"></i> LinkedIn
+                </a>
+                <a href="https://github.com/chasebonfiglio" class="contact-link" target="_blank">
+                    <i class="fab fa-github"></i> GitHub
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Project Manager Script -->
+    <script src="assets/js/projectManager.js"></script>
+    
+         <script>
+         // Simple script to handle dynamic project loading if needed
+         document.addEventListener('DOMContentLoaded', () => {
+             // Get project ID from URL parameter
+             const urlParams = new URLSearchParams(window.location.search);
+             const projectId = urlParams.get('id');
+             
+             if (projectId) {
+                 // Get project data from project manager
+                 const project = projectManager.getProjectById(projectId);
+                 
+                 if (project) {
+                     // Update page content with project data
+                     document.querySelector('.project-title').textContent = project.title;
+                     document.querySelector('.project-subtitle').textContent = project.description;
+                     
+                     // Update main image if available
+                     if (project.image) {
+                         document.getElementById('mainProjectImage').src = project.image;
+                     }
+                     
+                     // Update competition details if available
+                     if (project.competitionTitle) {
+                         document.getElementById('competitionTitle').textContent = project.competitionTitle;
+                     }
+                     
+                     if (project.competitionDescription) {
+                         document.getElementById('competitionDescription').textContent = project.competitionDescription;
+                     }
+                 }
+             }
+         });
+     </script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

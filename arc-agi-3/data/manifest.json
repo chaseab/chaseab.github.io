@@ -1,0 +1,43 @@
+{
+ "episodes": [
+  {
+   "env": "wa30",
+   "role": "most-progress",
+   "caption": "The loop closes the gap to the target and the judge confirms it is moving the right object the right way -- then it overshoots and oscillates (28 TOWARD / 24 AWAY), never landing the exact alignment.",
+   "n_steps": 120,
+   "verdicts": {
+    "NONE": 13,
+    "TOWARD": 28,
+    "AWAY": 24
+   },
+   "path_pts": 118,
+   "file": "data/replay_wa30.json"
+  },
+  {
+   "env": "tu93",
+   "role": "direction-tunneling",
+   "caption": "Legible step-by-step navigation reasoning, but the executor tunnels on one direction (RIGHT x21) and re-probes the same corridor instead of the untried goal-ward path -- it never reaches the target row.",
+   "n_steps": 126,
+   "verdicts": {
+    "TOWARD": 7,
+    "NONE": 12,
+    "AWAY": 1
+   },
+   "path_pts": 114,
+   "file": "data/replay_tu93.json"
+  },
+  {
+   "env": "re86",
+   "role": "thesis-exhibit",
+   "caption": "Correct goal, correct target -- but the plan mislabels the control direction ('up' for a button that goes right), so the group is steered the wrong way. A perception-to-language bug, not a reasoning failure.",
+   "n_steps": 120,
+   "verdicts": {
+    "TOWARD": 4,
+    "NONE": 6,
+    "AWAY": 1
+   },
+   "path_pts": 117,
+   "file": "data/replay_re86.json"
+  }
+ ]
+}

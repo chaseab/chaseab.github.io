@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mousetrap Car - Chase Bonfiglio Portfolio</title>
+    <meta name="description" content="Mousetrap car engineering project showcasing mechanical design, 3D printing, and physics principles.">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Themify Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lykmapipo/themify-icons@0.1.2/css/themify-icons.css">
+    
+    <style>
+        :root {
+            --primary-color: #1c2e4a;
+            --secondary-color: #2a3f5a;
+            --accent-color: #28a745;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        /* Navigation */
+        .navbar {
+            background: rgba(28, 46, 74, 0.95) !important;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            color: white !important;
+        }
+        
+        .nav-link {
+            color: rgba(255,255,255,0.9) !important;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            color: white !important;
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding-top: 80px;
+        }
+        
+        /* Project Details */
+        .project-details {
+            background: #fff;
+            padding: 3rem 0;
+        }
+        
+        .project-title {
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+        
+        .project-description {
+            color: #666;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+        
+        .main-image {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        /* Technical Report */
+        .technical-report {
+            background: #f8f9fa;
+            padding: 3rem 0;
+        }
+        
+        .pdf-container {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .pdf-viewer {
+            width: 100%;
+            height: 600px;
+            border: none;
+            border-radius: 10px;
+        }
+        
+        /* Video Section */
+        .video-section {
+            background: #fff;
+            padding: 3rem 0;
+        }
+        
+        .video-container {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .video-player {
+            width: 100%;
+            height: 500px;
+            border: none;
+            border-radius: 10px;
+        }
+        
+        /* Project Components */
+        .components-section {
+            background: #fff;
+            padding: 3rem 0;
+        }
+        
+        .component-card {
+            background: #fff;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .component-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .component-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #1c2e4a, #2a3f5a);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            margin-bottom: 1rem;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .status-complete {
+            background: #28a745;
+            color: white;
+        }
+        
+        .status-incomplete {
+            background: #ffc107;
+            color: #212529;
+        }
+        
+        /* Image Gallery */
+        .image-gallery {
+            background: #f8f9fa;
+            padding: 3rem 0;
+        }
+        
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .gallery-item {
+            background: #fff;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .gallery-item:hover {
+            transform: translateY(-10px);
+        }
+        
+        .gallery-item img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+        
+        .gallery-caption {
+            padding: 1.5rem;
+        }
+        
+        .gallery-caption h5 {
+            color: #1c2e4a;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .gallery-caption p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        /* Technical Challenges */
+        .technical-section {
+            background: #fff;
+            padding: 3rem 0;
+        }
+        
+        .tech-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid #1c2e4a;
+        }
+        
+        /* Results Section */
+        .results-section {
+            background: linear-gradient(135deg, #1c2e4a 0%, #2a3f5a 100%);
+            color: white;
+            padding: 3rem 0;
+        }
+        
+        .results-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+        }
+        
+        /* Contact Section */
+        .contact-section {
+            background: #f8f9fa;
+            padding: 3rem 0;
+        }
+        
+        .contact-card {
+            background: #fff;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .contact-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .contact-icon {
+            font-size: 2rem;
+            color: #1c2e4a;
+            margin-bottom: 1rem;
+        }
+        
+        /* Separator */
+        .separator {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #1c2e4a, transparent);
+            margin: 3rem auto;
+            width: 70%;
+        }
+        
+        /* Section Titles */
+        .section-title {
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .project-title {
+                font-size: 2rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-image {
+                height: 300px;
+            }
+            
+            .pdf-viewer {
+                height: 400px;
+            }
+            
+            .video-player {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <strong>Chase Bonfiglio</strong> Portfolio
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="projects.html">Projects</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html#resume">Resume</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html#photography">Photography</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html#contact">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container">
+            <!-- Project Overview -->
+            <div class="project-details">
+                <div class="text-center mb-4">
+                    <img src="assets/imgs/cad/mousetrap/mouse.jpg" alt="Mousetrap Car" class="main-image">
+                </div>
+                <h2 class="project-title">Engineering Design Challenge</h2>
+                <p class="project-description">
+                    This project involved designing and constructing a mousetrap car that demonstrates fundamental physics principles including potential energy, kinetic energy, friction, and mechanical advantage. The goal was to create a vehicle powered solely by the energy stored in a mousetrap spring that could travel the maximum distance possible.
+                </p>
+                <p class="project-description">
+                    The mousetrap car incorporates custom 3D-printed wheels, laser-cut wooden chassis components, and a carefully engineered drive mechanism using CDs as lightweight spools. The project showcases mechanical design principles, material selection, and the integration of traditional woodworking with modern 3D printing technology.
+                </p>
+            </div>
+
+            <!-- Technical Report -->
+            <div class="technical-report">
+                <div class="container">
+                    <h2 class="section-title">Technical Documentation</h2>
+                    <div class="pdf-container">
+                        <iframe src="assets/imgs/cad/mousetrap/Mousetrap_Technical_Report.pdf" class="pdf-viewer"></iframe>
+                        <div class="text-center mt-3">
+                            <a href="assets/imgs/cad/mousetrap/Mousetrap_Technical_Report.pdf" target="_blank" class="btn btn-outline-primary" style="border-color: #1c2e4a; color: #1c2e4a;">Download PDF</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="separator"></div>
+
+            <!-- Video Section -->
+            <section class="video-section">
+                <div class="container">
+                    <h2 class="section-title">Assembly Video</h2>
+                    <div class="video-container">
+                        <video controls class="video-player">
+                            <source src="assets/imgs/cad/mousetrap/mousetrapassembly.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                </div>
+            </section>
+
+            <div class="separator"></div>
+
+            <!-- Project Components -->
+            <section class="components-section">
+                <div class="container">
+                    <h2 class="section-title">Project Components</h2>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="component-card">
+                                <div class="component-icon">
+                                    <i class="fas fa-cogs"></i>
+                                </div>
+                                <h4>Drive Mechanism</h4>
+                                <p>CD-based spool system for efficient energy transfer from the mousetrap spring to the wheels.</p>
+                                <span class="status-badge status-complete">Complete</span>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="component-card">
+                                <div class="component-icon">
+                                    <i class="fas fa-print"></i>
+                                </div>
+                                <h4>3D Printed Wheels</h4>
+                                <p>Custom-designed lightweight wheels with spoked design for minimal friction and optimal performance.</p>
+                                <span class="status-badge status-complete">Complete</span>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="component-card">
+                                <div class="component-icon">
+                                    <i class="fas fa-cut"></i>
+                                </div>
+                                <h4>Laser-Cut Chassis</h4>
+                                <p>Precision-cut wooden frame with custom mouse head design and optimized structural geometry.</p>
+                                <span class="status-badge status-complete">Complete</span>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="component-card">
+                                <div class="component-icon">
+                                    <i class="fas fa-bolt"></i>
+                                </div>
+                                <h4>Power System</h4>
+                                <p>Victor mousetrap spring mechanism providing the primary energy source for propulsion.</p>
+                                <span class="status-badge status-complete">Complete</span>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="component-card">
+                                <div class="component-icon">
+                                    <i class="fas fa-link"></i>
+                                </div>
+                                <h4>Axle Assembly</h4>
+                                <p>Precision-engineered axle system with bearings for smooth wheel rotation and minimal friction.</p>
+                                <span class="status-badge status-complete">Complete</span>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="component-card">
+                                <div class="component-icon">
+                                    <i class="fas fa-tools"></i>
+                                </div>
+                                <h4>Assembly Process</h4>
+                                <p>3D printing custom components, repurposing existing parts, and laser cutting balsa wood for precision construction.</p>
+                                <span class="status-badge status-complete">Complete</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+
+            <!-- Image Gallery -->
+            <section class="image-gallery">
+                <h2 class="section-title">Project Gallery</h2>
+                                 <div class="gallery-grid">
+                     <div class="gallery-item">
+                         <img src="assets/imgs/cad/mousetrap/IMG_9245.JPG" alt="Completed Mousetrap Car">
+                         <div class="gallery-caption">
+                             <h5>Completed Mousetrap Car</h5>
+                             <p>Side view of the fully assembled vehicle, ready for testing</p>
+                         </div>
+                     </div>
+                     <div class="gallery-item">
+                         <img src="assets/imgs/cad/mousetrap/mousetrapcar (2).jpg" alt="Mousetrap Car Render">
+                         <div class="gallery-caption">
+                             <h5>Mousetrap Car Render</h5>
+                             <p>A digital render showcasing the complete design</p>
+                         </div>
+                     </div>
+                     <div class="gallery-item">
+                         <img src="assets/imgs/cad/mousetrap/mousetrapcar (3).jpg" alt="Mousetrap Car Render 2">
+                         <div class="gallery-caption">
+                             <h5>Mousetrap Car Render 2</h5>
+                             <p>Another digital render highlighting design details</p>
+                         </div>
+                     </div>
+                     <div class="gallery-item">
+                         <img src="assets/imgs/cad/mousetrap/IMG_9249.JPG" alt="Rear Wheel Detail">
+                         <div class="gallery-caption">
+                             <h5>Rear Wheel Detail</h5>
+                             <p>Close-up of the rear CD wheel and its connection to the wooden chassis</p>
+                         </div>
+                     </div>
+                     <div class="gallery-item">
+                         <img src="assets/imgs/cad/mousetrap/IMG_9251.JPG" alt="Custom Chassis Detail">
+                         <div class="gallery-caption">
+                             <h5>Custom Chassis Detail</h5>
+                             <p>Wooden chassis with a laser-cut mouse head design, adding a unique touch</p>
+                         </div>
+                     </div>
+                     <div class="gallery-item">
+                         <img src="assets/imgs/cad/mousetrap/IMG_9074.JPG" alt="Custom 3D Printed Wheels">
+                         <div class="gallery-caption">
+                             <h5>Custom 3D Printed Wheels</h5>
+                             <p>Lightweight, spoked wheels designed for minimal friction and optimal performance</p>
+                         </div>
+                     </div>
+                     <div class="gallery-item">
+                         <img src="assets/imgs/cad/mousetrap/IMG_9088.JPG" alt="3D Printing Process">
+                         <div class="gallery-caption">
+                             <h5>3D Printing Process</h5>
+                             <p>Manufacturing custom components, such as wheels, using a 3D printer</p>
+                         </div>
+                     </div>
+                     <div class="gallery-item">
+                         <img src="assets/imgs/cad/mousetrap/IMG_9120.JPG" alt="Mousetrap Car Components">
+                         <div class="gallery-caption">
+                             <h5>Mousetrap Car Components</h5>
+                             <p>Essential parts including custom wheels, fasteners, and structural elements</p>
+                         </div>
+                     </div>
+                     <div class="gallery-item">
+                         <img src="assets/imgs/cad/mousetrap/IMG_9162.JPG" alt="Material Preparation">
+                         <div class="gallery-caption">
+                             <h5>Material Preparation</h5>
+                             <p>Cutting and shaping materials for the mousetrap car's construction</p>
+                         </div>
+                     </div>
+                     <div class="gallery-item">
+                         <img src="assets/imgs/cad/mousetrap/IMG_9169.JPG" alt="Assembly Workbench">
+                         <div class="gallery-caption">
+                             <h5>Assembly Workbench</h5>
+                             <p>Tools and small parts, including copper wiring and fasteners, ready for integration</p>
+                         </div>
+                     </div>
+                     <div class="gallery-item">
+                         <img src="assets/imgs/cad/mousetrap/IMG_9171.JPG" alt="CD Drive Mechanism">
+                         <div class="gallery-caption">
+                             <h5>CD Drive Mechanism</h5>
+                             <p>CDs used as a lightweight spool for the mousetrap car's propulsion system</p>
+                         </div>
+                     </div>
+                     <div class="gallery-item">
+                         <img src="assets/imgs/cad/mousetrap/IMG_9191.JPG" alt="Chassis and Drive Components">
+                         <div class="gallery-caption">
+                             <h5>Chassis and Drive Components</h5>
+                             <p>Wooden frame pieces and the CD-based drive system laid out for assembly</p>
+                         </div>
+                     </div>
+                     <div class="gallery-item">
+                         <img src="assets/imgs/cad/mousetrap/IMG_9196.JPG" alt="Axle Assembly Detail">
+                         <div class="gallery-caption">
+                             <h5>Axle Assembly Detail</h5>
+                             <p>Close-up of a precision-engineered axle hub with a bearing for smooth rotation</p>
+                         </div>
+                     </div>
+                     <div class="gallery-item">
+                         <img src="assets/imgs/cad/mousetrap/IMG_9211.JPG" alt="Mousetrap Power Source">
+                         <div class="gallery-caption">
+                             <h5>Mousetrap Power Source</h5>
+                             <p>Traditional mousetraps, the core propulsion mechanism, alongside other small parts</p>
+                         </div>
+                     </div>
+                     <div class="gallery-item">
+                         <img src="assets/imgs/cad/mousetrap/IMG_9233.JPG" alt="Early Assembly">
+                         <div class="gallery-caption">
+                             <h5>Early Assembly</h5>
+                             <p>Mousetrap car chassis with the mousetrap and CD wheel, showing initial setup</p>
+                         </div>
+                     </div>
+                     <div class="gallery-item">
+                         <img src="assets/imgs/cad/mousetrap/IMG_9258.JPG" alt="Mousetrap Mechanism">
+                         <div class="gallery-caption">
+                             <h5>Mousetrap Mechanism</h5>
+                             <p>The spring-loaded mousetrap, the heart of the car's propulsion</p>
+                         </div>
+                     </div>
+                 </div>
+            </section>
+
+            <div class="separator"></div>
+
+            <!-- Results and Impact -->
+            <section class="results-section">
+                <div class="container">
+                    <h2 class="section-title text-white">Project Results & Impact</h2>
+                    <div class="row">
+                        <div class="col-lg-8 mx-auto">
+                            <div class="results-card">
+                                <h4 class="text-center mb-4">Project Success</h4>
+                                <p class="lead text-center mb-4">
+                                    The mousetrap car project successfully demonstrated fundamental physics principles while showcasing modern manufacturing techniques and creative engineering design.
+                                </p>
+                                
+                                <div class="row mt-5">
+                                    <div class="col-md-6">
+                                        <h5 class="font-weight-bold">Key Achievements</h5>
+                                        <ul class="list-unstyled">
+                                            <li class="mb-2"><i class="ti-check text-success mr-2"></i>Efficient energy transfer from spring to wheels</li>
+                                            <li class="mb-2"><i class="ti-check text-success mr-2"></i>Custom 3D printed components</li>
+                                            <li class="mb-2"><i class="ti-check text-success mr-2"></i>Laser-cut precision chassis</li>
+                                            <li class="mb-2"><i class="ti-check text-success mr-2"></i>Minimal friction design</li>
+                                            <li class="mb-2"><i class="ti-check text-success mr-2"></i>Successful propulsion system</li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h5 class="font-weight-bold">Educational Impact</h5>
+                                        <ul class="list-unstyled">
+                                            <li class="mb-2"><i class="ti-check text-success mr-2"></i>Physics principles demonstration</li>
+                                            <li class="mb-2"><i class="ti-check text-success mr-2"></i>Mechanical engineering concepts</li>
+                                            <li class="mb-2"><i class="ti-check text-success mr-2"></i>Modern manufacturing integration</li>
+                                            <li class="mb-2"><i class="ti-check text-success mr-2"></i>Problem-solving skills development</li>
+                                            <li class="mb-2"><i class="ti-check text-success mr-2"></i>Hands-on engineering experience</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Contact Section -->
+            <section class="contact-section">
+                <div class="container">
+                    <h2 class="section-title">Get In Touch</h2>
+                    <p class="text-center lead mb-5">Interested in learning more about this project or collaborating on similar engineering challenges?</p>
+                    
+                    <div class="row justify-content-center">
+                        <div class="col-lg-8">
+                            <div class="row">
+                                <div class="col-md-4 mb-4">
+                                    <div class="contact-card">
+                                        <div class="contact-icon">
+                                            <i class="ti-email"></i>
+                                        </div>
+                                        <h5>Email</h5>
+                                        <p class="mb-0"><a href="mailto:chasebonfiglio@vt.edu">chasebonfiglio@vt.edu</a></p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-4">
+                                    <a href="https://www.linkedin.com/in/chase-bonfiglio" target="_blank" class="text-decoration-none" style="color: inherit;">
+                                        <div class="contact-card" style="cursor: pointer;">
+                                            <div class="contact-icon">
+                                                <i class="ti-linkedin"></i>
+                                            </div>
+                                            <h5>LinkedIn</h5>
+                                            <p class="mb-0">Connect for professional opportunities</p>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-md-4 mb-4">
+                                    <div class="contact-card">
+                                        <div class="contact-icon">
+                                            <i class="ti-github"></i>
+                                        </div>
+                                        <h5>GitHub</h5>
+                                        <p class="mb-0">View project code and documentation</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="text-center mt-5">
+                                <a href="index.html#contact" class="btn btn-lg" style="background-color: #1c2e4a; color: white; border: none; border-radius: 25px; padding: 12px 30px; font-weight: 500; text-decoration: none; display: inline-block; margin-right: 15px;">Contact Me</a>
+                                <a href="projects.html" class="btn btn-lg" style="background-color: #1c2e4a; color: white; border: none; border-radius: 25px; padding: 12px 30px; font-weight: 500; text-decoration: none; display: inline-block;">View All Projects</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-4">
+        <div class="container">
+            <p class="mb-0">&copy; 2025 Chase Bonfiglio. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Video Autoplay Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const video = document.querySelector('.video-player');
+            const videoSection = document.querySelector('.video-section');
+            
+            if (video && videoSection) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            // Video is in view, start playing
+                            video.play().catch(error => {
+                                console.log('Autoplay prevented:', error);
+                            });
+                        } else {
+                            // Video is out of view, pause it
+                            video.pause();
+                        }
+                    });
+                }, {
+                    threshold: 0.5 // Trigger when 50% of the video section is visible
+                });
+                
+                observer.observe(videoSection);
+            }
+        });
+    </script>
+
+</body>
+</html>
