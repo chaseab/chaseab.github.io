@@ -132,9 +132,65 @@ Ranked by payoff. Each is genuinely explanatory, not ornament.
 - Self-contained CSS/JS like `arc-agi-3/` — do not entangle with the theme's `johndoe.css`.
 - No claim on the page that isn't in the report.
 
-## Open questions for Chase
+---
 
-1. Any video of the ROV in water? Would anchor the hero.
-2. Is the Arduino source on GitHub? A code link would raise credibility a lot.
-3. Photos of the *failed* underwater photogrammetry attempt? Would make section 08 concrete.
-4. Should the page present as Dec 2024 completed work, or as ongoing (the report's reflection lists planned next steps)?
+## DECISIONS — confirmed by Chase, 2026-08-08
+
+### Framing: archived / shelved. This is binding.
+
+The page opens with a **status band** stating the project is shelved. Chase's words:
+*"archived, there's more that could be worked and I didn't really finish it but in all
+reality I'm probably done with it"* and *"I know I talked big talk about future work in
+the report that never happened."*
+
+So the page must:
+- Lead with a dated shelved status. Not buried, not euphemistic.
+- **Not** reproduce the report's Personal Reflection as a roadmap. That section promises
+  calibration work, an expanded sensor package, and ML-assisted photogrammetry navigation —
+  none of it happened. Presenting it as "next steps" would be a false claim.
+- If that ambition is mentioned at all, mention it in past tense as *what I intended at the
+  time*, explicitly marked as not pursued. Retiring your own stated plans honestly is a
+  stronger signal than pretending they're still live.
+
+### Scope of testing — CRITICAL, overrides the report
+
+**Subsystems were wet-tested. The assembled ROV never dove.**
+
+The report's phrasing ("didn't leak on the first operation underwater", GoPro images
+"captured underwater") describes *component* immersion, not a piloted run. Chase confirmed
+the full vehicle never operated in open water.
+
+Therefore the page must NOT claim, imply, or illustrate:
+- a piloted dive, a mission, a survey run, or any field deployment
+- navigation, station-keeping, or maneuvering performance
+- any measured thruster or propulsion result
+
+Permitted claims: sensor housing held under immersion; telemetry ran at rate on the bench;
+GoPro footage was captured in water; the sampler was bench-tested.
+
+### Interactives — approved
+
+1. **RS-485 noise demo** — approved. Highest explanatory value.
+2. **Budget treemap** — approved. $186.69 by subsystem.
+3. **PWM duty-cycle figure** — approved *only as designed control scheme*.
+   Chase: *"I never quite figured out the thruster response."* So the figure shows the
+   duty-cycle → commanded-voltage relationship as designed and wired. It must carry a
+   visible label such as "control scheme as built — thruster response never characterized."
+   No RPM readout, no thrust curve, no performance numbers. Those don't exist.
+
+Not building for now: telemetry replay dashboard, photogrammetry turbidity A/B.
+Revisit once source data is confirmed.
+
+### Code links — deferred
+
+Arduino sketch and Python dashboard may exist locally; Chase is checking at home.
+Build the page with no code section, structured so one can be added without a rework.
+
+---
+
+## Still open
+
+1. Any video or photos of the ROV in water? Would anchor the hero — but only subsystem
+   footage exists, so caption accordingly.
+2. Photos of the *failed* underwater photogrammetry output? Would make section 08 concrete.
+3. Once located: link or excerpt the Arduino/Python source.
