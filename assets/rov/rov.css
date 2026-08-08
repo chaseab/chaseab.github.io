@@ -151,7 +151,10 @@ q{quotes:"\201C" "\201D"}
 @media(max-width:720px){.mininav__links{display:none}}
 
 /* ---------- header ---------- */
-.entry{padding:64px 0 40px;position:relative}
+/* NB: vertical padding as longhand only. `.entry`/`.sec` are declared after
+   `.wrap` at equal specificity, so a `padding` shorthand here would clobber
+   .wrap's left gutter and slide content under the fixed depth rail. */
+.entry{padding-top:64px;padding-bottom:40px;position:relative}
 .crumb{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--dim);margin-bottom:34px}
 .crumb a{color:var(--muted);text-decoration:none}
 .crumb a:hover{color:var(--cyan)}
@@ -217,7 +220,7 @@ q{quotes:"\201C" "\201D"}
 .chip--none{color:var(--dim)}
 
 /* ---------- sections ---------- */
-.sec{padding:78px 0;position:relative}
+.sec{padding-top:78px;padding-bottom:78px;position:relative}
 .sec__head{display:flex;align-items:baseline;gap:18px;margin-bottom:12px}
 .sec__num{
   font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--cyan);
