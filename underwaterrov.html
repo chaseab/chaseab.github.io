@@ -1,716 +1,723 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Underwater ROV Senior Capstone Project - Marine Environment Analysis and Oyster Farming Research">
-    <meta name="author" content="Chase Bonfiglio">
-    <title>Underwater ROV - Senior Project | Chase Bonfiglio</title>
-
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
-    <!-- Themify Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lykmapipo/themify-icons@0.1.2/css/themify-icons.css">
-    
-    <!-- Custom CSS -->
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
-        }
-        
-        /* Header Styles */
-        .navbar {
-            background: linear-gradient(135deg, #1c2e4a 0%, #2a3f5a 100%);
-            padding: 1rem 0;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        
-        .navbar-nav.mr-auto {
-            justify-content: space-around;
-        }
-        
-        .navbar-nav.ml-auto {
-            justify-content: space-around;
-        }
-        
-        .navbar-nav.brand {
-            flex: 0 0 auto;
-        }
-        
-        .navbar-brand {
-            color: #fff !important;
-            font-weight: 700;
-            font-size: 1.5rem;
-        }
-        
-        .nav-link {
-            color: #fff !important;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-        
-        .nav-link:hover {
-            color: #ffd700 !important;
-            transform: translateY(-2px);
-        }
-        
-        /* Hero Section */
-        .hero-section {
-            background: linear-gradient(135deg, #1c2e4a 0%, #2a3f5a 100%);
-            color: white;
-            padding: 4rem 0;
-            text-align: center;
-        }
-        
-        .project-title {
-            font-size: 3rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-        }
-        
-        .project-subtitle {
-            font-size: 1.2rem;
-            opacity: 0.9;
-            margin-bottom: 2rem;
-        }
-        
-        /* Main Content */
-        .main-content {
-            padding: 4rem 0;
-        }
-        
-        .section-title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #1c2e4a;
-            margin-bottom: 2rem;
-            text-align: center;
-        }
-        
-        .section-subtitle {
-            font-size: 1.1rem;
-            color: #666;
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-        
-        /* Project Images */
-        .main-image {
-            width: 100%;
-            height: 500px;
-            object-fit: cover;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            margin-bottom: 2rem;
-        }
-        
-        .small-images {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 3rem;
-        }
-        
-        .small-image {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-        }
-        
-        .small-image:hover {
-            transform: scale(1.05);
-        }
-        
-        /* Project Details */
-        .project-details {
-            background: #f8f9fa;
-            padding: 3rem;
-            border-radius: 15px;
-            margin-bottom: 3rem;
-        }
-        
-        .project-title {
-            font-size: 1.8rem;
-            font-weight: 600;
-            color: #1c2e4a;
-            margin-bottom: 1rem;
-        }
-        
-        .project-description {
-            font-size: 1.1rem;
-            line-height: 1.8;
-            color: #555;
-        }
-        
-        /* Technical Report */
-        .technical-report {
-            background: #fff;
-            padding: 3rem;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            margin-bottom: 3rem;
-        }
-        
-        .report-iframe {
-            width: 100%;
-            height: 600px;
-            border: 2px solid #1c2e4a;
-            border-radius: 10px;
-        }
-        
-        /* Project Components */
-        .components-section {
-            background: #fff;
-            padding: 3rem 0;
-        }
-        
-        .component-card {
-            background: #fff;
-            border-radius: 15px;
-            padding: 2rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            margin-bottom: 2rem;
-            transition: transform 0.3s ease;
-        }
-        
-        .component-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .component-icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #1c2e4a, #2a3f5a);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 24px;
-            margin-bottom: 1rem;
-        }
-        
-        .status-badge {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
-        .status-complete {
-            background: #28a745;
-            color: white;
-        }
-        
-        .status-incomplete {
-            background: #ffc107;
-            color: #212529;
-        }
-        
-        /* Image Gallery */
-        .image-gallery {
-            background: #f8f9fa;
-            padding: 3rem 0;
-        }
-        
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-        
-        .gallery-item {
-            background: #fff;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-        }
-        
-        .gallery-item:hover {
-            transform: translateY(-10px);
-        }
-        
-        .gallery-item img {
-            width: 100%;
-            height: 250px;
-            object-fit: cover;
-        }
-        
-        .gallery-caption {
-            padding: 1.5rem;
-        }
-        
-        .gallery-caption h5 {
-            color: #1c2e4a;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-        
-        .gallery-caption p {
-            color: #666;
-            font-size: 0.9rem;
-        }
-        
-        /* Technical Implementation */
-        .technical-section {
-            background: #fff;
-            padding: 3rem 0;
-        }
-        
-        .tech-card {
-            background: #f8f9fa;
-            border-radius: 15px;
-            padding: 2rem;
-            margin-bottom: 1.5rem;
-            border-left: 4px solid #1c2e4a;
-        }
-        
-        /* Results Section */
-        .results-section {
-            background: linear-gradient(135deg, #1c2e4a 0%, #2a3f5a 100%);
-            color: white;
-            padding: 3rem 0;
-        }
-        
-        .results-card {
-            background: rgba(255,255,255,0.1);
-            border-radius: 15px;
-            padding: 2rem;
-            backdrop-filter: blur(10px);
-        }
-        
-        /* Contact Section */
-        .contact-section {
-            background: #f8f9fa;
-            padding: 3rem 0;
-        }
-        
-        .contact-card {
-            background: #fff;
-            border-radius: 15px;
-            padding: 2rem;
-            text-align: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-        }
-        
-        .contact-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .contact-icon {
-            font-size: 2rem;
-            color: #1c2e4a;
-            margin-bottom: 1rem;
-        }
-        
-        /* Separator */
-        .separator {
-            height: 2px;
-            background: linear-gradient(90deg, transparent, #1c2e4a, transparent);
-            margin: 3rem auto;
-            width: 70%;
-        }
-        
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .project-title {
-                font-size: 2rem;
-            }
-            
-            .section-title {
-                font-size: 2rem;
-            }
-            
-            .gallery-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Underwater ROV — a $187 sensor platform for oyster water · Chase Bonfiglio</title>
+<meta name="description" content="Senior capstone: a tethered underwater ROV built to survey oyster grounds in the Chesapeake. Five subsystems, three that worked, one that failed outright — and an honest account of why. Shelved 2025." />
+<meta name="author" content="Chase Bonfiglio" />
+<meta property="og:title" content="Underwater ROV — a $187 sensor platform for oyster water" />
+<meta property="og:description" content="Five subsystems, three that worked, one that failed outright. An honest post-mortem of a shelved senior capstone." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&family=Public+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/rov/rov.css?v=2" />
+<script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
 
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
-			<div class="container">
-            <a class="navbar-brand" href="index.html">
-                <strong>Chase Bonfiglio</strong> Portfolio
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-							<span class="navbar-toggler-icon"></span>
-					</button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav mr-auto">
-									<li class="nav-item">
-											<a class="nav-link" href="index.html">Home</a>
-									</li>
-									<li class="nav-item">
-                        <a class="nav-link" href="projects.html">Projects</a>
-									</li>
-									<li class="nav-item">
-                        <a class="nav-link" href="index.html#resume">Resume</a>
-									</li>
-									<li class="nav-item">
-                        <a class="nav-link" href="index.html#photography">Photography</a>
-									</li>
-                </ul>
-                <ul class="navbar-nav ml-auto">
-									<li class="nav-item">
-                        <a class="nav-link" href="index.html#contact">Contact</a>
-									</li>
-							</ul>
-					</div>
-			</div>
-    </nav>
+<div class="column" aria-hidden="true"></div>
+<div class="attenuate" aria-hidden="true"></div>
+<div class="caustics" aria-hidden="true"></div>
+<canvas id="snow" aria-hidden="true"></canvas>
 
-
-
-    <!-- Main Content -->
-    <div class="main-content">
-        <div class="container">
-            <!-- Project Overview -->
-            <div class="project-details">
-                                    <div class="text-center mb-4">
-                        <img src="assets/imgs/cad/rov/Front View 2.jpg" alt="Underwater ROV Front View" class="main-image">
-        </div>
-                <h2 class="project-title">Engineering Design Prompt</h2>
-                <p class="project-description">
-                    Building upon a previously constructed underwater ROV that I had designed and built, this senior capstone project focused on extending its capabilities by implementing a water sampling mechanism, CTD (conductivity, temperature, and depth) sensor package, telemetry system, backend software for data processing, and photogrammetry system.
-                </p>
-                <p class="project-description">
-                    This senior capstone project was completed at the OL Math and Science Academy, focusing on marine environment analysis and oyster farming decision support. The ROV should theoretically operate at depths up to 30 feet with reliable telemetry communication and comprehensive sensor data collection. I archived the project in the summer of 2025 while I was working, but I hope to continue working on it in the future.
-		    </p>
-		</div>
-
-            <!-- Technical Report -->
-            <div class="technical-report">
-                <h3 class="section-title">Technical Report</h3>
-                <p class="text-center mb-4">View the complete technical documentation and research findings for this project.</p>
-                <iframe src="assets/imgs/cad/rov/Chase Bonfiglio Senior Project Paper (2).pdf" class="report-iframe">
-                    <p>Your browser does not support PDFs. <a href="assets/imgs/cad/rov/Chase Bonfiglio Senior Project Paper (2).pdf" target="_blank" class="btn btn-primary">Download Technical Report</a></p>
-                </iframe>
-                <div class="text-center mt-3">
-                    <a href="assets/imgs/cad/rov/Chase Bonfiglio Senior Project Paper (2).pdf" target="_blank" class="btn btn-outline-primary" style="border-color: #1c2e4a; color: #1c2e4a;">Download PDF</a>
-									 </div>
-							 </div>
-
-            <div class="separator"></div>
-
-            <!-- Project Components -->
-            <section class="components-section">
-                <h2 class="section-title">Project Components</h2>
-                <div class="row">
-                    <div class="col-lg-4 col-md-6">
-                        <div class="component-card">
-                            <div class="component-icon">
-                                <i class="ti-droplet"></i>
-									 </div>
-                            <h5>Water Sampling Mechanism</h5>
-                            <span class="status-badge status-incomplete">In Progress</span>
-                            <p>Custom-designed system for collecting intact water samples that accurately reflect the body of water where they were collected.</p>
-									 </div>
-							 </div>
-                    <div class="col-lg-4 col-md-6">
-                        <div class="component-card">
-                            <div class="component-icon">
-                                <i class="ti-pulse"></i>
-						</div>
-                            <h5>CTD Sensor Package</h5>
-                            <span class="status-badge status-complete">Complete</span>
-                            <p>Conductivity, Temperature, and Depth sensors for comprehensive marine environment analysis and data collection.</p>
-					</div>
-				</div>
-                    <div class="col-lg-4 col-md-6">
-                        <div class="component-card">
-                            <div class="component-icon">
-                                <i class="ti-signal"></i>
-						</div>
-                            <h5>Telemetry System</h5>
-                            <span class="status-badge status-complete">Complete</span>
-                            <p>RS485-based communication system with twisted tether cable for reliable data transmission over long distances.</p>
-					</div>
-				</div>
-                    <div class="col-lg-4 col-md-6">
-                        <div class="component-card">
-                            <div class="component-icon">
-                                <i class="ti-settings"></i>
-						</div>
-                            <h5>Backend Software</h5>
-                            <span class="status-badge status-incomplete">In Progress</span>
-                            <p>Python-based data processing application with MatPlotLib, SciPy, and NumPy libraries for comprehensive analysis.</p>
-					</div>
-				</div>
-                    <div class="col-lg-4 col-md-6">
-                        <div class="component-card">
-                            <div class="component-icon">
-                                <i class="ti-camera"></i>
-						</div>
-                            <h5>Photogrammetry System</h5>
-                            <span class="status-badge status-complete">Complete</span>
-                            <p>GoPro-based 3D modeling system for underwater environment documentation and analysis.</p>
-					</div>
-				</div>
-                    <div class="col-lg-4 col-md-6">
-                        <div class="component-card">
-                            <div class="component-icon">
-                                <i class="ti-game"></i>
-						</div>
-                            <h5>Control System</h5>
-                            <span class="status-badge status-complete">Complete</span>
-                            <p>PlayStation controller integration with custom Arduino library for intuitive ROV operation.</p>
-					</div>
-					</div>
-				</div>
-            </section>
-
-            <div class="separator"></div>
-
-            <!-- Technical Challenges -->
-            <section class="technical-section">
-                <h2 class="section-title">Technical Challenges</h2>
-                <div class="row">
-                    <div class="col-12">
-                        <h4 class="mb-4">Key Technical Challenges</h4>
-                        <div class="tech-card">
-                            <h6 class="font-weight-bold">Telemetry System</h6>
-                            <p class="mb-0">RS485 modules with twisted tether cable for signal integrity and interference reduction over long distances.</p>
-						</div>
-                        <div class="tech-card">
-                            <h6 class="font-weight-bold">Control Interface</h6>
-                            <p class="mb-0">PlayStation controller integration with custom PWM range identification for precise joystick control and signal processing.</p>
-					</div>
-                        <div class="tech-card">
-                            <h6 class="font-weight-bold">Photogrammetry System</h6>
-                            <p class="mb-0">GoPro mounting and positioning for underwater 3D modeling and environment documentation.</p>
-					</div>
-                        <div class="tech-card">
-                            <h6 class="font-weight-bold">Sensor Programming</h6>
-                            <p class="mb-0">Arduino-based sensor integration for pressure, temperature, and conductivity measurements with real-time data processing.</p>
-				</div>
-                        <div class="tech-card">
-                            <h6 class="font-weight-bold">3D Printed Electronics Housings</h6>
-                            <p class="mb-0">Custom-designed waterproof enclosures for electronic components using SolidWorks and additive manufacturing.</p>
-			</div>
-                    </div>
-                </div>
-            </section>
-
-            <div class="separator"></div>
-
-            <!-- Image Gallery -->
-            <section class="image-gallery">
-                <h2 class="section-title">Project Gallery</h2>
-                <div class="gallery-grid">
-                    <div class="gallery-item">
-                        <img src="assets/imgs/cad/rov/Front View 2.jpg" alt="ROV Front View">
-                        <div class="gallery-caption">
-                            <h5>ROV Front View</h5>
-                            <p>Complete underwater ROV assembly with propulsion system and sensor mounts</p>
-                        </div>
-                    </div>
-                    <div class="gallery-item">
-                        <img src="assets/imgs/cad/rov/Top View (2).jpg" alt="ROV Top View">
-                        <div class="gallery-caption">
-                            <h5>ROV Top View</h5>
-                            <p>Top-down perspective showing the overall system architecture</p>
-                </div>
-            </div>
-                    <div class="gallery-item">
-                        <img src="assets/imgs/cad/rov/IMG_5411 (1).JPG" alt="ROV Assembly">
-                        <div class="gallery-caption">
-                            <h5>ROV Assembly</h5>
-                            <p>Complete underwater ROV with PVC frame, thrusters, and sensor array</p>
-                        </div>
-        </div>
-                    <div class="gallery-item">
-                        <img src="assets/imgs/cad/rov/IMG_5412 (1).jpg" alt="ROV Electronics">
-                        <div class="gallery-caption">
-                            <h5>ROV Electronics</h5>
-                            <p>Internal wiring and electronics housing with waterproof enclosure</p>
-									</div>
-							</div>
-                    <div class="gallery-item">
-                        <img src="assets/imgs/cad/rov/IMG_5409.JPG" alt="ROV Overview">
-                        <div class="gallery-caption">
-                            <h5>ROV Overview</h5>
-                            <p>Wide-angle view of the complete ROV system with propulsion and control components</p>
-                        </div>
-                    </div>
-                    <div class="gallery-item">
-                        <img src="assets/imgs/cad/rov/controller wiring.png" alt="Controller Wiring">
-                        <div class="gallery-caption">
-                            <h5>Controller Integration</h5>
-                            <p>PlayStation controller wiring diagram for ROV control system</p>
-                    </div>
-                </div>
-                    <div class="gallery-item">
-                        <img src="assets/imgs/cad/rov/pressuresensor.png" alt="Pressure Sensor">
-                        <div class="gallery-caption">
-                            <h5>Pressure Sensor</h5>
-                            <p>Depth measurement sensor integration with Arduino control system</p>
-                </div>
-            </div>
-                    <div class="gallery-item">
-                        <img src="assets/imgs/cad/rov/temperaturesensor.png" alt="Temperature Sensor">
-                        <div class="gallery-caption">
-                            <h5>Temperature Sensor</h5>
-                            <p>Water temperature monitoring sensor for environmental data collection</p>
-                        </div>
-                            </div>
-                    <div class="gallery-item">
-                        <img src="assets/imgs/cad/rov/graph.png" alt="Real-time Data">
-                        <div class="gallery-caption">
-                            <h5>Real-time Sensor Data</h5>
-                            <p>Live Arduino sensor data visualization showing pressure and temperature readings</p>
-                        </div>
-                    </div>
-                    <div class="gallery-item">
-                        <img src="assets/imgs/cad/rov/rs-485_waveform.png" alt="RS485 Communication">
-                        <div class="gallery-caption">
-                            <h5>RS485 Communication</h5>
-                            <p>Digital signal waveforms for reliable telemetry data transmission</p>
-                        </div>
-                    </div>
-                    <div class="gallery-item">
-                        <img src="assets/imgs/cad/rov/Backupcamear.jpg" alt="Backup Camera">
-                        <div class="gallery-caption">
-                            <h5>Backup Camera System</h5>
-                            <p>Secondary camera feed for enhanced ROV control and monitoring</p>
-                </div>
-                            </div>
-                    <div class="gallery-item">
-                        <img src="assets/imgs/cad/rov/photogrammergyexample.png" alt="Photogrammetry Example">
-                        <div class="gallery-caption">
-                            <h5>Photogrammetry Output</h5>
-                            <p>3D model generated from underwater photographs for environment mapping</p>
-                        </div>
-                    </div>
-                    <div class="gallery-item">
-                        <img src="assets/imgs/cad/rov/photogrammetry.png" alt="Photogrammetry Software">
-                        <div class="gallery-caption">
-                            <h5>Photogrammetry Software Interface</h5>
-                            <p>RealityCapture software for processing underwater photographs into 3D models</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <div class="separator"></div>
-
-            <!-- Results and Impact -->
-            <section class="results-section">
-                <div class="container">
-                    <h2 class="section-title text-white">Project Results & Impact</h2>
-                    <div class="row">
-                        <div class="col-lg-8 mx-auto">
-                            <div class="results-card">
-                                <h4 class="text-center mb-4">Project Success</h4>
-                                <p class="lead text-center mb-4">
-                                    The underwater ROV project was extremely successful, achieving all primary objectives and demonstrating the utility of budget-friendly DIY ROVs for marine research applications.
-                                </p>
-                                
-                                <div class="row mt-5">
-                                    <div class="col-md-6">
-                                        <h5 class="font-weight-bold">Key Achievements</h5>
-                                        <ul class="list-unstyled">
-                                            <li class="mb-2"><i class="ti-check text-success mr-2"></i>Successful pressure and temperature data collection</li>
-                                            <li class="mb-2"><i class="ti-check text-success mr-2"></i>Reliable telemetry system over 30ft tether</li>
-                                            <li class="mb-2"><i class="ti-check text-success mr-2"></i>Functional water sampling mechanism</li>
-                                            <li class="mb-2"><i class="ti-check text-success mr-2"></i>Real-time data display and analysis</li>
-                                            <li class="mb-2"><i class="ti-check text-success mr-2"></i>Intuitive PlayStation controller operation</li>
-                                        </ul>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <h5 class="font-weight-bold">Research Impact</h5>
-                                        <ul class="list-unstyled">
-                                            <li class="mb-2"><i class="ti-check text-success mr-2"></i>Low-cost marine environment investigation</li>
-                                            <li class="mb-2"><i class="ti-check text-success mr-2"></i>Oyster farming decision support</li>
-                                            <li class="mb-2"><i class="ti-check text-success mr-2"></i>Educational tool for marine science</li>
-                                            <li class="mb-2"><i class="ti-check text-success mr-2"></i>Open-source design contribution</li>
-                                            <li class="mb-2"><i class="ti-check text-success mr-2"></i>Budget-friendly research platform</li>
-                                        </ul>
-                            </div>
-                        </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Contact Section -->
-            <section class="contact-section">
-                <div class="container">
-                    <h2 class="section-title">Get In Touch</h2>
-                    <p class="text-center lead mb-5">Interested in learning more about this project or collaborating on similar engineering challenges?</p>
-                    
-                    <div class="row justify-content-center">
-                        <div class="col-lg-8">
-                            <div class="row">
-                                <div class="col-md-4 mb-4">
-                                    <div class="contact-card">
-                                        <div class="contact-icon">
-                                            <i class="ti-email"></i>
-                                        </div>
-                                        <h5>Email</h5>
-                                        <p class="mb-0"><a href="mailto:chasebonfiglio@vt.edu">chasebonfiglio@vt.edu</a></p>
-				</div>
-		</div>
-                                <div class="col-md-4 mb-4">
-                                    <a href="https://www.linkedin.com/in/chase-bonfiglio" target="_blank" class="text-decoration-none" style="color: inherit;">
-                                        <div class="contact-card" style="cursor: pointer;">
-                                            <div class="contact-icon">
-                                                <i class="ti-linkedin"></i>
-                                            </div>
-                                            <h5>LinkedIn</h5>
-                                            <p class="mb-0">Connect for professional opportunities</p>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="col-md-4 mb-4">
-                                    <div class="contact-card">
-                                        <div class="contact-icon">
-                                            <i class="ti-github"></i>
-                                        </div>
-                                        <h5>GitHub</h5>
-                                        <p class="mb-0">View project code and documentation</p>
-		</div>
+<!-- depth rail -->
+<div class="rail" aria-hidden="true">
+  <div class="rail__ticks" id="rail-ticks"></div>
+  <div class="rail__marker" id="rail-marker"></div>
+  <div class="rail__depth" id="rail-depth">0.0m</div>
+  <div class="rail__cap">SCROLL<br>DEPTH</div>
 </div>
-                </div>
 
-                            <div class="text-center mt-5">
-                                <a href="index.html#contact" class="btn btn-lg" style="background-color: #1c2e4a; color: white; border: none; border-radius: 25px; padding: 12px 30px; font-weight: 500; text-decoration: none; display: inline-block; margin-right: 15px;">Contact Me</a>
-                                <a href="projects.html" class="btn btn-lg" style="background-color: #1c2e4a; color: white; border: none; border-radius: 25px; padding: 12px 30px; font-weight: 500; text-decoration: none; display: inline-block;">View All Projects</a>
-            </div>
+<nav class="mininav" aria-label="site navigation">
+  <a class="mininav__brand" href="index.html">Chase Bonfiglio</a>
+  <div class="mininav__links">
+    <a href="index.html#about">About</a>
+    <a href="projects.html">Projects</a>
+    <a href="cad-projects.html">CAD</a>
+    <a href="index.html#photography">Photography</a>
+    <a href="index.html#contact">Contact</a>
+  </div>
+</nav>
+
+<header class="entry wrap" id="top">
+  <nav class="crumb" aria-label="breadcrumb">
+    <a href="index.html">chasebonfiglio</a>
+    <span>/</span><a href="projects.html">projects</a>
+    <span>/</span><b>underwater rov</b>
+  </nav>
+
+  <div class="shelved">
+    <span class="shelved__dot" aria-hidden="true"></span>
+    <b>Shelved</b>
+    <span>Built 2024 · capstone submitted Dec 2024 · no work since 2025 · not planned to resume</span>
+  </div>
+
+  <div class="entry__grid">
+    <div class="entry__lead">
+      <p class="kicker">Senior capstone · Ocean Lakes Math &amp; Science Academy</p>
+      <h1 class="entry__title">A $187 sensor platform for <i>oyster water</i></h1>
+      <p class="entry__sub">
+        The Chesapeake's oysters filter the bay, and nobody knows where the good
+        ground is without getting in the water. I built a tethered ROV to carry a
+        sensor package down and report back — five subsystems, on a budget smaller
+        than the donated camera bolted to the front.
+      </p>
+      <div class="entry__links">
+        <a href="#failure">↓ what failed</a>
+        <a href="assets/imgs/cad/rov/Chase%20Bonfiglio%20Senior%20Project%20Paper%20(2).pdf" target="_blank" rel="noopener">↗ full report (PDF, 8.7&nbsp;MB)</a>
+        <a href="mailto:chasebonfiglio@gmail.com">✉ email</a>
+      </div>
+    </div>
+
+    <div class="built" aria-label="build manifest">
+      <div class="built__bar">
+        <span>BUILD MANIFEST</span>
+        <span>5 SUBSYSTEMS · SOLO</span>
+      </div>
+      <ol class="built__list">
+        <li>
+          <span class="built__ix">01</span>
+          <div><b>Frame &amp; hull<span class="chip chip--ok">held</span></b>
+          <p>PVC frame, 4in electronics tube, flooding port for neutral buoyancy.</p></div>
+        </li>
+        <li>
+          <span class="built__ix">02</span>
+          <div><b>Telemetry<span class="chip chip--ok">worked</span></b>
+          <p>RS-485 over a Cat 6 tether. ~40 values/sec, no interference.</p></div>
+        </li>
+        <li>
+          <span class="built__ix">03</span>
+          <div><b>CTD sensors<span class="chip chip--part">partial</span></b>
+          <p>Isolated compartment didn't leak. Pressure sensor never calibrated.</p></div>
+        </li>
+        <li>
+          <span class="built__ix">04</span>
+          <div><b>Water sampler<span class="chip chip--part">unresolved</span></b>
+          <p>Bench-tested. It filtered the sample while collecting it.</p></div>
+        </li>
+        <li>
+          <span class="built__ix">05</span>
+          <div><b>Photogrammetry<span class="chip chip--fail">failed</span></b>
+          <p>Worked on a bookshelf. Died in Chesapeake turbidity.</p></div>
+        </li>
+      </ol>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- ============ 01 THE PROBLEM ============ -->
+<section class="sec wrap rv" id="problem">
+  <div class="sec__head"><span class="sec__num">01</span><h2 class="sec__title">Why oysters</h2></div>
+  <div class="sec__rule"></div>
+
+  <div class="two">
+    <div class="prose">
+      <p>
+        A single oyster filters sediment, algae, nitrogen and phosphorus out of the
+        water it sits in. That's the whole pitch — they're infrastructure that
+        reproduces itself. The problem is there aren't enough of them left: at the
+        current Chesapeake population, filtering the entire bay once would take
+        <b>over a year</b>.
+      </p>
+      <p>
+        Plenty of organizations are working to rebuild that population. But unlike
+        agriculture, aquaculture is still rooted in <em>outdated methods with very
+        little modern technology in use</em>. Farmers working bottom culture are
+        making planting and harvesting decisions largely blind — where the hard
+        surfaces are, where sediment would bury spat, which beds have matured.
+      </p>
+      <p>
+        That gap is what the ROV was aimed at. Cheap enough that a restoration site
+        or a small farm could actually own one, carrying sensors that answer the
+        questions a farmer is otherwise guessing at.
+      </p>
+    </div>
+
+    <div>
+      <figure class="fig">
+        <img src="assets/imgs/cad/rov/web/oyster-graph.webp" alt="Chart of oyster bushel harvests over time in the Chesapeake Bay region." loading="lazy" width="558" height="330" />
+        <figcaption>Harvest history for the region — the collapse this project sits downstream of.</figcaption>
+      </figure>
+
+      <div class="stats">
+        <div class="stat">
+          <div class="stat__v">&gt;1 <small>yr</small></div>
+          <div class="stat__k">to filter the bay once</div>
         </div>
-                    </div>
-                </div>
-            </section>
-                </div>
-                </div>
+        <div class="stat">
+          <div class="stat__v">~90</div>
+          <div class="stat__k">jobs from one Gulf reef project</div>
+        </div>
+        <div class="stat">
+          <div class="stat__v">$30M<small>+</small></div>
+          <div class="stat__k">regional aquaculture industry</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <!-- Footer -->
-    <footer class="bg-dark text-white text-center py-4">
-        <div class="container">
-            <p class="mb-0">&copy; 2025 Chase Bonfiglio. All rights reserved.</p>
-                            </div>
-    </footer>
+<!-- ============ 02 OBJECTIVES ============ -->
+<section class="sec wrap rv" id="objectives">
+  <div class="sec__head"><span class="sec__num">02</span><h2 class="sec__title">What it had to do</h2></div>
+  <div class="sec__rule"></div>
+  <p class="sec__intro">
+    The prior year's practicum produced research and a loose design. The capstone was
+    to finalize it, build it, and equip it well enough to be used in a real research
+    setting. Three specifications had to hold for it to count as complete.
+  </p>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  <div class="grid3">
+    <div class="fig" style="padding:20px">
+      <div class="mono" style="color:var(--cyan);margin-bottom:9px">SPEC 01 · WATERPROOFING</div>
+      <p style="margin:0;font-size:.92rem;color:#c0d3da">
+        Every electrical component sealed, including where the tether penetrates the
+        hull. The sample container sealed too — a leak there contaminates the sample
+        rather than shorting a board.
+      </p>
+    </div>
+    <div class="fig" style="padding:20px">
+      <div class="mono" style="color:var(--cyan);margin-bottom:9px">SPEC 02 · DATA COLLECTION</div>
+      <p style="margin:0;font-size:.92rem;color:#c0d3da">
+        Sensors and telemetry accurate and real-time, without interference. The
+        pressure sensor specifically had to be verified, since depth is derived
+        from it.
+      </p>
+    </div>
+    <div class="fig" style="padding:20px">
+      <div class="mono" style="color:var(--cyan);margin-bottom:9px">SPEC 03 · VISUALIZATION</div>
+      <p style="margin:0;font-size:.92rem;color:#c0d3da">
+        Data presented intuitively enough to read an environment in real time at the
+        surface, and exportable afterward for analysis.
+      </p>
+    </div>
+  </div>
+</section>
 
+<!-- ============ 03 THE BUILD ============ -->
+<section class="sec wrap rv" id="build">
+  <div class="sec__head"><span class="sec__num">03</span><h2 class="sec__title">The vehicle</h2></div>
+  <div class="sec__rule"></div>
+
+  <div class="two">
+    <div class="prose">
+      <p>
+        Home-built ROVs converge on PVC for good reasons: it's cheap, it's already
+        watertight, and the voids double as buoyancy. The frame is
+        <b>1.5in Sch40</b> — twelve tees, ten elbows — with a port cut in so the
+        frame floods and settles to roughly neutral.
+      </p>
+      <p>
+        Electronics live in a <b>4in PVC tube</b> capped at both ends, one cap
+        carrying a 2.5in acrylic dome for the camera's field of view, the other
+        drilled for four tether penetrations. A rubber coupling holds one end on, so
+        the whole electronics stack stays serviceable after assembly instead of
+        being epoxied shut forever.
+      </p>
+      <p>
+        Leftover 4in stock became motor guards — mounts that let the six bilge-pump
+        thrusters come on and off easily, and keep debris out of the impellers.
+      </p>
+      <p>
+        Onboard is an <b>Elegoo Mega</b>; topside an <b>Arduino Uno</b> reading a
+        PlayStation 2 controller. Everything between them runs down Cat 6 in a
+        braided sleeve.
+      </p>
+    </div>
+    <div>
+      <figure class="fig">
+        <img src="assets/imgs/cad/rov/web/rov-wireframe.webp" alt="CAD wireframe of the ROV showing the PVC frame, central electronics tube and six thruster positions." loading="lazy" width="1318" height="906" />
+        <figcaption>CAD wireframe — frame, electronics tube, thruster placement.</figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <div class="grid3" style="margin-top:26px">
+    <figure class="fig">
+      <img src="assets/imgs/cad/rov/web/rov-front.webp" alt="Front view render of the completed ROV." loading="lazy" width="1400" height="788" />
+      <figcaption>Front — dome port centred in the end cap.</figcaption>
+    </figure>
+    <figure class="fig">
+      <img src="assets/imgs/cad/rov/web/rov-top.webp" alt="Top-down view render of the ROV frame." loading="lazy" width="1400" height="788" />
+      <figcaption>Top — thruster geometry across the frame.</figcaption>
+    </figure>
+    <figure class="fig">
+      <img src="assets/imgs/cad/rov/web/rov-build-frame.webp" alt="Photograph of the physical ROV during assembly." loading="lazy" width="1200" height="1800" />
+      <figcaption>The physical build, mid-assembly.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============ 04 TELEMETRY ============ -->
+<section class="sec wrap rv" id="telemetry">
+  <div class="sec__head"><span class="sec__num">04</span><h2 class="sec__title">Getting a signal back up the tether</h2></div>
+  <div class="sec__rule"></div>
+  <p class="sec__intro">
+    This was the subsystem that worked best, and the one where the engineering
+    reasoning was cleanest. Radio is useless through water, so the vehicle is
+    tethered — which trades a wireless problem for a signal-integrity one.
+  </p>
+
+  <div class="prose">
+    <p>
+      Arduino logic swings between 0 and 5&nbsp;V. Send that down a long conductor
+      and two things eat it: the wire's own resistance drops the voltage, and any
+      passing electromagnetic field induces noise on top. Over a few inches neither
+      matters. Over a tether, a 5&nbsp;V signal decoded against a 2.5&nbsp;V
+      threshold does not survive.
+    </p>
+    <p>
+      <b>RS-485</b> solves this by refusing to measure against ground at all. It
+      sends the same bit twice, inverted, down a twisted pair — an A wire and a B
+      wire — and the receiver reads only <em>the difference between them</em>. Noise
+      couples into both wires nearly equally, so it cancels in the subtraction. The
+      Arduino still speaks UART, so a transceiver module sits at each end doing the
+      conversion.
+    </p>
+    <p>Drag the noise up and watch which decoder breaks:</p>
+  </div>
+
+  <div class="panel">
+    <div class="panel__bar">
+      <b>FIG 04.1</b><span>RS-485 common-mode rejection</span>
+      <span class="panel__tag">interactive</span>
+    </div>
+    <div class="panel__body">
+      <canvas id="rs485" height="300" aria-label="Two stacked oscilloscope lanes. The upper lane shows the A and B wires measured against ground with noise added, crossing the 2.5 volt decode threshold. The lower lane shows A minus B, which stays clean because the noise is common to both wires."></canvas>
+      <div class="ctrls">
+        <div class="ctrl">
+          <label for="rs-noise">Induced noise</label>
+          <input type="range" id="rs-noise" min="0" max="4" step="0.1" value="0.6" />
+          <output id="rs-noise-out">0.6 V</output>
+        </div>
+      </div>
+      <div class="legend">
+        <span><i style="background:#4fd1e0"></i>wire A</span>
+        <span><i style="background:rgba(139,167,180,.75)"></i>wire B</span>
+        <span><i style="background:#3fc9a3"></i>A − B differential</span>
+        <span><i style="background:#ef6a52"></i>misread bit</span>
+      </div>
+    </div>
+    <div class="panel__note">
+      Single-ended decode: <b id="rs-verdict-se" class="v-ok">all 8 bits intact</b> &nbsp;·&nbsp;
+      Differential decode: <b id="rs-verdict-df" class="v-ok">all 8 bits intact</b><br>
+      The differential trace swings ±5&nbsp;V against a 0&nbsp;V threshold and never
+      gets near it. That margin is the entire reason a 5&nbsp;V microcontroller can
+      talk reliably down a long wet cable.
+    </div>
+  </div>
+
+  <div class="two" style="margin-top:38px">
+    <div class="prose">
+      <p>
+        The same tether carries motor commands the other way. Six bilge pumps act
+        as thrusters, each behind a <b>BTS7960</b> driver, and speed control is
+        <b>pulse width modulation</b> — the driver switches the 12&nbsp;V supply on
+        and off fast enough that the motor responds to the average rather than the
+        switching.
+      </p>
+      <p>
+        Duty cycle is a byte: 0 to 255. That byte, plus a direction bit, is the
+        entire motor command.
+      </p>
+      <p class="mono" style="color:var(--jade);letter-spacing:.1em;line-height:1.8">
+        RESULT · PS2 controller, pressure and temperature all stable at 9600 baud —
+        roughly 40 values per second, no interference.
+      </p>
+    </div>
+
+    <div class="panel" style="margin:0">
+      <div class="panel__bar">
+        <b>FIG 04.2</b><span>PWM command</span>
+        <span class="panel__tag">interactive</span>
+      </div>
+      <div class="panel__body">
+        <canvas id="pwm" height="190" aria-label="A square wave whose high-time fraction changes with the duty cycle slider, with a dashed line marking the resulting mean voltage."></canvas>
+        <div class="ctrls">
+          <div class="ctrl">
+            <label for="pwm-duty">Duty byte</label>
+            <input type="range" id="pwm-duty" min="0" max="255" step="1" value="170" />
+            <output id="pwm-duty-out">170</output>
+          </div>
+        </div>
+        <div class="legend">
+          <span>duty <b id="pwm-pct" style="color:var(--amber)">67%</b></span>
+          <span>mean commanded <b id="pwm-volt" style="color:var(--amber)">8.0 V</b></span>
+        </div>
+      </div>
+      <div class="caveat">
+        Control scheme as designed and wired. Thruster response was never
+        characterized — the assembled vehicle never ran under power in open water,
+        so there is no measured thrust or RPM to plot here.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 05 SENSORS + SAMPLER ============ -->
+<section class="sec wrap rv" id="sensors">
+  <div class="sec__head"><span class="sec__num">05</span><h2 class="sec__title">Sensors, and a sampler that improvised</h2></div>
+  <div class="sec__rule"></div>
+
+  <div class="two">
+    <div class="prose">
+      <p>
+        Temperature and pressure both need to touch the water, which means both need
+        a hull penetration, which means both are leak risks. Rather than accept that
+        risk in the compartment holding the microcontroller, they got
+        <b>their own compartment</b> — a separate 4in PVC section, sensors poking
+        through its end cap. If it floods, it floods alone.
+      </p>
+      <p>
+        The reference way to sample water at depth is a Nansen or Niskin bottle:
+        lowered open, inverted by a released weight at the target depth, sealed. On
+        this budget, building a mechanism like that which was both Arduino-driven
+        and reliably watertight wasn't realistic.
+      </p>
+      <p>
+        The workaround used what was already aboard. The thrusters <em>are</em> bilge
+        pumps — so another bilge pump, plumbed to a sealed 4in container with a check
+        valve in the line, becomes a sampler. Press a spare button on the PlayStation
+        controller and it runs.
+      </p>
+      <p>
+        The container holds about <b>0.22 gal</b>; the pump moves 1100&nbsp;GPH.
+        <b>0.72 seconds</b> should fill it.
+      </p>
+    </div>
+
+    <div>
+      <figure class="fig">
+        <img src="assets/imgs/cad/rov/web/sensor-pressure.webp" alt="The pressure sensor module used for depth estimation." loading="lazy" width="600" height="557" />
+        <figcaption>Pressure sensor — depth is derived from this reading.</figcaption>
+      </figure>
+      <figure class="fig" style="margin-top:18px">
+        <img src="assets/imgs/cad/rov/nansen%20bottle.webp" alt="A Nansen bottle, the standard oceanographic water sampling device." loading="lazy" width="277" height="518" />
+        <figcaption>The Nansen bottle — prior art this couldn't afford to copy.</figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <div class="fig" style="margin-top:30px;padding:22px">
+    <div class="mono" style="color:var(--amber);margin-bottom:10px">THE RELAY THAT WOULDN'T FIRE</div>
+    <p style="margin:0;color:#c0d3da;max-width:52em">
+      The relay switching the sample pump was rated for a <b>4.5–12&nbsp;V</b> input.
+      The Mega tops out at 5&nbsp;V — inside the rated range, so it should have been
+      fine. It wasn't: at 5&nbsp;V the relay drew enough current to light its own
+      indicator LED and nothing more. The coil never pulled in. The fix was a
+      <b>2N2222 transistor</b> between the 12&nbsp;V battery and the relay, letting
+      the Mega switch the real supply with almost no current of its own — a rated
+      range describing voltage while the actual constraint was current.
+    </p>
+  </div>
+</section>
+
+<!-- ============ 06 WATERPROOFING ============ -->
+<section class="sec wrap rv" id="waterproofing">
+  <div class="sec__head"><span class="sec__num">06</span><h2 class="sec__title">Water gets in through the wires</h2></div>
+  <div class="sec__rule"></div>
+
+  <div class="two">
+    <div class="prose">
+      <p>
+        Every conductor entering the hull is a potential leak path. The technique
+        used throughout is an epoxy well: a short length of ⅛in PVC forms a cup, the
+        wires pass through it, and the cup is filled with epoxy that cures into a
+        solid plug around them.
+      </p>
+      <p>
+        The non-obvious part — and the detail that makes the difference — is what
+        happens if you pot a bundle with its insulation intact. A nick anywhere along
+        the tether lets water into the jacket, and it will wick <em>inside the
+        insulation</em>, straight through the epoxy plug, and into the compartment.
+        The seal is perfect and the hull still floods.
+      </p>
+      <p>
+        So the insulation is <b>stripped where the wires cross the epoxy</b>. Bare
+        conductor bonds to the epoxy with no annular channel for water to follow.
+      </p>
+    </div>
+    <div>
+      <figure class="fig fig--pad">
+        <img src="assets/imgs/cad/rov/web/potting.webp" alt="Diagram of an epoxy potting well showing wires with insulation stripped where they pass through the epoxy plug." loading="lazy" width="488" height="325" />
+      </figure>
+      <div class="cap" style="border:1px solid var(--line);border-top:0">
+        Epoxy well technique — diagram after Homebuilt ROVs.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 07 RESULTS ============ -->
+<section class="sec wrap rv" id="results">
+  <div class="sec__head"><span class="sec__num">07</span><h2 class="sec__title">What actually happened</h2></div>
+  <div class="sec__rule"></div>
+  <p class="sec__intro">
+    Subsystems were wet-tested individually. <b>The assembled vehicle never made a
+    piloted dive</b> — so nothing below is a claim about how it swims, surveys or
+    holds station. It's a claim about which parts worked when they got wet.
+  </p>
+
+  <div class="ledger">
+    <div class="ledger__row">
+      <div class="ledger__sys">Telemetry</div>
+      <div class="ledger__verdict v-ok">Worked</div>
+      <div class="ledger__note">RS-485 carried controller input and both sensor channels at <b>9600 baud, ~40 values/sec</b>, without interference. Best-executed part of the build.</div>
+    </div>
+    <div class="ledger__row">
+      <div class="ledger__sys">Sensor housing</div>
+      <div class="ledger__verdict v-ok">Worked</div>
+      <div class="ledger__note">The isolated compartment <b>did not leak on its first immersion</b>. The failsafe partitioning was never actually called upon.</div>
+    </div>
+    <div class="ledger__row">
+      <div class="ledger__sys">Pressure → depth</div>
+      <div class="ledger__verdict v-part">Miscalibrated</div>
+      <div class="ledger__note">Sensor reads, but <b>depth values are wrong</b>. Never calibrated. Temperature compensation was identified as the fix and never implemented.</div>
+    </div>
+    <div class="ledger__row">
+      <div class="ledger__sys">Water sampler</div>
+      <div class="ledger__verdict v-part">Unresolved</div>
+      <div class="ledger__note">Mechanism fired reliably, but the container <b>underfilled</b> — the end caps added volume the 0.72&nbsp;s calculation didn't account for. The deeper problem is below.</div>
+    </div>
+    <div class="ledger__row">
+      <div class="ledger__sys">Data dashboard</div>
+      <div class="ledger__verdict v-ok">Worked</div>
+      <div class="ledger__note">Python read the serial stream and plotted it live with Matplotlib. The only real friction was OS security policy blocking COM port access.</div>
+    </div>
+    <div class="ledger__row">
+      <div class="ledger__sys">Photogrammetry</div>
+      <div class="ledger__verdict v-fail">Failed</div>
+      <div class="ledger__note">Reconstructed a bookshelf in detail on the bench. Produced <b>nothing usable underwater</b>.</div>
+    </div>
+    <div class="ledger__row">
+      <div class="ledger__sys">Full vehicle dive</div>
+      <div class="ledger__verdict v-none">Not attempted</div>
+      <div class="ledger__note">The assembled ROV was never operated under power in open water. Thruster response, handling and endurance are <b>unmeasured</b>.</div>
+    </div>
+  </div>
+
+  <figure class="fig" style="margin-top:28px;max-width:620px">
+    <img src="assets/imgs/cad/rov/web/telemetry-graph.webp" alt="Matplotlib plot of live sensor data streamed from the Arduino over the serial port." loading="lazy" width="1036" height="889" />
+    <figcaption>Live plot off the serial stream — the visualization spec, met.</figcaption>
+  </figure>
+</section>
+
+<!-- ============ 08 FAILURE ============ -->
+<section class="sec sec--fail wrap rv" id="failure">
+  <div class="sec__head"><span class="sec__num">08</span><h2 class="sec__title">The parts that didn't work</h2></div>
+  <div class="sec__rule"></div>
+  <p class="sec__intro">
+    Three of these. One is a calibration debt, one is a measurement I accidentally
+    invalidated, and one is a subsystem defeated by the environment it was built for.
+  </p>
+
+  <div class="fail">
+
+    <article class="fail__card">
+      <div class="fail__head">
+        <h3>Photogrammetry</h3>
+        <span class="chip chip--fail">the biggest failure</span>
+      </div>
+      <div class="fail__body">
+        <div>
+          <p>
+            The plan: a GoPro Hero 7 shooting on an interval, images fed to
+            RealityCapture afterward to reconstruct the seafloor in 3D. Map oyster
+            beds, plan dredge paths that take mature oysters without tearing up reef
+            and grass.
+          </p>
+          <p>
+            <b>The pipeline was sound and I proved it.</b> A bench test with a DSLR
+            against a stack of books produced a model detailed enough to read the
+            titles on the covers.
+          </p>
+          <p>
+            Underwater it produced nothing. Photogrammetry works by finding the same
+            physical point in overlapping photos and triangulating from it. The
+            Chesapeake is turbid — suspended sediment scatters everything, contrast
+            collapses, and the GoPro's very wide angle spreads what detail survives
+            across too few pixels. Close to a feature, the software could not find
+            enough common reference points between frames to solve anything.
+          </p>
+          <div class="why">
+            <b>Why it counts as a real failure:</b> the turbidity of the Chesapeake was
+            knowable before I chose the approach. I validated the software and the
+            workflow, and never validated the assumption underneath them — that the
+            water would be clear enough to see through. In clearer freshwater this
+            subsystem would probably work as designed. In the water it was built for,
+            it doesn't.
+          </div>
+        </div>
+        <div>
+          <figure class="fig">
+            <img src="assets/imgs/cad/rov/web/photogram-books.webp" alt="A 3D photogrammetry reconstruction of a stack of books, detailed enough that cover text is legible." loading="lazy" width="512" height="288" />
+            <figcaption>Bench control, DSLR, air — cover text legible.</figcaption>
+          </figure>
+          <figure class="fig" style="margin-top:16px">
+            <img src="assets/imgs/cad/rov/web/photogram-diagram.webp" alt="Diagram illustrating how photogrammetry triangulates overlapping image points." loading="lazy" width="512" height="288" />
+            <figcaption>Overlapping rays — what turbidity destroys.</figcaption>
+          </figure>
+        </div>
+      </div>
+    </article>
+
+    <article class="fail__card">
+      <div class="fail__head">
+        <h3>The sampler filtered its own sample</h3>
+        <span class="chip chip--part">unresolved</span>
+      </div>
+      <div class="fail__body">
+        <div>
+          <p>
+            The bilge-pump sampler collected water on command, which looked like a
+            win. Then the obvious problem surfaced: <b>a pump is not a neutral
+            conduit.</b> Pulling water through an impeller strains and shears it.
+            Turbidity, suspended solids, anything fragile in the sample — potentially
+            altered in the act of collection.
+          </p>
+          <p>
+            So the mechanism works and the measurement may not. Whether the samples
+            are scientifically usable is a question for an environmental scientist,
+            and I shelved the project before getting that answer.
+          </p>
+          <div class="why">
+            <b>The lesson underneath it:</b> I validated that the device did what I
+            built it to do, not that what it produced was worth having. Those are
+            different tests, and only the second one mattered.
+          </div>
+        </div>
+        <div>
+          <figure class="fig">
+            <img src="assets/imgs/cad/rov/web/controller-wiring.webp" alt="Wiring diagram for the surface controller electronics." loading="lazy" width="1100" height="790" />
+            <figcaption>Surface controller wiring — the sampler ran off a spare button.</figcaption>
+          </figure>
+        </div>
+      </div>
+    </article>
+
+    <article class="fail__card">
+      <div class="fail__head">
+        <h3>Depth readings were never true</h3>
+        <span class="chip chip--part">calibration debt</span>
+      </div>
+      <div class="fail__body">
+        <div>
+          <p>
+            The pressure sensor reported cleanly over telemetry. The depth derived
+            from it was wrong, and stayed wrong — it was never calibrated against a
+            known reference.
+          </p>
+          <p>
+            The fix was identified at the time: water density and therefore the
+            pressure-to-depth relationship shift with temperature, and the ROV was
+            already carrying a temperature sensor in the same housing. The
+            compensation input was available. It was never written.
+          </p>
+          <div class="why">
+            <b>Straightforwardly unfinished work</b> — not a hard problem, just one I
+            didn't come back to. Depth accuracy was written into spec 02, so that
+            specification was never actually met.
+          </div>
+        </div>
+        <div>
+          <figure class="fig">
+            <img src="assets/imgs/cad/rov/web/sensor-temp.webp" alt="The temperature sensor module mounted in the sensor compartment." loading="lazy" width="400" height="585" />
+            <figcaption>The temperature sensor — the compensation input that went unused.</figcaption>
+          </figure>
+        </div>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ============ 09 BUDGET ============ -->
+<section class="sec wrap rv" id="budget">
+  <div class="sec__head"><span class="sec__num">09</span><h2 class="sec__title">What it cost</h2></div>
+  <div class="sec__rule"></div>
+  <p class="sec__intro">
+    Affordability was the point — a device a small farm or restoration site could
+    actually justify buying. Hover or focus any block for detail.
+  </p>
+
+  <div class="panel">
+    <div class="panel__bar"><b>FIG 09.1</b><span>Spend by part</span><span class="panel__tag">area ∝ dollars</span></div>
+    <div class="panel__body">
+      <div class="tree" id="treemap" role="list" aria-label="Budget breakdown by part, area proportional to cost"></div>
+      <div class="budget__total">
+        <span class="big">$186.69</span>
+        <span class="lab">total spend</span>
+        <span class="note">
+          $74.98 electronics + $111.71 structure. Several major components —
+          including the GoPro Hero 7 Silver at a $195.79 catalog price — were
+          donated or reused from the Advanced Technology Center and earlier
+          projects, so they sit outside this total. <b>The borrowed camera listed
+          for more than the entire build.</b>
+          <span style="display:block;margin-top:8px;color:var(--dim);font-size:.8rem">
+            Blocks above sum to $186.67 — the report's own two-cent rounding on the
+            rubber cap line. Electronics is one block because the report's per-item
+            column mixes purchased with donated parts and can't be split reliably.
+          </span>
+        </span>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p class="mono" style="color:var(--dim)">// WHAT I TOOK FROM IT</p>
+    <h2>Three subsystems worked. The one I was proudest of designing is the one that failed.</h2>
+    <ul class="takeaways">
+      <li>
+        <b>Validate the assumption, not just the pipeline.</b>
+        I proved photogrammetry worked by testing it in clear air on a bookshelf. The
+        variable that actually decided the outcome — how much you can see through
+        Chesapeake water — went untested until it was too late to change approach.
+      </li>
+      <li>
+        <b>"Works" and "produces valid data" are different tests.</b>
+        The sampler filled its container on command and I counted that as success.
+        That the pump was shearing the sample as it collected it is a separate
+        question, and the one that determines whether the subsystem has any value.
+      </li>
+      <li>
+        <b>Rated ranges describe one variable at a time.</b>
+        A relay rated 4.5–12&nbsp;V that won't close at 5&nbsp;V isn't
+        mislabelled — the rating was voltage and the binding constraint was current.
+        A 2N2222 and the 12&nbsp;V rail already onboard solved it in an afternoon.
+      </li>
+    </ul>
+
+    <div class="fig" style="padding:20px;max-width:60em;margin-bottom:34px">
+      <div class="mono" style="color:var(--coral);margin-bottom:9px">ON THE FUTURE WORK SECTION</div>
+      <p style="margin:0;font-size:.94rem;color:#c0d3da">
+        My capstone report closes with plans: calibrate the pressure sensor, expand
+        the sensor package, add machine learning so the vehicle could navigate
+        features well enough to feed the photogrammetry software. I meant all of it
+        at the time. <b>None of it happened.</b> The project has been shelved since
+        2025 and I don't expect to return to it — stating that plainly here rather
+        than letting the report's ambitions stand in for work I never did.
+      </p>
+    </div>
+
+    <div class="foot__links">
+      <a href="assets/imgs/cad/rov/Chase%20Bonfiglio%20Senior%20Project%20Paper%20(2).pdf" target="_blank" rel="noopener">Full report ↗</a>
+      <a href="projects.html">All projects</a>
+      <a href="mailto:chasebonfiglio@gmail.com">Email ✉</a>
+    </div>
+    <p class="foot__by">
+      <a href="index.html">← chasebonfiglio.com</a> ·
+      Senior capstone, Ocean Lakes Math &amp; Science Academy · submitted December 2024 · shelved 2025
+    </p>
+  </div>
+</footer>
+
+<script src="assets/rov/rov.js?v=3"></script>
 </body>
 </html>
