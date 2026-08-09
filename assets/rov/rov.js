@@ -100,10 +100,92 @@
     return { ctx: ctx, w: w, h: cssH };
   }
 
+  function pctOf(el) {
+    return ((el.value - el.min) / (el.max - el.min)) * 100;
+  }
   function paintRange(el) {
-    var pct = ((el.value - el.min) / (el.max - el.min)) * 100;
-    el.style.background =
-      'linear-gradient(90deg, var(--cyan) ' + pct + '%, var(--line) ' + pct + '%)';
+    el.style.setProperty('--fill', pctOf(el).toFixed(2) + '%');
+  }
+
+  /* Instrument wrapper around a native range input: tick rail, optional shaded
+     zone, and a sweep animation. The input stays a real <input type=range>, so
+     keyboard and screen-reader behaviour is untouched. */
+  function instrument(input, opts) {
+    var track = input.parentNode;                 // .inst__track
+    var ticks = document.createElement('div');
+    ticks.className = 'inst__ticks';
+    var min = parseFloat(input.min), max = parseFloat(input.max);
+
+    (opts.ticks || []).forEach(function (t) {
+      var d = document.createElement('div');
+      d.className = 'inst__tick';
+      d.style.left = ((t.v - min) / (max - min)) * 100 + '%';
+      if (t.label) d.innerHTML = '<span>' + t.label + '</span>';
+      ticks.appendChild(d);
+    });
+    track.appendChild(ticks);
+
+    var zoneEl = null;
+    function setZone(from, label) {
+      if (from == null || from > max) { if (zoneEl) zoneEl.style.display = 'none'; return; }
+      if (!zoneEl) {
+        zoneEl = document.createElement('div');
+        zoneEl.className = 'inst__zone';
+        zoneEl.innerHTML = '<span class="inst__zonelab"></span>';
+        track.insertBefore(zoneEl, input);
+      }
+      zoneEl.style.display = '';
+      var l = ((from - min) / (max - min)) * 100;
+      zoneEl.style.left = l + '%';
+      zoneEl.style.width = (100 - l) + '%';
+      zoneEl.querySelector('.inst__zonelab').textContent = label || '';
+    }
+
+    var sweeping = false, raf = null, dir = 1, pos = parseFloat(input.value), last = 0;
+    var btn = opts.sweepBtn;
+    function stopSweep() {
+      sweeping = false;
+      if (raf) cancelAnimationFrame(raf);
+      if (btn) { btn.setAttribute('aria-pressed', 'false'); btn.textContent = opts.sweepLabel; }
+    }
+    // `pos` is tracked separately from input.value on purpose: the step attribute
+    // quantises the input, so reading the value back each frame would snap the
+    // sub-step increment away and the sweep would never advance.
+    function step(now) {
+      if (!sweeping) return;
+      var dt = last ? Math.min((now - last) / 1000, 0.05) : 0.016;
+      last = now;
+      var span = max - min;
+      pos += dir * span * dt * 0.42;                 // full travel in ~2.4s
+      if (pos >= max) { pos = max; dir = -1; }
+      else if (pos <= min) { pos = min; dir = 1; }
+      input.value = pos;
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      raf = requestAnimationFrame(step);
+    }
+    if (btn) {
+      btn.textContent = opts.sweepLabel;
+      btn.addEventListener('click', function () {
+        if (sweeping) { stopSweep(); return; }
+        if (reduce) {                     // no animation: jump to the interesting value
+          input.value = opts.reducedTarget != null ? opts.reducedTarget : max;
+          input.dispatchEvent(new Event('input', { bubbles: true }));
+          return;
+        }
+        sweeping = true;
+        pos = parseFloat(input.value);
+        last = 0;
+        btn.setAttribute('aria-pressed', 'true');
+        btn.textContent = opts.stopLabel || 'Stop';
+        raf = requestAnimationFrame(step);
+      });
+    }
+    // any manual interaction cancels the sweep
+    ['pointerdown', 'keydown'].forEach(function (ev) {
+      input.addEventListener(ev, stopSweep);
+    });
+
+    return { setZone: setZone, stopSweep: stopSweep };
   }
 
   /* ---------- 3. RS-485 differential demo ---------- */
@@ -212,7 +294,9 @@
         ctx.fillText((v > 0 ? '+' : '') + v + 'V', 6, yD(v) + 3);
       });
 
-      noiseOut.textContent = amp.toFixed(1) + ' V';
+      noiseOut.textContent = amp.toFixed(1);
+      var pkpk = document.getElementById('rs-pkpk');
+      if (pkpk) pkpk.textContent = '±' + amp.toFixed(1) + ' V common-mode';
       if (errSE > 0) {
         verdictSE.textContent = errSE + ' of 8 bits corrupted';
         verdictSE.className = 'v-fail';
@@ -222,12 +306,47 @@
       }
       verdictDF.textContent = 'all 8 bits intact';
       verdictDF.className = 'v-ok';
+      if (rsCanvas._setState) rsCanvas._setState(errSE);
     }
 
+    // Where does the single-ended decode actually start losing bits? Solve it
+    // from the same waveform the figure draws rather than hard-coding a number.
+    function errorsAt(amp) {
+      var perBit = Math.floor(seed.length / BITS.length), bad = 0;
+      for (var b = 0; b < BITS.length; b++) {
+        var mid = b * perBit + Math.floor(perBit / 2);
+        var v = (BITS[b] ? VHI : 0) + seed[mid] * amp;
+        if ((v > THRESH ? 1 : 0) !== BITS[b]) bad++;
+      }
+      return bad;
+    }
+    var onset = null;
+    for (var a = 0; a <= parseFloat(noiseEl.max); a += 0.02) {
+      if (errorsAt(a) > 0) { onset = Math.round(a * 10) / 10; break; }
+    }
+
+    var rsInst = instrument(noiseEl, {
+      ticks: [{ v: 0, label: '0' }, { v: 1, label: '1' }, { v: 2, label: '2' },
+              { v: 3, label: '3' }, { v: 4, label: '4V' }],
+      sweepBtn: document.getElementById('rs-sweep'),
+      sweepLabel: '▶ Sweep noise',
+      stopLabel: '■ Stop',
+      reducedTarget: onset != null ? onset + 0.4 : null
+    });
+    rsInst.setZone(onset, onset != null ? '↑ single-ended fails above ' + onset.toFixed(1) + ' V' : '');
+
+    var rsState = document.getElementById('rs-state');
     noiseEl.addEventListener('input', function () { paintRange(noiseEl); drawRS(); });
     paintRange(noiseEl);
     window.addEventListener('resize', drawRS);
     drawRS();
+
+    // expose the state chip update to drawRS via a hook
+    rsCanvas._setState = function (errs) {
+      if (!rsState) return;
+      rsState.textContent = errs ? 'UART would fail' : 'both links clean';
+      rsState.className = 'inst__state ' + (errs ? 'v-fail' : 'v-ok');
+    };
   }
 
   /* ---------- 4. PWM duty-cycle figure ---------- */
@@ -291,6 +410,14 @@
       pctOut.textContent = Math.round(frac * 100) + '%';
       voltOut.textContent = (frac * VBAT).toFixed(1) + ' V';
     }
+    instrument(dutyEl, {
+      ticks: [{ v: 0, label: '0' }, { v: 64, label: '64' }, { v: 128, label: '128' },
+              { v: 192, label: '192' }, { v: 255, label: '255' }],
+      sweepBtn: document.getElementById('pwm-sweep'),
+      sweepLabel: '▶ Sweep duty',
+      stopLabel: '■ Stop',
+      reducedTarget: 255
+    });
     dutyEl.addEventListener('input', function () { paintRange(dutyEl); drawPWM(); });
     paintRange(dutyEl);
     window.addEventListener('resize', drawPWM);

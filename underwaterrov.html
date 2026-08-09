@@ -11,7 +11,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Dosis:wght@400;500;600;700&family=Source+Sans+Pro:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="assets/rov/rov.css?v=6" />
+<link rel="stylesheet" href="assets/rov/rov.css?v=7" />
 <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
@@ -219,18 +219,30 @@
       <span class="panel__tag">drag the slider</span></div>
     <div class="panel__body">
       <canvas id="rs485" height="300" aria-label="Two stacked oscilloscope lanes. The upper lane shows the A and B wires measured against ground with noise added, crossing the 2.5 volt decode threshold. The lower lane shows A minus B, which stays clean because the noise is common to both wires."></canvas>
-      <div class="ctrls">
-        <div class="ctrl">
-          <label for="rs-noise">Induced noise</label>
-          <input type="range" id="rs-noise" min="0" max="4" step="0.1" value="0.6" />
-          <output id="rs-noise-out">0.6 V</output>
-        </div>
-      </div>
       <div class="legend">
         <span><i style="background:#47D8E0"></i>wire A</span>
         <span><i style="background:rgba(162,182,203,.75)"></i>wire B</span>
         <span><i style="background:#20c997"></i>A − B differential</span>
         <span><i style="background:#FF8882"></i>misread bit</span>
+      </div>
+
+      <div class="inst">
+        <div class="inst__head">
+          <label class="inst__label" for="rs-noise">Induced noise</label>
+          <span class="inst__read">
+            <span class="inst__sub" id="rs-pkpk">±0.6 V common-mode</span>
+            <span class="inst__val"><output id="rs-noise-out">0.6</output><i>V</i></span>
+          </span>
+        </div>
+        <div class="inst__track">
+          <input type="range" id="rs-noise" min="0" max="4" step="0.1" value="0.6"
+                 aria-describedby="rs-verdict-se" />
+        </div>
+        <div class="inst__foot">
+          <button type="button" class="sweep" id="rs-sweep" aria-pressed="false">▶ Sweep noise</button>
+          <span class="inst__hint">or use ← →</span>
+          <span class="inst__state v-ok" id="rs-state">both links clean</span>
+        </div>
       </div>
     </div>
     <div class="panel__note">
@@ -264,16 +276,22 @@
         <span class="panel__tag">drag the slider</span></div>
       <div class="panel__body">
         <canvas id="pwm" height="190" aria-label="A square wave whose high-time fraction changes with the duty cycle slider, with a dashed line marking the resulting mean voltage."></canvas>
-        <div class="ctrls">
-          <div class="ctrl">
-            <label for="pwm-duty">Duty byte</label>
-            <input type="range" id="pwm-duty" min="0" max="255" step="1" value="170" />
-            <output id="pwm-duty-out">170</output>
+        <div class="inst">
+          <div class="inst__head">
+            <label class="inst__label" for="pwm-duty">Duty byte</label>
+            <span class="inst__read">
+              <span class="inst__sub"><b id="pwm-pct" style="color:var(--muted)">67%</b> duty</span>
+              <span class="inst__val"><output id="pwm-duty-out">170</output></span>
+            </span>
           </div>
-        </div>
-        <div class="legend">
-          <span>duty <b id="pwm-pct" style="color:var(--cyan)">67%</b></span>
-          <span>mean commanded <b id="pwm-volt" style="color:var(--cyan)">8.0 V</b></span>
+          <div class="inst__track">
+            <input type="range" id="pwm-duty" min="0" max="255" step="1" value="170" />
+          </div>
+          <div class="inst__foot">
+            <button type="button" class="sweep" id="pwm-sweep" aria-pressed="false">▶ Sweep duty</button>
+            <span class="inst__hint">or use ← →</span>
+            <span class="inst__state v-ok">mean <b id="pwm-volt">8.0 V</b></span>
+          </div>
         </div>
       </div>
       <div class="caveat">
@@ -498,6 +516,6 @@
   </div>
 </footer>
 
-<script src="assets/rov/rov.js?v=6"></script>
+<script src="assets/rov/rov.js?v=8"></script>
 </body>
 </html>
