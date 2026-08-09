@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Underwater ROV — tethered sensor platform · Chase Bonfiglio</title>
-<meta name="description" content="Senior capstone: a tethered underwater ROV for surveying oyster grounds in the Chesapeake. RS-485 telemetry, CTD sensor package, bilge-pump water sampler. Built for $186.69. Shelved 2025." />
+<title>Underwater ROV and Applicable Systems · Chase Bonfiglio</title>
+<meta name="description" content="Senior capstone: a tethered underwater ROV equipped with an RS-485 telemetry system, a conductivity, temperature and depth sensor package, a water sampling mechanism and a photogrammetry system. Constructed for $186.69. Shelved 2025." />
 <meta name="author" content="Chase Bonfiglio" />
-<meta property="og:title" content="Underwater ROV — tethered sensor platform" />
-<meta property="og:description" content="RS-485 telemetry, CTD sensors, water sampler. Five subsystems, built for $186.69, tested subsystem by subsystem." />
+<meta property="og:title" content="Underwater ROV and Applicable Systems" />
+<meta property="og:description" content="A tethered underwater ROV for analyzing local marine environments and informing oyster farming decisions. Five subsystems, constructed for $186.69." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Dosis:wght@400;500;600;700&family=Source+Sans+Pro:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -49,17 +49,19 @@
   <div class="shelved">
     <span class="shelved__dot" aria-hidden="true"></span>
     <b>Shelved</b>
-    <span>Capstone submitted Dec 2024 · no work since 2025</span>
+    <span>Capstone submitted December 2024 · no work since 2025</span>
   </div>
 
   <div class="entry__grid">
     <div class="entry__lead">
       <p class="kicker">Senior capstone · Ocean Lakes Math &amp; Science Academy</p>
-      <h1 class="entry__title">A tethered ROV for <i>oyster ground</i></h1>
+      <h1 class="entry__title">Underwater ROV and <i>applicable systems</i></h1>
       <p class="entry__sub">
-        A PVC-framed underwater vehicle carrying a CTD sensor package, a water
-        sampler and a camera, talking to the surface over RS-485 down a Cat 6
-        tether. Built solo for <b>$186.69</b>.
+        A tethered underwater vehicle equipped with the systems required to
+        analyze local marine environments: a conductivity, temperature and depth
+        sensor package, a water sampling mechanism, a photogrammetry system, and a
+        telemetry system reporting to the surface over a Cat 6 tether. Constructed
+        for <b>$186.69</b>.
       </p>
       <div class="entry__links">
         <a class="btn btn--solid" href="#vehicle">The build ↓</a>
@@ -76,19 +78,19 @@
       <ol class="built__list">
         <li><span class="built__ix">01</span>
           <div><b>Frame &amp; hull<span class="chip chip--ok">held</span></b>
-          <p>1.5in PVC frame, 4in electronics tube, flooding port for neutral buoyancy.</p></div></li>
+          <p>1.5in PVC frame, 4in electronics compartment, flooding port for neutral buoyancy.</p></div></li>
         <li><span class="built__ix">02</span>
-          <div><b>Telemetry<span class="chip chip--ok">worked</span></b>
-          <p>RS-485 over Cat 6. ~40 values/sec at 9600 baud, no interference.</p></div></li>
+          <div><b>Telemetry<span class="chip chip--ok">successful</span></b>
+          <p>RS-485 over Cat 6. Roughly 40 values each second at 9600 baud.</p></div></li>
         <li><span class="built__ix">03</span>
           <div><b>CTD sensors<span class="chip chip--part">partial</span></b>
-          <p>Isolated compartment held. Pressure sensor never calibrated.</p></div></li>
+          <p>Dedicated compartment did not leak. Pressure sensor not calibrated correctly.</p></div></li>
         <li><span class="built__ix">04</span>
-          <div><b>Water sampler<span class="chip chip--part">unresolved</span></b>
-          <p>Bilge pump + check valve. Bench-tested; sample validity unconfirmed.</p></div></li>
+          <div><b>Water sampling<span class="chip chip--part">unresolved</span></b>
+          <p>Bilge pump and check valve. Effective, but its applicability is undetermined.</p></div></li>
         <li><span class="built__ix">05</span>
           <div><b>Photogrammetry<span class="chip chip--fail">failed</span></b>
-          <p>RealityCapture. Solved on the bench, not in Chesapeake turbidity.</p></div></li>
+          <p>RealityCapture. Modelled well on the bench, not in Chesapeake turbidity.</p></div></li>
       </ol>
     </div>
   </div>
@@ -96,30 +98,35 @@
 
 <main>
 
-<!-- ============ 01 PROBLEM ============ -->
+<!-- ============ 01 STATEMENT OF THE PROBLEM ============ -->
 <section class="sec wrap rv" id="problem">
-  <div class="sec__head"><span class="sec__num">01</span><h2 class="sec__title">The problem</h2></div>
+  <div class="sec__head"><span class="sec__num">01</span><h2 class="sec__title">Statement of the problem</h2></div>
   <div class="sec__rule"></div>
 
   <div class="two">
     <div class="prose">
       <p>
-        Oysters filter sediment, algae, nitrogen and phosphorus out of the water
-        around them. At the Chesapeake's current population, filtering the whole bay
-        once takes over a year.
+        Oysters filter food through their gills and can remove sediments and other
+        contaminants that pollute the bay. They also consume algae and help to reduce
+        nutrients like nitrogen and phosphorus. With the current oyster population,
+        it would require over a year for the entire bay to be filtered.
       </p>
       <p>
-        Restoration and bottom-culture farms make planting and harvesting decisions
-        largely blind — where the hard surfaces are, where sediment would bury spat,
-        which beds have matured. The target was a vehicle cheap enough for a small
-        farm to own, carrying sensors that answer those questions directly.
+        A number of organizations are working to restore the population to its peak.
+        However, unlike agriculture, aquaculture is rooted in outdated methods of
+        farming with little modern technology in use. Farms and restoration sites
+        using bottom culture have little data on where hard surfaces lie, where
+        sediment would bury young oysters, or which beds have matured. With an
+        affordable underwater ROV carrying several sensors, those operations could
+        gather the data needed to make better decisions regarding planting and
+        harvesting.
       </p>
     </div>
 
     <div>
       <figure class="fig fig--invert">
         <img src="assets/imgs/cad/rov/web/oyster-graph.webp" alt="Chart of oyster bushel harvests over time in the Chesapeake Bay region." loading="lazy" width="558" height="330" />
-        <figcaption>Regional harvest history.</figcaption>
+        <figcaption>Oyster harvests in the region over time.</figcaption>
       </figure>
       <div class="stats">
         <div class="stat"><div class="stat__v">&gt;1 <small>yr</small></div>
@@ -141,37 +148,40 @@
   <div class="grid3">
     <figure class="fig fig--invert">
       <img src="assets/imgs/cad/rov/web/rov-wireframe.webp" alt="CAD wireframe of the ROV showing the PVC frame, central electronics tube and six thruster positions." loading="lazy" width="878" height="657" />
-      <figcaption>CAD wireframe — frame, electronics tube, thruster placement.</figcaption>
+      <figcaption>CAD wireframe of the frame, electronics compartment and thruster placement.</figcaption>
     </figure>
     <figure class="fig fig--plate">
       <img src="assets/imgs/cad/rov/web/rov-front.webp" alt="Front view render of the ROV showing the dome camera port." loading="lazy" width="1400" height="788" />
-      <figcaption>Front — dome port in the end cap.</figcaption>
+      <figcaption>Front view showing the acrylic dome set into the end cap.</figcaption>
     </figure>
     <figure class="fig fig--plate">
       <img src="assets/imgs/cad/rov/web/rov-top.webp" alt="Top-down render of the ROV frame and thruster layout." loading="lazy" width="1400" height="788" />
-      <figcaption>Top — thruster geometry.</figcaption>
+      <figcaption>Top view showing the thruster geometry.</figcaption>
     </figure>
   </div>
 
   <div class="two" style="margin-top:24px">
     <figure class="fig">
-      <img src="assets/imgs/cad/rov/web/rov-build-frame.webp" alt="Photograph of the physical ROV during assembly, showing the PVC frame and electronics tube." loading="lazy" width="1200" height="1800" />
-      <figcaption>Assembled frame and electronics tube.</figcaption>
+      <img src="assets/imgs/cad/rov/web/rov-build-frame.webp" alt="Photograph of the physical ROV during assembly, showing the PVC frame and electronics compartment." loading="lazy" width="1200" height="1800" />
+      <figcaption>The assembled frame and electronics compartment.</figcaption>
     </figure>
     <div>
       <dl class="specs">
         <div><dt>Frame</dt><dd>1.5in Sch40 PVC · 12 tees, 10 elbows · flooding port for neutral buoyancy</dd></div>
-        <div><dt>Hull</dt><dd>4in PVC tube, two end caps, rubber coupling for access · 2.5in acrylic dome · 4 tether penetrations</dd></div>
+        <div><dt>Compartment</dt><dd>4in PVC, two end caps, removable rubber coupling · 2.5in acrylic dome · four tether penetrations</dd></div>
         <div><dt>Onboard</dt><dd>Elegoo Mega</dd></div>
-        <div><dt>Topside</dt><dd>Arduino Uno reading a PlayStation 2 controller</dd></div>
-        <div><dt>Thrusters</dt><dd>6 × 500 GPH bilge pump · BTS7960 drivers · guards cut from 4in offcut</dd></div>
-        <div><dt>Tether</dt><dd>Cat 6 in braided sleeve</dd></div>
-        <div><dt>Camera</dt><dd>GoPro Hero 7 Silver (donated)</dd></div>
+        <div><dt>Surface</dt><dd>Arduino Uno interfaced with a PlayStation 2 controller</dd></div>
+        <div><dt>Thrusters</dt><dd>6 × 500 GPH bilge pump · BTS7960 drivers · guards cut from excess 4in stock</dd></div>
+        <div><dt>Tether</dt><dd>Cat 6 in braided covering</dd></div>
+        <div><dt>Camera</dt><dd>GoPro Hero 7 Silver</dd></div>
       </dl>
       <p class="prose" style="margin-top:18px">
-        PVC because it's cheap, already watertight, and the voids double as
-        buoyancy. The rubber coupling was the one concession to serviceability —
-        without it the electronics stack gets epoxied shut permanently.
+        In most home-built underwater ROVs, PVC piping is used as a cheap method of
+        creating a frame whilst allowing space to hold wires and onboard
+        electronics. For this project, a port was added to the frame to allow it to
+        flood and achieve a neutral buoyancy. A removable rubber coupling retains
+        one end cap, which allows the internal electronics to be accessible after
+        their initial assembly.
       </p>
     </div>
   </div>
@@ -179,21 +189,28 @@
 
 <!-- ============ 03 TELEMETRY ============ -->
 <section class="sec wrap rv" id="telemetry">
-  <div class="sec__head"><span class="sec__num">03</span><h2 class="sec__title">Telemetry and motor control</h2></div>
+  <div class="sec__head"><span class="sec__num">03</span><h2 class="sec__title">Telemetry protocol</h2></div>
   <div class="sec__rule"></div>
 
   <div class="prose">
     <p>
-      Radio is useless through water, so the vehicle is tethered — which trades a
-      wireless problem for a signal-integrity one. Arduino logic swings 0–5&nbsp;V;
-      down a long conductor, resistance drops it and stray fields add noise on top.
-      Decoded against a 2.5&nbsp;V threshold, it doesn't survive the trip.
+      Many forms of wireless communication, including radio waves, function poorly
+      through water, so a tethered design was used. Sending data over long cables
+      comes with its own set of challenges. The wires inherently have a small amount
+      of resistance, which subjects the signal to voltage drop, and even small
+      electromagnetic waves can alter the voltage in the wire and distort the
+      signal. With the small voltages used on the Arduino pins, a long run of
+      cabling can significantly impact a signal read against a 2.5&nbsp;V threshold.
     </p>
     <p>
-      <b>RS-485</b> doesn't measure against ground. It sends each bit twice,
-      inverted, down a twisted pair, and the receiver reads only the difference.
-      Noise couples into both wires roughly equally and cancels in the subtraction.
-      A transceiver module at each end converts to and from the Arduino's UART.
+      RS-485 was selected for its ability to be used over long distances and resist
+      electrical noise. It uses a twisted pair consisting of an A and a B wire.
+      Instead of reading the voltage of a single wire like UART, RS-485 reads the
+      difference between the two wires. When the signal is altered with electrical
+      noise, the differential voltage remains the same, as the A and B voltages are
+      altered equally. Serial communication on the Arduino is done over UART, so a
+      separate module was required at each end to send and receive the differential
+      voltages.
     </p>
   </div>
 
@@ -219,23 +236,26 @@
     <div class="panel__note">
       Single-ended: <b id="rs-verdict-se" class="v-ok">all 8 bits intact</b> &nbsp;·&nbsp;
       differential: <b id="rs-verdict-df" class="v-ok">all 8 bits intact</b>.
-      The differential swings ±5&nbsp;V against a 0&nbsp;V threshold, so it keeps
-      margin long after the single-ended decode has broken.
+      The differential swings ±5&nbsp;V against a 0&nbsp;V threshold, so it retains
+      margin well after the single-ended reading has become unreliable.
     </div>
   </div>
 
   <div class="two" style="margin-top:34px">
     <div class="prose">
       <p>
-        The same tether carries motor commands down. Six bilge pumps act as
-        thrusters, each behind a BTS7960 driver. Speed is pulse width modulation —
-        the driver chops the 12&nbsp;V supply fast enough that the motor responds to
-        the average. Duty is a byte, 0–255; that plus a direction bit is the whole
-        motor command.
+        In order to communicate more than two values, pulse width modulation is
+        used. Using a set frequency, a cycle consisting of a HIGH and a LOW period
+        is sent, and by reading the percentage of the cycle that is HIGH the
+        Arduino can read a number between 0 and 255. With motor drivers, the same
+        protocol allows an Arduino to vary the voltage supplied to the motors and
+        adjust the speed at which they spin.
       </p>
       <p class="result">
-        PS2 controller, pressure and temperature all stable at 9600 baud — about 40
-        values per second, no interference.
+        The implementation of the RS-485 telemetry modules proved to be very
+        successful. The PlayStation controller, pressure sensor and temperature
+        sensor all functioned well at 9600 baud, allowing the Arduinos to
+        communicate these values roughly 40 times each second.
       </p>
     </div>
 
@@ -257,46 +277,55 @@
         </div>
       </div>
       <div class="caveat">
-        Control scheme as wired. Thruster response was never characterized — the
-        assembled vehicle never ran under power in open water.
+        The control scheme as wired. Thruster response was never characterized, as
+        the assembled vehicle was not operated under power in open water.
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============ 04 SENSORS + SAMPLER ============ -->
+<!-- ============ 04 SENSORS + SAMPLING ============ -->
 <section class="sec wrap rv" id="sensors">
-  <div class="sec__head"><span class="sec__num">04</span><h2 class="sec__title">Sensors and water sampling</h2></div>
+  <div class="sec__head"><span class="sec__num">04</span><h2 class="sec__title">Sensor and water sampling containers</h2></div>
   <div class="sec__rule"></div>
 
   <div class="two">
     <div class="prose">
       <p>
-        Temperature and pressure both need to touch the water, so both need a hull
-        penetration. They sit in their own 4in PVC compartment rather than the one
-        holding the microcontroller — if it floods, it floods alone.
+        Whilst there is an electronics compartment integrated into the design, the
+        sensors, when interfaced with the water, provided the greatest opportunity
+        for leakage. Both the temperature and pressure sensors required additional
+        ports to access the surrounding environment and, if damaged, could allow
+        water to short any components around them. In order to prevent this
+        possibility, these sensors sit in their own dedicated compartment.
       </p>
       <p>
-        Sampling at depth is normally a Nansen or Niskin bottle, inverted and sealed
-        by a released weight. Building that Arduino-driven and watertight wasn't
-        realistic on the budget, so the sampler reuses what was already aboard: a
-        bilge pump plumbed to a sealed 4in container with a check valve in the line,
-        fired from a spare controller button. Container ≈ <b>0.22 gal</b>, pump
-        1100&nbsp;GPH, so <b>0.72&nbsp;s</b> to fill.
+        In order to acquire water samples at specified depths, most operations use a
+        Nansen or the improved Niskin bottle, which is lowered into the water open
+        and sealed at depth by a released weight. On the budget allotted,
+        constructing a mechanical device of that kind which interfaced with the
+        Arduino and remained waterproof seemed unlikely. However, the ROV already
+        included a device capable of pumping water. An additional bilge pump was
+        attached to a sealed 4-inch container with a check valve placed in the middle
+        of the excess hosing, and one of the empty buttons on the PlayStation
+        controller was used for activation. The container holds approximately
+        <b>.22 gallons</b> and the pump is rated at 1100 gallons per hour, so
+        powering it for <b>.72 seconds</b> would fill the container completely.
       </p>
       <p>
-        The relay driving that pump was rated 4.5–12&nbsp;V and the Mega tops out at
-        5&nbsp;V, inside the range. At 5&nbsp;V it lit its own indicator LED and the
-        coil never pulled in — the rating was voltage, the binding constraint was
-        current. A <b>2N2222</b> between the 12&nbsp;V battery and the relay let the
-        Mega switch the real supply.
+        A relay was necessary to ensure the functionality of the bilge pump. When
+        testing the relay with an advertised voltage input range of 4.5–12 volts, it
+        was discovered that the lower end of this range provided insufficient current
+        to activate the relay, instead only triggering the indicator light. Utilizing
+        a <b>2N2222 transistor</b> in between the 12-volt battery and relay, the
+        Arduino Mega could activate the relay with minimal current.
       </p>
     </div>
 
     <div>
       <figure class="fig fig--plate">
         <img src="assets/imgs/cad/rov/web/sensor-pressure.webp" alt="The pressure sensor module used for depth estimation." loading="lazy" width="479" height="501" />
-        <figcaption>Pressure sensor — depth is derived from this.</figcaption>
+        <figcaption>The pressure sensor, from which depth is calculated.</figcaption>
       </figure>
       <figure class="fig fig--invert" style="margin-top:18px">
         <img src="assets/imgs/cad/rov/web/controller-wiring.webp" alt="Wiring diagram for the surface controller electronics." loading="lazy" width="762" height="579" />
@@ -314,20 +343,22 @@
   <div class="two">
     <div class="prose">
       <p>
-        Every conductor entering the hull is a leak path. A short length of ⅛in PVC
-        forms a well around the wires, filled with epoxy that cures into a plug.
+        The main method used to feed wires in and out of the PVC whilst preventing
+        leakage was creating a well of epoxy for the wires to sit in. An ⅛-inch PVC
+        pipe forms the well, and the epoxy cures into a solid plug around the wires
+        passing through it.
       </p>
       <p>
-        Insulation is stripped where the wires cross the epoxy. Pot a bundle with the
-        jacket intact and a nick anywhere along the tether lets water wick
-        <em>inside</em> the insulation, through the plug, into the compartment — a
-        perfect-looking seal and a flooded hull. Bare conductor bonds to the epoxy
-        with no channel to follow.
+        However, if bundles of wires were fed through this well and the jacket of the
+        bundle got cut somewhere along the tether, water would have the opportunity
+        to leak in essentially through the wires themselves. In order to prevent
+        leaking of any kind, insulation on the wires was removed where they went
+        through the epoxy.
       </p>
     </div>
     <figure class="fig fig--inset fig--invert">
       <img src="assets/imgs/cad/rov/web/potting.webp" alt="Diagram of an epoxy potting well showing wires with insulation stripped where they pass through the epoxy plug." loading="lazy" width="488" height="319" />
-      <figcaption>Epoxy well — diagram after Homebuilt ROVs.</figcaption>
+      <figcaption>The epoxy well, diagram courtesy of Homebuilt ROVs.</figcaption>
     </figure>
   </div>
 </section>
@@ -337,45 +368,46 @@
   <div class="sec__head"><span class="sec__num">06</span><h2 class="sec__title">Results</h2></div>
   <div class="sec__rule"></div>
   <p class="sec__intro">
-    Subsystems were wet-tested individually. The assembled vehicle never made a
-    piloted dive, so there are no handling, endurance or survey numbers here.
+    Subsystems were tested individually in water. The assembled vehicle was never
+    operated under power in open water, so no handling, endurance or survey results
+    are reported here.
   </p>
 
   <div class="ledger">
     <div class="ledger__row">
       <div class="ledger__sys">Telemetry</div>
-      <div class="ledger__verdict v-ok">Worked</div>
-      <div class="ledger__note">Controller input and both sensor channels at 9600 baud, ~40 values/sec, no interference.</div>
+      <div class="ledger__verdict v-ok">Successful</div>
+      <div class="ledger__note">The RS-485 modules proved to be very successful. The controller and both sensor channels functioned well at 9600 baud, roughly 40 values each second, without interference.</div>
     </div>
     <div class="ledger__row">
-      <div class="ledger__sys">Sensor housing</div>
-      <div class="ledger__verdict v-ok">Worked</div>
-      <div class="ledger__note">No leak on first immersion. The failsafe partitioning was never called on.</div>
+      <div class="ledger__sys">Sensor compartment</div>
+      <div class="ledger__verdict v-ok">Successful</div>
+      <div class="ledger__note">Both sensors proved to be functional, and the container that housed them did not leak on the first operation underwater.</div>
     </div>
     <div class="ledger__row">
-      <div class="ledger__sys">Data dashboard</div>
-      <div class="ledger__verdict v-ok">Worked</div>
-      <div class="ledger__note">Python read the serial stream and plotted it live in Matplotlib. Main friction was OS policy blocking COM port access.</div>
+      <div class="ledger__sys">Data visualization</div>
+      <div class="ledger__verdict v-ok">Successful</div>
+      <div class="ledger__note">Utilizing the Matplotlib library, creating real-time graphs based on the Arduino serial outputs was straightforward. The main obstacle was security policy on the machine preventing Python from accessing certain COM ports.</div>
     </div>
     <div class="ledger__row">
       <div class="ledger__sys">Pressure → depth</div>
       <div class="ledger__verdict v-part">Miscalibrated</div>
-      <div class="ledger__note">Sensor reads; derived depth is wrong. Needs temperature compensation — the sensor for it was in the same housing. Never got back to it.</div>
+      <div class="ledger__note">The sensor reports, but it is not calibrated correctly, leading to incorrect depth readings. Temperature readings could be used to further hone the depth figures, as pressure is slightly affected by water temperature. This was not implemented.</div>
     </div>
     <div class="ledger__row">
-      <div class="ledger__sys">Water sampler</div>
-      <div class="ledger__verdict v-part">Unresolved</div>
-      <div class="ledger__note">Fires reliably; container underfills because the end caps add volume the 0.72&nbsp;s figure didn't account for. Bigger issue: the pump shears what it collects, so sample validity is unconfirmed.</div>
+      <div class="ledger__sys">Water sampling</div>
+      <div class="ledger__verdict v-part">Undetermined</div>
+      <div class="ledger__note">The mechanism proved to be effective, but its applicability is yet to be determined. The container did not fill completely, as the end caps provided additional, unaccounted-for volume. The greater concern is that the bilge pump was unintentionally filtering the sample as it collected it.</div>
     </div>
     <div class="ledger__row">
       <div class="ledger__sys">Photogrammetry</div>
       <div class="ledger__verdict v-fail">Failed</div>
-      <div class="ledger__note">Solved cleanly on the bench, produced nothing usable underwater. Detail below.</div>
+      <div class="ledger__note">This part of the project was the biggest failure. The software modelled well on the bench and produced nothing usable underwater.</div>
     </div>
     <div class="ledger__row">
-      <div class="ledger__sys">Full vehicle dive</div>
+      <div class="ledger__sys">Full vehicle operation</div>
       <div class="ledger__verdict v-none">Not attempted</div>
-      <div class="ledger__note">Never operated under power in open water. Thruster response, handling and endurance unmeasured.</div>
+      <div class="ledger__note">The assembled vehicle was never operated under power in open water. Thruster response, handling and endurance remain unmeasured.</div>
     </div>
   </div>
 
@@ -383,26 +415,31 @@
     <div>
       <figure class="fig fig--invert">
         <img src="assets/imgs/cad/rov/web/telemetry-graph.webp" alt="Matplotlib plot of live sensor data streamed from the Arduino over the serial port." loading="lazy" width="1036" height="889" />
-        <figcaption>Live plot off the serial stream.</figcaption>
+        <figcaption>One of the resulting real-time graphs.</figcaption>
       </figure>
     </div>
     <div>
       <div class="grid3" style="grid-template-columns:1fr 1fr">
         <figure class="fig fig--plate">
           <img src="assets/imgs/cad/rov/web/photogram-books.webp" alt="A 3D photogrammetry reconstruction of a stack of books, detailed enough that cover text is legible." loading="lazy" width="300" height="118" />
-          <figcaption>Bench control — DSLR, in air. Cover text legible.</figcaption>
+          <figcaption>Bench test using a DSLR camera in air.</figcaption>
         </figure>
         <figure class="fig">
           <img src="assets/imgs/cad/rov/web/photogram-diagram.webp" alt="Diagram illustrating how photogrammetry triangulates overlapping image points." loading="lazy" width="512" height="288" />
-          <figcaption>Overlapping rays — what turbidity destroys.</figcaption>
+          <figcaption>Overlapping reference points used to triangulate geometry.</figcaption>
         </figure>
       </div>
       <p class="prose" style="margin-top:16px">
-        RealityCapture reconstructed a stack of books in enough detail to read the
-        covers. Underwater it solved nothing: suspended sediment collapses contrast,
-        and the GoPro's very wide angle spreads what detail survives across too few
-        pixels, leaving too few common points between frames. Likely workable in
-        clearer freshwater; not in the Chesapeake with this camera.
+        When initially testing the software with a DSLR camera, the 3D models turned
+        out well with a lot of detail; the stack of books imaged was captured well
+        enough to read the text on the covers. However, when attempting to get photos
+        underwater with the GoPro, the images captured did not hold enough detail for
+        the software to properly model the environment. Whilst the extremely wide
+        angle of the GoPro certainly did not help, the main culprit likely lies in
+        the turbidity of the water. Close to a feature, the software lacked enough
+        common reference points to create a model. This function may be useful in a
+        different environment with lower turbidity, but in the Chesapeake Bay it is
+        rendered effectively useless without higher-quality images.
       </p>
     </div>
   </div>
@@ -421,13 +458,15 @@
         <span class="big">$186.69</span>
         <span class="lab">total spend</span>
         <span class="note">
-          $74.98 electronics + $111.71 structure. The GoPro ($195.79 list) and
-          several other components were donated or reused from the Advanced
-          Technology Center, so they sit outside this total.
+          $74.98 in electronics and $111.71 in PVC and additional materials.
+          Several components, including the GoPro Hero 7 Silver listed at $195.79,
+          were acquired from either previous personal projects or the Advanced
+          Technology Center's existing resources, and are not included in this
+          total.
           <span style="display:block;margin-top:7px;color:var(--dim);font-size:.8rem">
             Blocks sum to $186.67 — the report's own two-cent rounding. Electronics
-            is one block because its per-item column mixes purchased with donated
-            parts.
+            is a single block because its per-item column mixes purchased with
+            acquired parts.
           </span>
         </span>
       </div>
@@ -441,10 +480,11 @@
   <div class="wrap">
     <p class="label">Status</p>
     <p class="foot__lead">
-      Shelved since 2025. The report closes with plans — calibrate the pressure
-      sensor, expand the sensor package, add ML-assisted navigation for the
-      photogrammetry — and none of them happened. Full method, budget tables and
-      references are in the capstone paper.
+      Shelved since 2025. The report closes by outlining intended future
+      work: calibrating the pressure sensor, expanding the sensor package, and
+      incorporating machine learning to optimize image collection for the
+      photogrammetry system. None of it was carried out. The full method, budget
+      tables and references are in the capstone paper.
     </p>
     <div class="foot__links">
       <a class="btn btn--solid" href="assets/imgs/cad/rov/Chase%20Bonfiglio%20Senior%20Project%20Paper%20(2).pdf" target="_blank" rel="noopener">Full report (PDF) ↗</a>
