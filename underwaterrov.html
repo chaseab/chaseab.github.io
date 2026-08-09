@@ -10,8 +10,8 @@
 <meta property="og:description" content="Five subsystems, three that worked, one that failed outright. An honest post-mortem of a shelved senior capstone." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&family=Public+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="assets/rov/rov.css?v=2" />
+<link href="https://fonts.googleapis.com/css2?family=Dosis:wght@400;500;600;700&family=Source+Sans+Pro:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/rov/rov.css?v=5" />
 <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
@@ -64,9 +64,9 @@
         than the donated camera bolted to the front.
       </p>
       <div class="entry__links">
-        <a href="#failure">↓ what failed</a>
-        <a href="assets/imgs/cad/rov/Chase%20Bonfiglio%20Senior%20Project%20Paper%20(2).pdf" target="_blank" rel="noopener">↗ full report (PDF, 8.7&nbsp;MB)</a>
-        <a href="mailto:chasebonfiglio@gmail.com">✉ email</a>
+        <a class="btn btn--solid" href="#failure">What failed ↓</a>
+        <a class="btn" href="assets/imgs/cad/rov/Chase%20Bonfiglio%20Senior%20Project%20Paper%20(2).pdf" target="_blank" rel="noopener">Full report (PDF) ↗</a>
+        <a class="btn" href="mailto:chasebonfiglio@gmail.com">Email ✉</a>
       </div>
     </div>
 
@@ -137,7 +137,7 @@
     </div>
 
     <div>
-      <figure class="fig">
+      <figure class="fig fig--invert">
         <img src="assets/imgs/cad/rov/web/oyster-graph.webp" alt="Chart of oyster bushel harvests over time in the Chesapeake Bay region." loading="lazy" width="558" height="330" />
         <figcaption>Harvest history for the region — the collapse this project sits downstream of.</figcaption>
       </figure>
@@ -228,7 +228,7 @@
       </p>
     </div>
     <div>
-      <figure class="fig">
+      <figure class="fig fig--invert">
         <img src="assets/imgs/cad/rov/web/rov-wireframe.webp" alt="CAD wireframe of the ROV showing the PVC frame, central electronics tube and six thruster positions." loading="lazy" width="1318" height="906" />
         <figcaption>CAD wireframe — frame, electronics tube, thruster placement.</figcaption>
       </figure>
@@ -236,11 +236,11 @@
   </div>
 
   <div class="grid3" style="margin-top:26px">
-    <figure class="fig">
+    <figure class="fig fig--plate">
       <img src="assets/imgs/cad/rov/web/rov-front.webp" alt="Front view render of the completed ROV." loading="lazy" width="1400" height="788" />
       <figcaption>Front — dome port centred in the end cap.</figcaption>
     </figure>
-    <figure class="fig">
+    <figure class="fig fig--plate">
       <img src="assets/imgs/cad/rov/web/rov-top.webp" alt="Top-down view render of the ROV frame." loading="lazy" width="1400" height="788" />
       <figcaption>Top — thruster geometry across the frame.</figcaption>
     </figure>
@@ -390,11 +390,11 @@
     </div>
 
     <div>
-      <figure class="fig">
+      <figure class="fig fig--plate">
         <img src="assets/imgs/cad/rov/web/sensor-pressure.webp" alt="The pressure sensor module used for depth estimation." loading="lazy" width="600" height="557" />
         <figcaption>Pressure sensor — depth is derived from this reading.</figcaption>
       </figure>
-      <figure class="fig" style="margin-top:18px">
+      <figure class="fig fig--plate" style="margin-top:18px">
         <img src="assets/imgs/cad/rov/nansen%20bottle.webp" alt="A Nansen bottle, the standard oceanographic water sampling device." loading="lazy" width="277" height="518" />
         <figcaption>The Nansen bottle — prior art this couldn't afford to copy.</figcaption>
       </figure>
@@ -441,7 +441,7 @@
       </p>
     </div>
     <div>
-      <figure class="fig fig--pad">
+      <figure class="fig fig--inset fig--invert">
         <img src="assets/imgs/cad/rov/web/potting.webp" alt="Diagram of an epoxy potting well showing wires with insulation stripped where they pass through the epoxy plug." loading="lazy" width="488" height="325" />
       </figure>
       <div class="cap" style="border:1px solid var(--line);border-top:0">
@@ -499,7 +499,7 @@
     </div>
   </div>
 
-  <figure class="fig" style="margin-top:28px;max-width:620px">
+  <figure class="fig fig--invert" style="margin-top:28px;max-width:620px">
     <img src="assets/imgs/cad/rov/web/telemetry-graph.webp" alt="Matplotlib plot of live sensor data streamed from the Arduino over the serial port." loading="lazy" width="1036" height="889" />
     <figcaption>Live plot off the serial stream — the visualization spec, met.</figcaption>
   </figure>
@@ -552,7 +552,7 @@
           </div>
         </div>
         <div>
-          <figure class="fig">
+          <figure class="fig fig--plate">
             <img src="assets/imgs/cad/rov/web/photogram-books.webp" alt="A 3D photogrammetry reconstruction of a stack of books, detailed enough that cover text is legible." loading="lazy" width="512" height="288" />
             <figcaption>Bench control, DSLR, air — cover text legible.</figcaption>
           </figure>
@@ -590,7 +590,7 @@
           </div>
         </div>
         <div>
-          <figure class="fig">
+          <figure class="fig fig--invert">
             <img src="assets/imgs/cad/rov/web/controller-wiring.webp" alt="Wiring diagram for the surface controller electronics." loading="lazy" width="1100" height="790" />
             <figcaption>Surface controller wiring — the sampler ran off a spare button.</figcaption>
           </figure>
@@ -707,9 +707,9 @@
     </div>
 
     <div class="foot__links">
-      <a href="assets/imgs/cad/rov/Chase%20Bonfiglio%20Senior%20Project%20Paper%20(2).pdf" target="_blank" rel="noopener">Full report ↗</a>
-      <a href="projects.html">All projects</a>
-      <a href="mailto:chasebonfiglio@gmail.com">Email ✉</a>
+      <a class="btn btn--solid" href="assets/imgs/cad/rov/Chase%20Bonfiglio%20Senior%20Project%20Paper%20(2).pdf" target="_blank" rel="noopener">Full report ↗</a>
+      <a class="btn" href="projects.html">All projects</a>
+      <a class="btn" href="mailto:chasebonfiglio@gmail.com">Email ✉</a>
     </div>
     <p class="foot__by">
       <a href="index.html">← chasebonfiglio.com</a> ·
@@ -718,6 +718,6 @@
   </div>
 </footer>
 
-<script src="assets/rov/rov.js?v=3"></script>
+<script src="assets/rov/rov.js?v=5"></script>
 </body>
 </html>

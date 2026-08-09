@@ -81,7 +81,7 @@
         if (f.y > snow.height + 4) { f.y = -4; f.x = Math.random() * snow.width; }
         sx.beginPath();
         sx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
-        sx.fillStyle = 'rgba(190,225,235,' + f.o + ')';
+        sx.fillStyle = 'rgba(190,225,240,' + f.o + ')';
         sx.fill();
       }
       requestAnimationFrame(snowLoop);
@@ -141,14 +141,14 @@
 
       // lane frames + labels
       function lane(top, label, sub) {
-        ctx.strokeStyle = 'rgba(29,59,79,.9)';
+        ctx.strokeStyle = 'rgba(255,255,255,.14)';
         ctx.lineWidth = 1;
         ctx.strokeRect(padL, top, plotW, laneH);
-        ctx.fillStyle = '#8ba7b4';
+        ctx.fillStyle = '#a2b6cb';
         ctx.font = '600 9px JetBrains Mono, monospace';
         ctx.fillText(label, padL + 6, top + 13);
         if (sub) {
-          ctx.fillStyle = '#5d7d8c';
+          ctx.fillStyle = '#7089a3';
           ctx.fillText(sub, padL + 6, top + 25);
         }
       }
@@ -158,11 +158,11 @@
       // ---- lane 1: A and B vs ground, with threshold ----
       var yA = function (v) { return topA + laneH - 14 - (v + 3) / 11 * (laneH - 28); };
       // threshold line
-      ctx.strokeStyle = 'rgba(242,181,68,.55)';
+      ctx.strokeStyle = 'rgba(250,208,44,.6)';
       ctx.setLineDash([4, 4]);
       ctx.beginPath(); ctx.moveTo(padL, yA(THRESH)); ctx.lineTo(padL + plotW, yA(THRESH)); ctx.stroke();
       ctx.setLineDash([]);
-      ctx.fillStyle = 'rgba(242,181,68,.8)';
+      ctx.fillStyle = 'rgba(250,208,44,.85)';
       ctx.font = '8px JetBrains Mono, monospace';
       ctx.fillText('2.5V threshold', padL + plotW - 82, yA(THRESH) - 4);
 
@@ -177,17 +177,17 @@
       var aV = function (i) { return (bitAt(i) ? VHI : 0) + noiseAt(i); };
       var bV = function (i) { return (bitAt(i) ? 0 : VHI) + noiseAt(i); };
       trace(bV, yA, 'rgba(139,167,180,.75)', 1.2);
-      trace(aV, yA, '#4fd1e0', 1.6);
+      trace(aV, yA, '#47D8E0', 1.6);
 
       // ---- lane 2: differential ----
       var yD = function (v) { return topD + laneH - 14 - (v + 7) / 14 * (laneH - 28); };
-      ctx.strokeStyle = 'rgba(242,181,68,.4)';
+      ctx.strokeStyle = 'rgba(250,208,44,.4)';
       ctx.setLineDash([4, 4]);
       ctx.beginPath(); ctx.moveTo(padL, yD(0)); ctx.lineTo(padL + plotW, yD(0)); ctx.stroke();
       ctx.setLineDash([]);
-      ctx.fillStyle = 'rgba(242,181,68,.65)';
+      ctx.fillStyle = 'rgba(250,208,44,.7)';
       ctx.fillText('0V', padL + plotW - 20, yD(0) - 4);
-      trace(function (i) { return aV(i) - bV(i); }, yD, '#3fc9a3', 1.7);
+      trace(function (i) { return aV(i) - bV(i); }, yD, '#20c997', 1.7);
 
       // ---- decode both, mark bit errors ----
       var errSE = 0;
@@ -198,14 +198,14 @@
         if (seBit !== BITS[b]) errSE++;
         // sample ticks on lane 1
         var bad = seBit !== BITS[b];
-        ctx.fillStyle = bad ? '#ef6a52' : 'rgba(79,209,224,.55)';
+        ctx.fillStyle = bad ? '#FF8882' : 'rgba(71,216,224,.55)';
         ctx.beginPath();
         ctx.arc(xAt(mid), yA(aV(mid)), bad ? 3.4 : 2.2, 0, Math.PI * 2);
         ctx.fill();
       }
 
       // y axis labels
-      ctx.fillStyle = '#5d7d8c';
+      ctx.fillStyle = '#7089a3';
       ctx.font = '8px JetBrains Mono, monospace';
       [5, 0].forEach(function (v) { ctx.fillText(v + 'V', 8, yA(v) + 3); });
       [5, -5].forEach(function (v) {
@@ -251,16 +251,16 @@
       var cycles = 4, cw = plotW / cycles;
       var yHi = padT + 8, yLo = padT + plotH - 8;
 
-      ctx.strokeStyle = 'rgba(29,59,79,.9)';
+      ctx.strokeStyle = 'rgba(255,255,255,.14)';
       ctx.strokeRect(padL, padT, plotW, plotH);
 
       // mean (commanded average) line
       var yMean = yLo - frac * (yLo - yHi);
       ctx.setLineDash([5, 4]);
-      ctx.strokeStyle = 'rgba(242,181,68,.75)';
+      ctx.strokeStyle = 'rgba(250,208,44,.8)';
       ctx.beginPath(); ctx.moveTo(padL, yMean); ctx.lineTo(padL + plotW, yMean); ctx.stroke();
       ctx.setLineDash([]);
-      ctx.fillStyle = 'rgba(242,181,68,.9)';
+      ctx.fillStyle = 'rgba(250,208,44,.95)';
       ctx.font = '8px JetBrains Mono, monospace';
       ctx.fillText('mean ' + (frac * VBAT).toFixed(1) + 'V', padL + plotW - 62, yMean - 5);
 
@@ -272,16 +272,16 @@
         ctx.lineTo(x0, yHi); ctx.lineTo(xHiEnd, yHi);
         ctx.lineTo(xHiEnd, yLo); ctx.lineTo(xEnd, yLo);
       }
-      ctx.strokeStyle = '#4fd1e0'; ctx.lineWidth = 2; ctx.stroke();
+      ctx.strokeStyle = '#47D8E0'; ctx.lineWidth = 2; ctx.stroke();
 
       // duty shading
-      ctx.fillStyle = 'rgba(79,209,224,.1)';
+      ctx.fillStyle = 'rgba(71,216,224,.12)';
       for (var c2 = 0; c2 < cycles; c2++) {
         var xa = padL + c2 * cw;
         ctx.fillRect(xa, yHi, cw * frac, yLo - yHi);
       }
 
-      ctx.fillStyle = '#5d7d8c';
+      ctx.fillStyle = '#7089a3';
       ctx.font = '8px JetBrains Mono, monospace';
       ctx.fillText('12V', 8, yHi + 3);
       ctx.fillText('0V', 12, yLo + 3);
@@ -306,15 +306,15 @@
     // but its per-item column can't be split reliably, because donated and
     // reused parts are mixed in with purchased ones.
     var DATA = [
-      { n: 'Electronics',        v: 74.98, c: '#4fd1e0', d: 'Category total. Includes the Elegoo Mega, RS-485 modules, motor drivers, bilge pumps and wiring — several were donated or reused, so this is spend, not catalog value.' },
-      { n: '4in PVC · 1ft',      v: 34.58, c: '#f2b544', d: 'Electronics compartment and motor guards' },
-      { n: 'PVC tees ×12',       v: 23.04, c: '#e6a740', d: 'Frame joints — $1.92 each' },
-      { n: '1.5in PVC · 10ft',   v: 12.78, c: '#d99a3f', d: 'Main frame stock' },
-      { n: 'PVC elbows ×10',     v:  9.60, c: '#cd903d', d: 'Frame corners — $0.96 each' },
-      { n: '4in rubber cap',     v:  9.81, c: '#c78f3c', d: 'Removable access cap for the electronics tube' },
-      { n: 'Cement + primer',    v:  8.88, c: '#bd8639', d: 'PVC solvent welding' },
-      { n: '3in dome',           v:  8.00, c: '#b37d36', d: 'Camera port' },
-      { n: '4in end cap',        v:  5.00, c: '#a97433', d: 'Compartment end closure' }
+      { n: 'Electronics',        v: 74.98, c: 'rgba(71,216,224,.42)', d: 'Category total. Includes the Elegoo Mega, RS-485 modules, motor drivers, bilge pumps and wiring — several were donated or reused, so this is spend, not catalog value.' },
+      { n: '4in PVC · 1ft',      v: 34.58, c: 'rgba(250,208,44,.30)', d: 'Electronics compartment and motor guards' },
+      { n: 'PVC tees ×12',       v: 23.04, c: 'rgba(250,208,44,.26)', d: 'Frame joints — $1.92 each' },
+      { n: '1.5in PVC · 10ft',   v: 12.78, c: 'rgba(250,208,44,.22)', d: 'Main frame stock' },
+      { n: 'PVC elbows ×10',     v:  9.60, c: 'rgba(250,208,44,.19)', d: 'Frame corners — $0.96 each' },
+      { n: '4in rubber cap',     v:  9.81, c: 'rgba(250,208,44,.16)', d: 'Removable access cap for the electronics tube' },
+      { n: 'Cement + primer',    v:  8.88, c: 'rgba(250,208,44,.13)', d: 'PVC solvent welding' },
+      { n: '3in dome',           v:  8.00, c: 'rgba(250,208,44,.11)', d: 'Camera port' },
+      { n: '4in end cap',        v:  5.00, c: 'rgba(250,208,44,.09)', d: 'Compartment end closure' }
     ];
     function squarify(items, x, y, w, h, out) {
       if (!items.length) return;
