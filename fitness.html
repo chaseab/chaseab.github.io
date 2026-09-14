@@ -243,7 +243,7 @@
     for(var k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e;}
 
   /* ---------- SBD progression ---------- */
-  var lifts=[
+  var FALLBACK_LIFTS=[
     {name:'Squat',color:'#191919',now:375,goal:405,
       pts:[['2022-05',135],['2023-03',225],['2024-03',315],['2025-03',365],['2026-07',375]],
       proj:[['2026-07',375],['2026-10',405]]},
@@ -254,8 +254,24 @@
       pts:[['2022-05',185],['2023-03',225],['2024-06',315],['2025-03',385],['2026-07',395]],
       proj:[['2026-07',395],['2026-10',405]]}
   ];
+  // The chart reads assets/data/sbd-progress.json (which the lift logger appends to); the
+  // inline array above is only a fallback if the fetch fails. Colors stay fixed per lift.
+  function liftsFromJson(j){
+    var meta={squat:{name:'Squat',color:'#191919'},bench:{name:'Bench',color:'#707070'},deadlift:{name:'Deadlift',color:'#9c7b38'}};
+    return ['squat','bench','deadlift'].map(function(k){
+      var L=j[k]||{},pts=(L.points||[]).map(function(p){return [p.date,p.lbs];}),proj=(L.projection||[]).map(function(p){return [p.date,p.lbs];});
+      var now=pts.length?pts[pts.length-1][1]:0,goal=proj.length?proj[proj.length-1][1]:now;
+      if(proj.length&&pts.length&&proj[0][1]!==now){proj=[[pts[pts.length-1][0],now]].concat(proj.slice(1));}
+      return {name:meta[k].name,color:meta[k].color,now:now,goal:goal,pts:pts,proj:proj};
+    });
+  }
+  function renderSBD(lifts){
+  // axes stretch to fit whatever the data now spans
+  var _all=[].concat.apply([],lifts.map(function(L){return L.pts.concat(L.proj);}));
+  var _maxYr=Math.max.apply(null,_all.map(function(p){var q=p[0].split('-');return +q[0]+(+q[1]-1)/12;}).concat([2026.9]));
+  var _maxLb=Math.max.apply(null,_all.map(function(p){return p[1];}).concat([400]));
   var W=440,H=300,mL=30,mR=16,mT=16,mB=28;
-  var xMin=2022.0,xMax=2027.0,yMin=0,yMax=420;
+  var xMin=2022.0,xMax=Math.max(2027.0,Math.ceil(_maxYr+0.5)),yMin=0,yMax=Math.ceil((_maxLb+20)/20)*20;
   function X(yr){return mL+(yr-xMin)/(xMax-xMin)*(W-mL-mR);}
   function Y(lb){return mT+(1-(lb-yMin)/(yMax-yMin))*(H-mT-mB);}
   var MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -315,6 +331,17 @@
       lg.appendChild(s);
     });
   }
+  }
+  (function(){
+    var done=false;
+    function go(l){if(done)return;done=true;renderSBD(l);}
+    if(window.fetch){
+      fetch('assets/data/sbd-progress.json',{cache:'no-cache'}).then(function(r){if(!r.ok)throw 0;return r.json();})
+        .then(function(j){go(liftsFromJson(j));}).catch(function(){go(FALLBACK_LIFTS);});
+      setTimeout(function(){go(FALLBACK_LIFTS);},4000);
+    } else { go(FALLBACK_LIFTS); }
+  })();
+
 
   /* ---------- WHOOP weekly sparklines ---------- */
   /* columns: strain, recovery%, resting HR, HRV ms, sleep% — weekly averages since 2025-12 */
