@@ -1,0 +1,4 @@
+# Netlify redirects
+# The Sept 2026 resume links the old ARC writeup URL; the page now lives under /arc-agi-3/
+/arcagithree.html   /arc-agi-3/   301
+/arcagithree        /arc-agi-3/   301
