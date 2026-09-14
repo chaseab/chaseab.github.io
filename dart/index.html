@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>OCHE — an autodart scoring rig · Chase Bonfiglio</title>
+<meta name="description" content="Project log: a DIY autodart scoring rig — three cameras and computer vision to find where each dart lands, and a 501 scoreboard built on a replayable event log. Honest about what's built and what isn't wired up yet." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css?v=1" />
+</head>
+<body>
+
+<nav class="mininav" id="mininav" aria-label="site navigation">
+  <a class="mininav__brand" href="../index.html">Chase Bonfiglio</a>
+  <button class="mininav__toggle" id="nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="nav-menu">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="mininav__menu" id="nav-menu">
+    <div class="mininav__links">
+      <a href="../index.html#home">Home</a>
+      <a href="../index.html#about">About</a>
+      <a href="../index.html#resume">Resume</a>
+      <a href="../projects.html">Projects</a>
+      <a href="../index.html#photography">Photography</a>
+      <a href="../index.html#contact">Contact</a>
+    </div>
+    <a href="#scoreboard" class="mininav__cta">Skip&nbsp;to&nbsp;the&nbsp;build&nbsp;↓</a>
+  </div>
+</nav>
+
+<header class="entry wrap" id="top">
+  <nav class="crumb" aria-label="breadcrumb">
+    <a href="../index.html">chasebonfiglio</a>
+    <span>/</span><a href="../projects.html">projects</a>
+    <span>/</span><b>oche</b>
+  </nav>
+
+  <p class="kicker">Project log · personal · <span class="live">in progress</span></p>
+  <h1 class="entry__title">Scoring darts with cameras instead of a pen</h1>
+  <p class="entry__lead">
+    I'm building <b>OCHE</b>, a DIY autodart scoring rig: three cameras watch the
+    board, computer vision works out where each dart landed, and a scoreboard I
+    wrote keeps a <b>501 double-out</b> match. The two hard halves — the vision
+    pipeline and the scoreboard — are built and unit-tested on their own. What I
+    haven't done yet is wire a real dart in the board to a number on the screen.
+    This page is a lab notebook, not a product page: the parts that don't work
+    yet say so.
+  </p>
+
+  <div class="status" aria-label="project status">
+    <div class="status__bar"><span class="label">Status</span><span class="label">updated as it changes</span></div>
+    <div class="status__body">
+      <div class="status__item"><b>Vision pipeline</b><span class="ok">Built &amp; unit-tested</span> — homography, detection, fusion, triangulation</div>
+      <div class="status__item"><b>Scoreboard (501)</b><span class="ok">Working</span> — rules, checkout solver, live stats, replayable log</div>
+      <div class="status__item"><b>Simulator</b><span class="ok">Working</span> — a scatter model stands in for the rig</div>
+      <div class="status__item"><b>Camera → score, end&nbsp;to&nbsp;end</b><span class="todo">Not wired</span> — the rig-to-UI adapter is still a stub</div>
+      <div class="status__item"><b>Camera mount</b><span class="ok">Built</span> — 3D-printed, four revisions</div>
+      <div class="status__item"><b>Mobile layout</b><span class="todo">Not built</span> — laptop was the first target</div>
+    </div>
+  </div>
+
+  <figure class="hero panel">
+    <div class="panel__bar"><span class="label">Board geometry</span><span class="tag">SCORING</span></div>
+    <div class="board-fig">
+      <svg id="dartboard" viewBox="-118 -118 236 236" role="img" aria-label="A regulation dartboard drawn from the scorer's millimetre coordinates, treble-20 highlighted."></svg>
+    </div>
+    <figcaption>
+      The board the scorer reasons about, drawn from the same millimetre
+      coordinates the vision pipeline outputs — treble-20 highlighted. A photo of
+      the physical rig belongs here <span class="wip">[Chase: drop a board/camera photo]</span>.
+    </figcaption>
+  </figure>
+</header>
+
+<main class="wrap">
+
+<!-- 01 rig -->
+<section class="sec" id="rig">
+  <div class="sec__head"><span class="sec__num">01 / rig</span><h2 class="sec__title">What's on the bench</h2></div>
+  <div class="spec">
+    <div><b>Cameras</b><span>3 × board-facing</span><small>Overlapping views for triangulation · calibrated per camera <span class="wip">[model — confirm]</span></small></div>
+    <div><b>Compute</b><span>Raspberry Pi</span><small>Capture runs as a <code>systemd</code> service on the Pi <span class="wip">[Pi model — confirm]</span></small></div>
+    <div><b>Board</b><span>Regulation dartboard</span><small>Standard 20-sector layout, bull at centre <span class="wip">[bristle/type — confirm]</span></small></div>
+    <div><b>Mount</b><span>Printed camera mount, v1 → v4</span><small>SolidWorks-designed, on-board and off-board variants <span class="wip">[printer — confirm]</span></small></div>
+    <div><b>Scoreboard</b><span>TypeScript · React · Vite</span><small>Runs in a browser; no backend needed to keep score</small></div>
+    <div><b>Vision</b><span>Python</span><small>Calibration, detection and fusion, covered by <code>pytest</code></small></div>
+  </div>
+  <div class="sec__body">
+    <p>
+      The rig splits cleanly into two halves that I could build and test
+      separately: the <b>vision</b> that turns three camera frames into a hit
+      location, and the <b>scoreboard</b> that turns hit locations into a match.
+      They only ever meet through one small message type, which is why the
+      scoreboard already works without a single real camera attached.
+    </p>
+  </div>
+</section>
+
+<!-- 02 vision -->
+<section class="sec" id="vision">
+  <div class="sec__head"><span class="sec__num">02 / vision</span><h2 class="sec__title">Finding the dart</h2></div>
+  <div class="sec__body">
+    <p>The pipeline goes from raw frames to one coordinate in millimetres from the bullseye:</p>
+    <ol class="pipe">
+      <li><b>capture</b> 3 views</li>
+      <li>per-camera <b>homography</b></li>
+      <li><b>detect</b> the tip</li>
+      <li><b>fuse / triangulate</b></li>
+      <li><b>(x, y) in mm</b></li>
+      <li><b>score</b> the segment</li>
+    </ol>
+    <p>
+      Each camera is calibrated with its own homography onto the board plane; the
+      per-view detections are fused — and, across the three cameras, triangulated
+      — into a single point in millimetres. From there one function,
+      <code>coordToSegment</code>, decides what that point scored. It's the single
+      authority on what a dart hit, so the hardware and the simulator can never
+      disagree about the rules of the board.
+    </p>
+    <p>
+      The vision code carries eight unit-test modules — <code>board</code>,
+      <code>camera_config</code>, <code>detect</code>, <code>fusion</code>,
+      <code>homography</code>, <code>labels</code>, <code>pipeline</code> and
+      <code>triangulate</code>. What those tests <em>don't</em> cover is
+      end-to-end accuracy on real thrown darts; that needs the loop closed, and I
+      have no hit-location error numbers yet.
+    </p>
+  </div>
+  <div class="note"><b>Next</b> — close the loop and measure hit-location error against hand-scored throws. Until then, treat the vision half as unit-correct but not field-validated.</div>
+</section>
+
+<!-- 03 scoreboard -->
+<section class="sec" id="scoreboard">
+  <div class="sec__head"><span class="sec__num">03 / scoreboard</span><h2 class="sec__title">Keeping the match</h2></div>
+  <div class="sec__body">
+    <p>
+      The scoreboard is deliberately boring in one direction only:
+      <b>feed → events → reducer → state → render</b>. The UI never mutates match
+      state, so undo is just "drop the last dart and replay," and the whole match
+      is a log I can replay from the start.
+    </p>
+    <ul>
+      <li><b>The seam is one message type.</b> Everything upstream — a real camera or the simulator — converts into the same event, so nothing downstream knows or cares which produced the hit. That's why I could finish and test the scoreboard before the rig existed.</li>
+      <li><b>The checkout is computed, not tabulated.</b> The finish-path solver works out how to end a leg instead of shipping a 170-row lookup table — and the simulator aims with the <em>same</em> solver, so the suggested finish and the sim can't drift apart.</li>
+      <li><b>501 rules are pure.</b> Bust, double-out, legs and sets are plain functions with no framework in them — easy to test, easy to reason about.</li>
+      <li><b>The simulator throws with realistic scatter.</b> Three skill levels apply 9 / 15 / 26&nbsp;mm of Gaussian spread, which is what stands in for the camera feed today.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 04 last mile -->
+<section class="sec" id="last-mile">
+  <div class="sec__head"><span class="sec__num">04 / next</span><h2 class="sec__title">The last mile</h2></div>
+  <div class="sec__body">
+    <p>
+      Everything is staged for one integration and no more: the rig-to-scoreboard
+      adapter (<code>wsFeed</code>) is still a stub. The job is to normalise the
+      rig's WebSocket frames into the one event type the scoreboard already
+      speaks, then run a single real dart from board to screen. After that:
+    </p>
+    <ul>
+      <li>A <b>mobile / TV layout</b> — the scoreboard was built laptop-first.</li>
+      <li><b>Game modes beyond 501</b> — the rules are shaped so these are new files, not a rewrite.</li>
+    </ul>
+    <p><b>Where it is.</b> Both halves work and are unit-tested; the camera-to-score loop has not yet run as one system.</p>
+  </div>
+</section>
+
+<!-- 05 log -->
+<section class="sec" id="log">
+  <div class="sec__head"><span class="sec__num">05 / log</span><h2 class="sec__title">Build log</h2></div>
+  <div class="note"><b>To fill in</b> — I didn't keep dated notes as I went on this one. <span class="wip">[Chase: milestones + dates for the timeline, and whether the code repo is public]</span></div>
+</section>
+
+</main>
+
+<footer class="foot wrap">
+  <div class="row">
+    <span>OCHE project log · Chase Bonfiglio · 2026</span>
+    <a href="../projects.html">← all projects</a>
+    <a href="../index.html#contact">contact</a>
+  </div>
+</footer>
+
+<script>
+// mobile nav
+(function(){
+  var nav=document.getElementById('mininav'),btn=document.getElementById('nav-toggle');
+  if(!nav||!btn)return;
+  btn.addEventListener('click',function(){var o=nav.classList.toggle('open');btn.setAttribute('aria-expanded',o?'true':'false')});
+  nav.querySelectorAll('.mininav__menu a').forEach(function(a){a.addEventListener('click',function(){nav.classList.remove('open');btn.setAttribute('aria-expanded','false')})});
+})();
+
+// regulation dartboard, drawn from millimetre geometry (treble-20 highlighted)
+(function(){
+  var order=[20,1,18,4,13,6,10,15,2,17,3,19,7,16,8,11,14,9,12,5];
+  var svg=document.getElementById('dartboard');if(!svg)return;
+  var NS='http://www.w3.org/2000/svg';
+  var R={dOut:100,dIn:95,tOut:63,tIn:58,bullOut:16,bull:6};
+  var seg=2*Math.PI/20, off=-Math.PI/2-seg/2;
+  function ring(a,ro,ri,fill){
+    var a0=off+a*seg,a1=a0+seg;
+    function p(r,ang){return [Math.cos(ang)*r,Math.sin(ang)*r]}
+    var A=p(ri,a0),B=p(ro,a0),C=p(ro,a1),D=p(ri,a1);
+    var path=document.createElementNS(NS,'path');
+    path.setAttribute('d','M'+A[0]+' '+A[1]+' L'+B[0]+' '+B[1]+' A'+ro+' '+ro+' 0 0 1 '+C[0]+' '+C[1]+' L'+D[0]+' '+D[1]+' A'+ri+' '+ri+' 0 0 0 '+A[0]+' '+A[1]+' Z');
+    path.setAttribute('fill',fill);svg.appendChild(path);
+  }
+  var BLK='#0f1319',WHT='#c9c2ac',RED='#a52a2f',GRN='#1f6b3a',RED_HI='#ff3355',GRN_HI='#00ff88';
+  for(var i=0;i<20;i++){
+    var alt=i%2===0;
+    ring(i,R.dIn,R.tOut,alt?BLK:WHT);
+    ring(i,R.tOut,R.tIn,alt?GRN:RED);
+    ring(i,R.tIn,R.bullOut,alt?BLK:WHT);
+    ring(i,R.dOut,R.dIn,alt?RED:GRN);
+  }
+  ring(0,R.tOut,R.tIn,GRN_HI);
+  ring(0,R.dOut,R.dIn,RED_HI);
+  function circle(r,f){var e=document.createElementNS(NS,'circle');e.setAttribute('r',r);e.setAttribute('fill',f);svg.appendChild(e)}
+  circle(R.bullOut,'#1f6b3a');circle(R.bull,'#ff3355');
+  order.forEach(function(num,i){
+    var ang=off+i*seg+seg/2,r=110;
+    var t=document.createElementNS(NS,'text');
+    t.setAttribute('x',Math.cos(ang)*r);t.setAttribute('y',Math.sin(ang)*r+3.5);
+    t.setAttribute('text-anchor','middle');
+    t.setAttribute('font-family',"'JetBrains Mono',monospace");
+    t.setAttribute('font-size','9');
+    t.setAttribute('fill',num===20?'#00ff88':'#8b9bb4');
+    t.textContent=num;svg.appendChild(t);
+  });
+})();
+</script>
+</body>
+</html>
