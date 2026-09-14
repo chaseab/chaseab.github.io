@@ -78,12 +78,12 @@
 <section class="sec" id="rig">
   <div class="sec__head"><span class="sec__num">01 / rig</span><h2 class="sec__title">What's on the bench</h2></div>
   <div class="spec">
-    <div><b>Cameras</b><span>3 × board-facing</span><small>Overlapping views for triangulation · calibrated per camera</small></div>
-    <div><b>Compute</b><span>Raspberry Pi</span><small>Capture runs as a <code>systemd</code> service on the Pi</small></div>
-    <div><b>Board</b><span>Regulation dartboard</span><small>Standard 20-sector layout, bull at centre</small></div>
+    <div><b>Cameras</b><span>3 × OV9732</span><small>1280×720 @ 30&nbsp;fps MJPG on a powered USB hub · addressed by <code>/dev/v4l/by-path</code>, exposure &amp; white-balance locked manual</small></div>
+    <div><b>Compute</b><span>Raspberry Pi · <code>dartpi</code></span><small>RPi&nbsp;OS Lite 64-bit; OpenCV + V4L2; the detection server runs as a <code>systemd</code> service with a tuning UI on the LAN</small></div>
+    <div><b>Board</b><span>WDF/BDO regulation</span><small>451&nbsp;mm face, 340&nbsp;mm playing surface; radii measured to the centre of the wire</small></div>
     <div><b>Mount</b><span>Printed camera mount, v1 → v4</span><small>SolidWorks-designed, on-board and off-board variants</small></div>
-    <div><b>Scoreboard</b><span>TypeScript · React · Vite</span><small>Runs in a browser; no backend needed to keep score</small></div>
-    <div><b>Vision</b><span>Python</span><small>Calibration, detection and fusion, covered by <code>pytest</code></small></div>
+    <div><b>Scoreboard</b><span>TypeScript · React&nbsp;19 · Vite · Tailwind</span><small>Runs in a browser; no backend needed to keep score</small></div>
+    <div><b>Vision</b><span>Python · OpenCV</span><small>Calibration, detection and fusion, covered by <code>pytest</code> (8 modules)</small></div>
   </div>
   <div class="sec__body">
     <p>
@@ -110,23 +110,37 @@
       <li><b>score</b> the segment</li>
     </ol>
     <p>
-      Each camera is calibrated with its own homography onto the board plane; the
-      per-view detections are fused — and, across the three cameras, triangulated
-      — into a single point in millimetres. From there one function,
-      <code>coordToSegment</code>, decides what that point scored. It's the single
-      authority on what a dart hit, so the hardware and the simulator can never
-      disagree about the rules of the board.
+      Each camera is calibrated in two steps: a checkerboard pass for its
+      intrinsics, then a homography that maps its view onto the board plane. A
+      dart is found by <b>frame differencing</b> — the server watches for the
+      spike a thrown dart makes and waits for the frame to settle — but only
+      inside the board region: every pixel is projected through the homography,
+      and anything past ~180&nbsp;mm (the rim, the background, a reaching hand)
+      is masked out. The per-camera detections become one point in millimetres,
+      and <code>coordToSegment</code> turns that into a score — the single
+      authority both the hardware and the simulator defer to.
     </p>
     <p>
-      The vision code carries eight unit-test modules — <code>board</code>,
-      <code>camera_config</code>, <code>detect</code>, <code>fusion</code>,
-      <code>homography</code>, <code>labels</code>, <code>pipeline</code> and
-      <code>triangulate</code>. What those tests <em>don't</em> cover is
-      end-to-end accuracy on real thrown darts; that needs the loop closed, and I
-      have no hit-location error numbers yet.
+      On the Pi, a browser tuning UI shows the guess plus the tip it found in
+      each camera; I confirm or correct it, every confirmation is logged as
+      labelled data, and the scored dart is folded into the background so the
+      next throw is detected incrementally. The pipeline carries eight
+      <code>pytest</code> modules — board, camera_config, detect, fusion,
+      homography, labels, pipeline and triangulate.
     </p>
   </div>
-  <div class="note"><b>Next</b> — close the loop and measure hit-location error against hand-scored throws. Until then, treat the vision half as unit-correct but not field-validated.</div>
+
+  <div class="tablewrap">
+  <table class="meas">
+    <thead><tr><th>What I measured</th><th>Result</th><th>What it means</th></tr></thead>
+    <tbody>
+      <tr><td>Per-camera calibration reprojection error</td><td class="n">0.29 – 0.86&nbsp;mm</td><td>The three homographies land sub-millimetre, so the board-plane mapping is good enough to trust for scoring.</td></tr>
+      <tr><td>End-to-end hit-location error on real throws</td><td class="n">not yet measured</td><td>Needs the camera&nbsp;→&nbsp;score loop closed — this is the number that actually decides whether it can score a real match.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="note"><b>Next</b> — close the loop and measure hit-location error against hand-scored throws. The calibration is sub-millimetre; the open question is what the full pipeline does on real darts.</div>
 </section>
 
 <!-- 03 scoreboard -->
@@ -180,7 +194,14 @@
 <!-- 05 log -->
 <section class="sec" id="log">
   <div class="sec__head"><span class="sec__num">05 / log</span><h2 class="sec__title">Build log</h2></div>
-  <p class="sec__body">I didn't keep dated notes on this one; the log gets backfilled when the rig-to-scoreboard wiring lands.</p>
+  <p class="sec__body">
+    I didn't keep a dated commit log on this one. Where it stands as of
+    <b>14&nbsp;Sep&nbsp;2026</b>: the three cameras are calibrated
+    (sub-millimetre reprojection error), the Pi is recording and labelling real
+    throws through the tuning UI, and the scoreboard runs on the simulator feed.
+    The missing piece is the adapter that turns those recorded detections into
+    live scoreboard events.
+  </p>
 </section>
 
 </main>
