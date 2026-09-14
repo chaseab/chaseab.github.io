@@ -79,7 +79,7 @@
     <div><b>Cameras</b><span>2 × Innomaker U20CAM</span><small>Overhead on the official tower mount, one on the wrist · MJPG 1280×960</small></div>
     <div><b>Compute</b><span>Windows desktop, GTX 1080 Ti</span><small>Pascal: CUDA 11.8 wheels only, no bf16 — everything is sized to that</small></div>
     <div><b>Software</b><span>LeRobot 0.4.4 · PyTorch 2.7.1 · ACT</span><small>Custom Python server + Three.js dashboard on top</small></div>
-    <div><b>Parts</b><span>Printed on a Bambu P1S</span><small>Printer status is piped into the same dashboard</small></div>
+    <div><b>Parts</b><span>Printed on a Bambu P1S</span><small>Structural parts printed at home; a separate printer dashboard watches the jobs</small></div>
   </div>
 
   <div class="sec__body">
@@ -103,7 +103,6 @@
         <li>Live overhead and wrist feeds, with a swap button because Windows re-enumerates the two identical cameras in a different order after any USB disturbance.</li>
         <li>A <b>virtual twin</b> of the follower driven from the URDF and the servo telemetry (8&nbsp;Hz), standing on the 3D map from the next section.</li>
         <li>Calibrate, teleop, record, and train from the browser. The training panel builds the LeRobot record/train commands and validates them by parsing them with LeRobot's own config classes before anything runs.</li>
-        <li>Served through a Cloudflare tunnel so I can check on a training run from my phone.</li>
       </ul>
     </div>
     <figure class="panel">
