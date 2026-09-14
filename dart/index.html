@@ -94,6 +94,11 @@
       scoreboard already works without a single real camera attached.
     </p>
   </div>
+  <figure class="panel" style="margin-top:8px">
+    <div class="panel__bar"><span class="label">The rig in place</span><span class="tag">HARDWARE</span></div>
+    <img src="assets/rig.webp" width="1200" height="844" alt="A TARGET dartboard on a black backing panel mounted on a wall, with three small camera modules on 3D-printed mounts clipped to the frame at the top, right and bottom, and wiring running off to the left toward the Pi." loading="lazy" />
+    <figcaption>The board mounted on the wall: three OV9732 cameras on printed mounts clip to the frame — top, right and bottom — with the wiring running back to the Pi off-frame.</figcaption>
+  </figure>
 </section>
 
 <!-- 02 vision -->
@@ -129,6 +134,12 @@
       homography, labels, pipeline and triangulate.
     </p>
   </div>
+
+  <figure class="panel" style="margin-top:8px">
+    <div class="panel__bar"><span class="label">Calibration tool</span><span class="tag">HOMOGRAPHY</span></div>
+    <img src="assets/calibrate-tool.webp" width="1200" height="622" alt="A browser calibration tool showing one camera's photo of the dartboard, with blue circle markers dropped on known points — the bull and the outer edges of the double ring at 20, 6, 3 and 11 — that it uses to solve the homography." loading="lazy" />
+    <figcaption>The calibration tool I wrote: it shows one camera's view of the board and I click a handful of known points — the bull and the double-ring edges at 20, 3, 6 and 11 — and it solves that camera's homography onto the board plane.</figcaption>
+  </figure>
 
   <div class="tablewrap">
   <table class="meas">
