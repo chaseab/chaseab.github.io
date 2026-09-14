@@ -62,13 +62,12 @@
   </div>
 
   <figure class="hero panel">
-    <div class="panel__bar"><span class="label">Board geometry</span><span class="tag">SCORING</span></div>
-    <div class="board-fig">
-      <svg id="dartboard" viewBox="-118 -118 236 236" role="img" aria-label="A regulation dartboard drawn from the scorer's millimetre coordinates, treble-20 highlighted."></svg>
-    </div>
+    <div class="panel__bar"><span class="label">OCHE scoreboard · 501 double-out</span><span class="tag">SIMULATOR</span></div>
+    <img src="assets/scoreboard.webp" width="1137" height="1064" alt="The OCHE scoreboard mid-match: two player columns with three-dart averages and visit history, a large remaining-score readout, a suggested checkout route, and a dartboard hit-map in the centre." loading="eager" />
     <figcaption>
-      The board the scorer reasons about, drawn from the same millimetre
-      coordinates the vision pipeline outputs — treble-20 highlighted.
+      The scoreboard mid-leg — here driven by the simulator, not a real board, since
+      the camera feed isn't wired yet. Player columns, three-dart averages, the
+      suggested finish, and the hit-map all read off the same replayable event log.
     </figcaption>
   </figure>
 </header>
@@ -147,6 +146,17 @@
       <li><b>The simulator throws with realistic scatter.</b> Three skill levels apply 9 / 15 / 26&nbsp;mm of Gaussian spread, which is what stands in for the camera feed today.</li>
     </ul>
   </div>
+  <figure class="panel" style="margin-top:8px">
+    <div class="panel__bar"><span class="label">Board geometry</span><span class="tag">MM-SPACE</span></div>
+    <div class="board-fig">
+      <svg id="dartboard" viewBox="-118 -118 236 236" role="img" aria-label="A regulation dartboard drawn from the scorer's millimetre coordinates, treble-20 highlighted."></svg>
+    </div>
+    <figcaption>
+      The board the scorer reasons about, drawn from the same millimetre coordinates
+      the vision pipeline outputs — <code>coordToSegment</code> maps any point here to
+      a score. Treble-20 highlighted.
+    </figcaption>
+  </figure>
 </section>
 
 <!-- 04 last mile -->
