@@ -207,6 +207,11 @@ img{max-width:100%;display:block}
    ARC flagship — SAME card footprint as the rest, its own
    retro skin. The one deliberate colour moment on the page.
    ========================================================= */
+.tile--oche{background:#0b0b09;border-color:#2a2b20;color:#d8d2bf}
+.tile--oche .tile__media{background:#111310}
+.tile--oche .tile__title,.tile--oche .tile__meta{color:#e9e4d4}
+.tile--oche .tile__blurb{color:#8f8a76}
+.tile--oche .tile__accent{background:#ffb000;opacity:1}
 .tile--so101{background:#0d1117;border-color:#1e2a3a;color:#e2e8f0}
 .tile--so101 .tile__media{background:#080b10}
 .tile--so101 .tile__title,.tile--so101 .tile__blurb,.tile--so101 .tile__meta{color:#e2e8f0}
@@ -327,7 +332,7 @@ const PROJECTS = [
     tags:['computer vision','embedded','Raspberry Pi','multi-camera','React','TypeScript'],
     status:'live', statusLabel:'Building',
     date:'2026-09', year:'2026', featured:true, theme:'oche',
-    img:'assets/imgs/oche-cover.jpg', href:'dart/index.html',
+    img:'assets/imgs/oche-cover.webp', href:'dart/index.html',
     meta:'Solo · started 2026',
     blurb:"A DIY autodart scoring rig: multi-camera vision on a Raspberry Pi locates each dart by homography and fuses three views into one hit, streamed to a terminal-brutalist 501 scoreboard. Vision pipeline and scoreboard are built and tested — the live camera-to-board link is the last mile."
   },
