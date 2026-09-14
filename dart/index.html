@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>OCHE — a DIY autodart scoring rig · Chase Bonfiglio</title>
+<meta name="description" content="OCHE: multi-camera computer vision on a Raspberry Pi that locates each dart by homography and fuses the views into a hit, streamed to a terminal-brutalist 501 scoreboard. A build log — honest about what works and what's the last mile." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+/* ============================================================
+   OCHE — terminal-brutalist. Pulls the aesthetic of the real
+   scoreboard it documents: amber phosphor on black, hard rules,
+   a millimetre grid, seven-segment numerals. No photos required.
+   ============================================================ */
+:root{
+  --bg:#0b0b09;
+  --bg-2:#111310;
+  --panel:#15170f;
+  --amber:#ffb000;      /* phosphor */
+  --amber-dim:#8a6410;
+  --amber-ghost:#3a2c07;
+  --green:#37d67a;      /* dartboard green / "checkout on" */
+  --red:#e5484d;        /* doubles & trebles */
+  --paper:#e9e4d4;
+  --ink:#d8d2bf;
+  --ink-dim:#8f8a76;
+  --line:#2a2b20;
+  --line-2:#3c3d2c;
+  --f-mono:'IBM Plex Mono',ui-monospace,monospace;
+  --f-sans:'IBM Plex Sans',system-ui,sans-serif;
+  --f-pixel:'Silkscreen',monospace;
+  --maxw:1120px;
+  --pad:clamp(18px,5vw,56px);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:var(--f-mono);font-size:16px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  background-image:
+    linear-gradient(var(--line) 1px,transparent 1px),
+    linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:28px 28px;
+  background-position:center top;
+}
+/* faint vignette + scanline atmosphere */
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;
+  background:radial-gradient(120% 90% at 50% -10%,transparent 55%,rgba(0,0,0,.55) 100%);}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.35;
+  background:repeating-linear-gradient(180deg,transparent 0 2px,rgba(0,0,0,.25) 2px 3px);}
+main,.mininav,footer{position:relative;z-index:2}
+a{color:var(--amber);text-decoration:none}
+a:hover{text-decoration:underline}
+img{max-width:100%;display:block}
+::selection{background:var(--amber);color:#000}
+
+/* ---- sticky mini-nav (site convention) ---- */
+.mininav{position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;
+  gap:1rem;padding:.7rem var(--pad);background:rgba(11,11,9,.86);backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line-2)}
+.mininav__brand{font-family:var(--f-pixel);font-size:.82rem;color:var(--paper);letter-spacing:.02em}
+.mininav__brand:hover{text-decoration:none;color:var(--amber)}
+.mininav__menu{display:flex;align-items:center;gap:1.4rem}
+.mininav__links{display:flex;gap:1.1rem;flex-wrap:wrap}
+.mininav__links a{color:var(--ink-dim);font-size:.8rem;letter-spacing:.03em}
+.mininav__links a:hover{color:var(--amber);text-decoration:none}
+.mininav__cta{font-family:var(--f-pixel);font-size:.66rem;color:#000;background:var(--amber);
+  padding:.5rem .7rem;border-radius:2px}
+.mininav__cta:hover{text-decoration:none;background:#fff}
+.mininav__toggle{display:none;background:none;border:1px solid var(--line-2);border-radius:2px;
+  width:38px;height:34px;cursor:pointer;flex-direction:column;gap:4px;align-items:center;justify-content:center}
+.mininav__toggle span{width:18px;height:2px;background:var(--amber)}
+
+/* ---- layout ---- */
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 var(--pad)}
+section{padding:clamp(48px,8vw,88px) 0}
+.pixel{font-family:var(--f-pixel);font-size:.68rem;letter-spacing:.06em;color:var(--amber-dim);
+  text-transform:uppercase}
+.crumb{font-size:.74rem;color:var(--ink-dim);padding:1.1rem 0 0}
+.crumb a{color:var(--ink-dim)}.crumb a:hover{color:var(--amber)}
+.crumb b{color:var(--amber)}
+
+/* ---- hero ---- */
+.hero{padding-top:clamp(28px,5vw,52px)}
+.hero__tag{display:inline-flex;align-items:center;gap:.5rem;border:1px solid var(--line-2);
+  padding:.32rem .6rem;border-radius:2px;font-size:.7rem;color:var(--ink-dim);margin-bottom:1.4rem}
+.hero__tag .dot{width:8px;height:8px;border-radius:50%;background:var(--amber);
+  box-shadow:0 0 8px var(--amber);animation:blink 1.6s steps(1) infinite}
+@keyframes blink{50%{opacity:.25}}
+.hero h1{font-family:var(--f-pixel);color:var(--paper);line-height:1.04;margin:.2rem 0 .1rem;
+  font-size:clamp(2.4rem,9vw,5.2rem);text-shadow:0 0 22px rgba(255,176,0,.18)}
+.hero h1 .amb{color:var(--amber);text-shadow:0 0 26px rgba(255,176,0,.45)}
+.hero__sub{max-width:44ch;color:var(--ink);font-size:clamp(1rem,2.4vw,1.18rem);margin:1.3rem 0 0}
+.hero__sub b{color:var(--paper)}
+.hero__links{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:1.7rem}
+.btn{display:inline-flex;align-items:center;gap:.45rem;font-family:var(--f-mono);font-size:.82rem;
+  padding:.6rem .9rem;border:1px solid var(--line-2);border-radius:2px;color:var(--ink);background:var(--bg-2)}
+.btn:hover{border-color:var(--amber);color:var(--amber);text-decoration:none}
+.btn--solid{background:var(--amber);color:#000;border-color:var(--amber);font-weight:600}
+.btn--solid:hover{background:#fff;color:#000;border-color:#fff}
+
+/* ---- hero split: copy + live scoreboard mock ---- */
+.hero__grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(24px,5vw,56px);align-items:center}
+.board{border:1px solid var(--line-2);background:
+   radial-gradient(120% 120% at 50% 0,#16180f,#0c0d08);border-radius:4px;padding:20px;
+   box-shadow:0 0 0 1px #000,0 24px 60px -30px #000 inset}
+.board__bar{display:flex;justify-content:space-between;align-items:center;font-family:var(--f-pixel);
+  font-size:.6rem;color:var(--amber-dim);border-bottom:1px solid var(--line);padding-bottom:.6rem;margin-bottom:1rem}
+.seven{font-family:var(--f-pixel);color:var(--amber);font-size:clamp(2.2rem,7vw,3.4rem);
+  text-align:center;letter-spacing:.08em;text-shadow:0 0 18px rgba(255,176,0,.55);line-height:1}
+.seven small{display:block;font-size:.6rem;color:var(--ink-dim);letter-spacing:.14em;margin-top:.5rem}
+.dartboard{margin:1.1rem auto 0;max-width:280px}
+.checkout{margin-top:1rem;border-top:1px solid var(--line);padding-top:.9rem;font-size:.8rem;color:var(--ink-dim)}
+.checkout b{color:var(--green)}
+.checkout .route{color:var(--paper);letter-spacing:.04em}
+
+/* ---- pipeline ---- */
+.lead{max-width:60ch}
+.lead h2,.status h2,.manifest h2{font-family:var(--f-pixel);color:var(--paper);
+  font-size:clamp(1.3rem,4vw,1.9rem);margin:.4rem 0 1rem}
+.pipe{display:grid;grid-template-columns:repeat(6,1fr);gap:.5rem;margin-top:2rem}
+.pipe__node{border:1px solid var(--line-2);background:var(--panel);border-radius:3px;padding:.8rem .6rem;
+  position:relative;min-height:92px}
+.pipe__node .n{font-family:var(--f-pixel);font-size:.54rem;color:var(--amber-dim)}
+.pipe__node b{display:block;color:var(--paper);font-size:.82rem;margin:.35rem 0 .2rem}
+.pipe__node p{margin:0;font-size:.68rem;color:var(--ink-dim);line-height:1.35}
+.pipe__node::after{content:"▸";position:absolute;right:-.55rem;top:50%;transform:translateY(-50%);
+  color:var(--amber-dim);z-index:3;font-size:.8rem}
+.pipe__node:last-child::after{display:none}
+.pipe__note{margin-top:1rem;font-size:.76rem;color:var(--ink-dim)}
+.pipe__note b{color:var(--amber)}
+
+/* ---- manifest ---- */
+.manifest__list{list-style:none;margin:1.4rem 0 0;padding:0;display:grid;
+  grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+.manifest__list li{background:var(--bg-2);padding:1.1rem 1.2rem}
+.manifest__list .ix{font-family:var(--f-pixel);font-size:.6rem;color:var(--amber-dim)}
+.manifest__list b{display:block;color:var(--paper);margin:.3rem 0 .3rem;font-size:.95rem}
+.manifest__list p{margin:0;font-size:.82rem;color:var(--ink-dim)}
+.manifest__list code{color:var(--amber);font-size:.8rem;background:var(--amber-ghost);padding:0 .25rem;border-radius:2px}
+
+/* ---- mounts iteration strip ---- */
+.mounts{display:flex;gap:.5rem;margin-top:1.3rem;flex-wrap:wrap}
+.mounts .m{border:1px solid var(--line-2);border-radius:2px;padding:.5rem .7rem;font-size:.72rem;color:var(--ink-dim)}
+.mounts .m b{color:var(--paper)}
+.mounts .m.cur{border-color:var(--amber);color:var(--amber)}
+.mounts .m.cur b{color:var(--amber)}
+
+/* ---- honest status ---- */
+.status{background:var(--bg-2);border-top:1px solid var(--line-2);border-bottom:1px solid var(--line-2)}
+.status__grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(20px,4vw,48px);margin-top:1.4rem}
+.col h3{font-family:var(--f-pixel);font-size:.72rem;margin:0 0 .9rem}
+.col--on h3{color:var(--green)}
+.col--next h3{color:var(--red)}
+.col ul{list-style:none;margin:0;padding:0}
+.col li{padding:.55rem 0 .55rem 1.5rem;border-bottom:1px dashed var(--line-2);position:relative;font-size:.86rem;color:var(--ink)}
+.col li::before{position:absolute;left:0;top:.55rem;font-family:var(--f-mono)}
+.col--on li::before{content:"✓";color:var(--green)}
+.col--next li::before{content:"›";color:var(--red)}
+.honest{margin-top:1.7rem;border-left:2px solid var(--amber);padding:.4rem 0 .4rem 1rem;color:var(--paper);
+  font-size:.9rem;max-width:64ch}
+
+/* ---- stack ---- */
+.stack{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.4rem}
+.stack span{font-size:.74rem;color:var(--ink-dim);border:1px solid var(--line-2);border-radius:2px;padding:.35rem .6rem}
+
+/* ---- footer ---- */
+footer{border-top:1px solid var(--line-2);background:var(--bg-2);padding:clamp(40px,7vw,72px) 0}
+footer .pixel{color:var(--amber-dim)}
+footer h2{font-family:var(--f-pixel);color:var(--paper);font-size:clamp(1.2rem,3.5vw,1.7rem);margin:.5rem 0 1.1rem;max-width:24ch}
+.take{list-style:none;margin:0 0 1.6rem;padding:0;display:grid;gap:.7rem;max-width:70ch}
+.take li{font-size:.86rem;color:var(--ink)}
+.take b{color:var(--amber)}
+.foot__links{display:flex;flex-wrap:wrap;gap:.6rem;margin-bottom:1.2rem}
+.foot__by{font-size:.74rem;color:var(--ink-dim)}
+.totop{position:fixed;right:16px;bottom:16px;z-index:30;width:40px;height:40px;border-radius:2px;
+  border:1px solid var(--line-2);background:var(--bg-2);color:var(--amber);cursor:pointer;
+  opacity:0;pointer-events:none;transition:opacity .2s}
+.totop.show{opacity:1;pointer-events:auto}
+
+@media(max-width:860px){
+  .mininav__toggle{display:flex}
+  .mininav__menu{position:absolute;top:100%;left:0;right:0;flex-direction:column;align-items:flex-start;
+    gap:.9rem;padding:1rem var(--pad);background:var(--bg);border-bottom:1px solid var(--line-2);
+    display:none}
+  .mininav__menu.open{display:flex}
+  .mininav__links{flex-direction:column;gap:.7rem}
+  .hero__grid{grid-template-columns:1fr}
+  .pipe{grid-template-columns:1fr 1fr}
+  .pipe__node::after{content:"▾";right:auto;left:50%;top:auto;bottom:-.7rem;transform:translateX(-50%)}
+  .manifest__list{grid-template-columns:1fr}
+  .status__grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- sticky mini-nav -->
+<nav class="mininav" aria-label="site navigation">
+  <a class="mininav__brand" href="../index.html">Chase Bonfiglio</a>
+  <button class="mininav__toggle" id="nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="nav-menu">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="mininav__menu" id="nav-menu">
+    <div class="mininav__links">
+      <a href="../index.html#home">Home</a>
+      <a href="../index.html#about">About</a>
+      <a href="../index.html#resume">Resume</a>
+      <a href="../projects.html">Projects</a>
+      <a href="../index.html#photography">Photography</a>
+      <a href="../index.html#contact">Contact</a>
+    </div>
+    <a href="#pipeline" class="mininav__cta">See&nbsp;the&nbsp;build&nbsp;↓</a>
+  </div>
+</nav>
+
+<main>
+<div class="wrap">
+  <nav class="crumb" aria-label="breadcrumb">
+    <a href="https://chasebonfiglio.com">chasebonfiglio</a>
+    <span>/</span><a href="https://chasebonfiglio.com/projects.html">projects</a>
+    <span>/</span><b>oche</b>
+  </nav>
+</div>
+
+<!-- ===================== HERO ===================== -->
+<section class="hero"><div class="wrap">
+  <div class="hero__grid">
+    <div>
+      <span class="hero__tag"><span class="dot"></span>Personal build · started 2026 · in progress</span>
+      <h1><span class="amb">OCHE</span></h1>
+      <p class="pixel" style="margin:.2rem 0 0">A DIY autodart scoring rig</p>
+      <p class="hero__sub">
+        Multi-camera vision on a Raspberry&nbsp;Pi finds where each dart landed,
+        turns three views into one hit in millimetres, and streams it to a
+        <b>terminal-brutalist 501 scoreboard</b>. The vision pipeline and the
+        scoreboard are built and tested on their own — <b>wiring the camera to
+        the board is the last mile.</b>
+      </p>
+      <div class="hero__links">
+        <a class="btn btn--solid" href="#pipeline">↓ how it works</a>
+        <a class="btn" href="https://github.com/chaseab" target="_blank" rel="noopener">↗ code</a>
+        <a class="btn" href="mailto:chasebonfiglio@gmail.com">✉ email</a>
+      </div>
+    </div>
+
+    <!-- scoreboard mock — CSS/SVG, no photo dependency -->
+    <div class="board" aria-label="scoreboard mock-up">
+      <div class="board__bar"><span>OCHE · 501 DOUBLE-OUT</span><span id="leg-label">LEG 1</span></div>
+      <div class="seven" id="seven">501<small>SCORE TO CHECKOUT</small></div>
+      <svg class="dartboard" id="dartboard" viewBox="-110 -110 220 220" role="img" aria-label="regulation dartboard, treble-20 highlighted"></svg>
+      <div class="checkout">
+        <span class="pixel">Suggested finish</span><br>
+        <span class="route" id="route">T20 · T20 · BULL</span> &nbsp;<b id="co-on">checkout on</b>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<!-- ===================== PIPELINE ===================== -->
+<section id="pipeline"><div class="wrap lead">
+  <span class="pixel">// the throw pipeline</span>
+  <h2>Three cameras in, one number out — and only one direction of flow.</h2>
+  <p style="color:var(--ink-dim)">
+    A dart lands. Each camera sees it from a different angle; per-camera
+    <em>homography</em> maps pixels to the board plane, the views are fused into a
+    single coordinate in millimetres from the bullseye, and the board geometry
+    decides what that coordinate scored. From there it's just events: the UI never
+    mutates the match — it replays a log, so undo is <em>"drop the last dart and
+    replay."</em>
+  </p>
+  </div>
+  <div class="wrap">
+  <div class="pipe">
+    <div class="pipe__node"><span class="n">01 · SENSE</span><b>3× camera</b><p>Pi cameras, overlapping views of the board.</p></div>
+    <div class="pipe__node"><span class="n">02 · WARP</span><b>Homography</b><p>Pixels → board plane, calibrated per camera.</p></div>
+    <div class="pipe__node"><span class="n">03 · FIND</span><b>Detect</b><p>Locate the dart tip in each frame.</p></div>
+    <div class="pipe__node"><span class="n">04 · FUSE</span><b>Fusion</b><p>Three views → one (x, y) in millimetres.</p></div>
+    <div class="pipe__node"><span class="n">05 · SCORE</span><b>Board geometry</b><p><code>coordToSegment</code> — the authority on the hit.</p></div>
+    <div class="pipe__node"><span class="n">06 · SHOW</span><b>Scoreboard</b><p>Event → reducer → state → render.</p></div>
+  </div>
+  <p class="pipe__note">
+    <b>The wire contract is the seam.</b> Everything upstream — real rig or
+    simulator — converts into the same event type, so nothing downstream knows or
+    cares whether a camera or a Gaussian-scatter sim produced the hit.
+  </p>
+  </div>
+</section>
+
+<!-- ===================== BUILD MANIFEST ===================== -->
+<section class="manifest"><div class="wrap">
+  <span class="pixel">// what's built</span>
+  <h2>Build manifest — solo</h2>
+  <ul class="manifest__list">
+    <li><span class="ix">01 · VISION</span><b>Multi-camera pipeline</b><p>Homography, detection and fusion in Python/OpenCV, running on a Raspberry&nbsp;Pi with a systemd service. Covered by <code>pytest</code>.</p></li>
+    <li><span class="ix">02 · GEOMETRY</span><b>Board in millimetres</b><p><code>coordToSegment</code> is the single source of truth for what a dart hit — real hardware and the sim both defer to it.</p></li>
+    <li><span class="ix">03 · RULES</span><b>501 engine, pure</b><p>Bust, double-out, legs and sets — no framework, no React. Just a reducer over an event log.</p></li>
+    <li><span class="ix">04 · SOLVER</span><b>Checkout finder</b><p>Computes the finish path instead of shipping a 170-row lookup table. The suggestion panel and the sim aim with the <em>same</em> solver, so they never disagree.</p></li>
+    <li><span class="ix">05 · ARCHITECTURE</span><b>Replayable event log</b><p>feed → events → reducer → state → render, one direction only. The whole match is a log you can replay; undo is dropping the last event.</p></li>
+    <li><span class="ix">06 · HARDWARE</span><b>Camera mount, iterated</b><p>SolidWorks-designed, 3D-printed mount taken through four revisions (on-board and off-board variants) to get the geometry rigid and the angles right.</p></li>
+  </ul>
+  <div class="mounts" aria-label="mount revisions">
+    <div class="m"><b>v1</b> first fit</div>
+    <div class="m"><b>v2</b> on-board</div>
+    <div class="m"><b>v3</b> off-board</div>
+    <div class="m cur"><b>v4</b> current</div>
+  </div>
+</div></section>
+
+<!-- ===================== HONEST STATUS ===================== -->
+<section class="status"><div class="wrap">
+  <span class="pixel">// honest status</span>
+  <h2>What's live, and what's the last mile</h2>
+  <div class="status__grid">
+    <div class="col col--on">
+      <h3>Built &amp; tested</h3>
+      <ul>
+        <li>Multi-camera vision pipeline (homography → detect → fuse), unit-tested</li>
+        <li>501 double-out scoreboard: rules, checkout solver, live stats</li>
+        <li>Simulated thrower with realistic scatter (PRO / CLUB / PUB)</li>
+        <li>Raspberry&nbsp;Pi capture service + camera calibration</li>
+        <li>Four-revision 3D-printed camera mount</li>
+      </ul>
+    </div>
+    <div class="col col--next">
+      <h3>Not wired up yet</h3>
+      <ul>
+        <li>The rig-to-scoreboard adapter (<code style="color:var(--red);background:none">wsFeed</code>) is still a stub</li>
+        <li>End-to-end camera → live score has not run as one loop</li>
+        <li>Mobile / TV layout (laptop was the first target)</li>
+        <li>Game modes beyond 501 (the domain is shaped for it)</li>
+      </ul>
+    </div>
+  </div>
+  <p class="honest">
+    I'd rather show this honestly: the hard, separable pieces work and are tested,
+    but I haven't yet closed the loop from a real dart in the board to a number on
+    the screen. That last integration — normalising the rig's frame schema into
+    the one event type everything already speaks — is the next thing I build.
+  </p>
+  <div class="stack" aria-label="stack">
+    <span>TypeScript</span><span>React</span><span>Vite</span><span>Python</span>
+    <span>OpenCV</span><span>Raspberry Pi</span><span>WebSocket</span><span>SolidWorks</span>
+  </div>
+</div></section>
+</main>
+
+<!-- ===================== FOOTER ===================== -->
+<footer><div class="wrap">
+  <p class="pixel">// what I'm taking from it</p>
+  <h2>Make the seam a contract, and the hardware stops mattering.</h2>
+  <ul class="take">
+    <li><b>One event type at the seam.</b> Real cameras or a simulator both collapse into the same wire contract, so I built and tested the whole scoreboard before the rig existed.</li>
+    <li><b>Compute, don't tabulate.</b> The checkout solver derives the finish path — reusing it for the sim's aim means the demo and the suggestion can never drift apart.</li>
+    <li><b>Geometry deserves one owner.</b> Everything that needs to know "what did that dart score?" asks the same millimetre-space function. No second opinion.</li>
+  </ul>
+  <div class="foot__links">
+    <a class="btn" href="https://github.com/chaseab" target="_blank" rel="noopener">Code&nbsp;↗</a>
+    <a class="btn" href="mailto:chasebonfiglio@gmail.com">Email&nbsp;✉</a>
+    <a class="btn" href="../projects.html">All projects&nbsp;→</a>
+  </div>
+  <p class="foot__by"><a href="https://chasebonfiglio.com">← chasebonfiglio.com</a> · personal build · updated 2026</p>
+</div></footer>
+
+<button class="totop" id="to-top" aria-label="Back to top" title="Back to top">↑</button>
+
+<script>
+// nav toggle
+const t=document.getElementById('nav-toggle'),m=document.getElementById('nav-menu');
+t.addEventListener('click',()=>{const o=m.classList.toggle('open');t.setAttribute('aria-expanded',o)});
+// to-top
+const tt=document.getElementById('to-top');
+addEventListener('scroll',()=>{tt.classList.toggle('show',scrollY>600)});
+tt.addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
+
+// ---- draw a regulation dartboard, treble-20 highlighted ----
+(function(){
+  const order=[20,1,18,4,13,6,10,15,2,17,3,19,7,16,8,11,14,9,12,5];
+  const svg=document.getElementById('dartboard');
+  const NS='http://www.w3.org/2000/svg';
+  const R={board:100,dOut:100,dIn:95,tOut:63,tIn:58,bullOut:16,bull:6};
+  const seg=2*Math.PI/20, off=-Math.PI/2-seg/2;
+  function ring(a,ro,ri,fill){
+    const a0=off+a*seg,a1=a0+seg;
+    const p=(r,ang)=>[Math.cos(ang)*r,Math.sin(ang)*r];
+    const [x0,y0]=p(ri,a0),[x1,y1]=p(ro,a0),[x2,y2]=p(ro,a1),[x3,y3]=p(ri,a1);
+    const path=document.createElementNS(NS,'path');
+    path.setAttribute('d',`M${x0} ${y0} L${x1} ${y1} A${ro} ${ro} 0 0 1 ${x2} ${y2} L${x3} ${y3} A${ri} ${ri} 0 0 0 ${x0} ${y0} Z`);
+    path.setAttribute('fill',fill);svg.appendChild(path);
+  }
+  const BLK='#100f0b',WHT='#2a2a20',RED='#7c1d1f',GRN='#1f5d38',
+        RED_HI='#e5484d',GRN_HI='#37d67a';
+  for(let i=0;i<20;i++){
+    const alt=i%2===0;
+    ring(i,R.dIn,R.tOut,alt?BLK:WHT);         // outer single
+    ring(i,R.tOut,R.tIn,alt?GRN:RED);         // treble
+    ring(i,R.tIn,R.bullOut,alt?BLK:WHT);      // inner single
+  }
+  // double ring
+  for(let i=0;i<20;i++)ring(i,R.dOut,R.dIn,i%2===0?RED:GRN);
+  // highlight treble-20 (index 0)
+  ring(0,R.tOut,R.tIn,GRN_HI);
+  ring(0,R.dOut,R.dIn,RED_HI);
+  // bulls
+  const c=(r,f)=>{const e=document.createElementNS(NS,'circle');e.setAttribute('r',r);e.setAttribute('fill',f);svg.appendChild(e)};
+  c(R.bullOut,'#1f5d38');c(R.bull,'#e5484d');
+  // numbers
+  order.forEach((num,i)=>{
+    const ang=off+i*seg+seg/2,r=108;
+    const tx=document.createElementNS(NS,'text');
+    tx.setAttribute('x',Math.cos(ang)*r);tx.setAttribute('y',Math.sin(ang)*r+3);
+    tx.setAttribute('text-anchor','middle');
+    tx.setAttribute('font-family',"'Silkscreen',monospace");
+    tx.setAttribute('font-size','9');
+    tx.setAttribute('fill',num===20?'#ffb000':'#8f8a76');
+    tx.textContent=num;svg.appendChild(tx);
+  });
+})();
+</script>
+</body>
+</html>
