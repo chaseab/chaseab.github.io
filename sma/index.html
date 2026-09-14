@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Shape-memory-alloy actuators — Kennedy Lab research · Chase Bonfiglio</title>
+<meta name="description" content="Undergraduate research in Dr. Scott Kennedy's Intelligent Materials for Biomimetic Sensors and Actuators Lab at Virginia Tech's Hume Center: a test rig for parallel Flexinol wire arrays as low-cost linear actuators for biomimetic robotics." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css?v=1" />
+</head>
+<body>
+
+<nav class="mininav" id="mininav" aria-label="site navigation">
+  <a class="mininav__brand" href="../index.html">Chase Bonfiglio</a>
+  <button class="mininav__toggle" id="nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="nav-menu">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="mininav__menu" id="nav-menu">
+    <div class="mininav__links">
+      <a href="../index.html#home">Home</a>
+      <a href="../index.html#about">About</a>
+      <a href="../index.html#resume">Resume</a>
+      <a href="../projects.html">Projects</a>
+      <a href="../index.html#photography">Photography</a>
+      <a href="../index.html#contact">Contact</a>
+    </div>
+    <a href="#idea" class="mininav__cta">Skip&nbsp;to&nbsp;the&nbsp;idea&nbsp;↓</a>
+  </div>
+</nav>
+
+<header class="entry wrap" id="top">
+  <nav class="crumb" aria-label="breadcrumb">
+    <a href="../index.html">chasebonfiglio</a>
+    <span>/</span><a href="../projects.html">projects</a>
+    <span>/</span><b>sma-actuators</b>
+  </nav>
+
+  <p class="kicker">Undergraduate research · Kennedy Lab, Hume Center · since November 2025 · <span class="live">in progress</span></p>
+  <h1 class="entry__title">Shape-memory-alloy wires as cheap, small linear actuators</h1>
+  <p class="entry__lead">
+    Since November 2025 I've been an undergraduate researcher in <b>Dr. Scott Kennedy's Intelligent Materials for Biomimetic
+    Sensors and Actuators Lab</b> at Virginia Tech's Hume Center. The lab works on shape-memory-alloy (SMA) actuated
+    robotic ankle systems; my piece is a test rig for characterizing <b>parallel Flexinol wire arrays</b>. This page
+    describes the idea and the rig. Results are held for the paper.
+  </p>
+
+  <div class="status" aria-label="project status">
+    <div class="status__bar"><span class="label">Status · 14 Sep 2026</span><span class="label">updated as it changes</span></div>
+    <div class="status__body">
+      <div class="status__item"><b>Rig</b><span class="wip">Single-channel bring-up</span> — design and instrumentation in place</div>
+      <div class="status__item"><b>Results</b><span class="todo">Not published yet</span> — characterization runs to come</div>
+      <div class="status__item"><b>Writing</b><span class="wip">Manuscript in preparation</span> — first author</div>
+      <div class="status__item"><b>Presented</b><span class="ok">VT Hume Colloquium, May 2026</span> — with Ethan Yueh and Christine Robinson</div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+<section class="sec" id="idea">
+  <div class="sec__head"><span class="sec__num">01 / the idea</span><h2 class="sec__title">Run many thin wires in parallel, and fire them in turns</h2></div>
+  <div class="sec__body">
+    <p>A shape-memory-alloy wire contracts when it's heated (in practice, when you pass current through it) and relaxes as it cools. That makes it a linear actuator with no motor, no gearbox, and almost no volume — attractive for biomimetic joints where a muscle-like pull is what you want. The catch is speed: a wire can only contract again once it has cooled, and cooling is slow.</p>
+    <p>The approach I'm testing works around the cooling limit instead of fighting it:</p>
+    <ul>
+      <li><b>Parallel arrays.</b> Several thin Flexinol wires share the load instead of one thick wire, so each cools faster.</li>
+      <li><b>One continuous zigzag.</b> The wire is routed back and forth as a single length, which keeps tension equal across every segment — while each electrical post along the route stays independently controllable.</li>
+      <li><b>Sequenced firing.</b> Wire pairs activate in turn: some contract while others are still cooling. Output frequency goes up without any individual wire cycling faster.</li>
+      <li><b>Readiness from resistance.</b> A wire's electrical resistance changes as it recovers thermally, so monitoring resistance tells the controller which wires are ready to fire — no extra sensors on the actuator.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="sec" id="rig">
+  <div class="sec__head"><span class="sec__num">02 / the rig</span><h2 class="sec__title">What the test rig is for</h2></div>
+  <div class="spec">
+    <div><b>Actuator</b><span>Parallel Flexinol wire array</span><small>Continuous zigzag routing, independently driven posts</small></div>
+    <div><b>Drive</b><span>Per-post current control</span><small>Wire pairs scheduled in sequence</small></div>
+    <div><b>Sensing</b><span>Wire resistance</span><small>Used as the thermal-recovery signal for scheduling</small></div>
+    <div><b>Purpose</b><span>Characterize the array</span><small>Performance of parallel Flexinol wire arrays under sequenced firing</small></div>
+  </div>
+  <div class="sec__body">
+    <p>I designed and built the rig and its instrumentation, and it's at single-channel bring-up: one wire pair driven and measured end to end before scaling out to the full array. The characterization runs, and the numbers, are what the manuscript is for — they'll go here once it's submitted.</p>
+  </div>
+  <div class="note"><b>What I'm not claiming yet</b> — no actuation force, bandwidth, or efficiency figures are published on this page. The design and the instrumentation exist; the measurements are in progress.</div>
+</section>
+
+<section class="sec" id="timeline">
+  <div class="sec__head"><span class="sec__num">03 / log</span><h2 class="sec__title">Timeline</h2></div>
+  <ul class="tl">
+    <li><b>Nov 2025</b>Joined the lab as an undergraduate student researcher.</li>
+    <li><b>May 2026</b>Presented the parallel-array work at the Virginia Tech Hume Colloquium alongside two lab-mates; MITRE and MIT Lincoln Laboratory roundtables the same day.</li>
+    <li><b>Summer–fall 2026</b>Rig build and single-channel bring-up; manuscript in preparation.</li>
+  </ul>
+</section>
+
+</main>
+
+<footer class="foot wrap">
+  <div class="row">
+    <span>Kennedy Lab research log · Chase Bonfiglio · 2026</span>
+    <a href="../projects.html">← all projects</a>
+    <a href="../index.html#contact">contact</a>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var nav = document.getElementById('mininav'), btn = document.getElementById('nav-toggle');
+    if (!nav || !btn) return;
+    btn.addEventListener('click', function () {
+      var open = nav.classList.toggle('open');
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    nav.querySelectorAll('.mininav__menu a').forEach(function (a) {
+      a.addEventListener('click', function () { nav.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); });
+    });
+  })();
+</script>
+</body>
+</html>
