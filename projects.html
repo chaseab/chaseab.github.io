@@ -207,6 +207,11 @@ img{max-width:100%;display:block}
    ARC flagship — SAME card footprint as the rest, its own
    retro skin. The one deliberate colour moment on the page.
    ========================================================= */
+.tile--so101{background:#0d1117;border-color:#1e2a3a;color:#e2e8f0}
+.tile--so101 .tile__media{background:#080b10}
+.tile--so101 .tile__title,.tile--so101 .tile__blurb,.tile--so101 .tile__meta{color:#e2e8f0}
+.tile--so101 .tile__blurb{color:#8b9bb4}
+.tile--so101 .tile__accent{background:#00ff88;opacity:1}
 .tile--arc{background:var(--arc-cream);border-color:#d8cfb4}
 .tile--arc .tile__accent{background:#05070f;opacity:1}
 .tile--arc .tile__media{background:#05070f}
@@ -308,6 +313,15 @@ img{max-width:100%;display:block}
 <script>
 /* ---- project data (edit here to add/retire projects) ---- */
 const PROJECTS = [
+  {
+    id:'so101', title:'SO-101 Arm · Imitation Learning', cat:'Robotics',
+    tags:['robotics','imitation learning','LeRobot','ACT','3D reconstruction'],
+    status:'live', statusLabel:'In progress',
+    date:'2026-09', year:'2026', featured:true, theme:'so101',
+    img:'assets/imgs/so101-cover.webp', href:'so101/index.html',
+    meta:'Solo · started Sep 2026',
+    blurb:"A leader/follower <b>SO-101</b> arm pair, a browser dashboard with a digital twin and a live 3D map built from the wrist camera (no markers), and a first imitation-learning task — stacking Jenga blocks with an ACT policy. Measured numbers, honest status."
+  },
   {
     id:'arc', title:'ARC-AGI-3 Reasoning Loop', cat:'AI',
     tags:['AI research','LLM','agents','vision','reasoning'],

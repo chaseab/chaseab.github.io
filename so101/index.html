@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SO-101 arm — imitation learning on real hardware · Chase Bonfiglio</title>
+<meta name="description" content="Project log: a leader/follower SO-101 arm pair, a browser dashboard with a digital twin and a live 3D map built from the wrist camera, and a first imitation-learning task (stacking Jenga blocks) — all on one Windows desktop with a GTX 1080 Ti." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css?v=1" />
+</head>
+<body>
+
+<nav class="mininav" id="mininav" aria-label="site navigation">
+  <a class="mininav__brand" href="../index.html">Chase Bonfiglio</a>
+  <button class="mininav__toggle" id="nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="nav-menu">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="mininav__menu" id="nav-menu">
+    <div class="mininav__links">
+      <a href="../index.html#home">Home</a>
+      <a href="../index.html#about">About</a>
+      <a href="../index.html#resume">Resume</a>
+      <a href="../projects.html">Projects</a>
+      <a href="../index.html#photography">Photography</a>
+      <a href="../index.html#contact">Contact</a>
+    </div>
+    <a href="#map" class="mininav__cta">Skip&nbsp;to&nbsp;the&nbsp;measurements&nbsp;↓</a>
+  </div>
+</nav>
+
+<header class="entry wrap" id="top">
+  <nav class="crumb" aria-label="breadcrumb">
+    <a href="../index.html">chasebonfiglio</a>
+    <span>/</span><a href="../projects.html">projects</a>
+    <span>/</span><b>so-101</b>
+  </nav>
+
+  <p class="kicker">Project log · started September 2026 · <span class="live">in progress</span></p>
+  <h1 class="entry__title">An SO-101 arm, a dashboard, and a first imitation-learning task</h1>
+  <p class="entry__lead">
+    In September 2026 I built a pair of <b>SO-101 arms</b> — a leader I move by hand and a follower that mirrors it — to
+    learn imitation learning on real hardware end to end: wiring and calibration, data collection, training a policy, and
+    running it back on the arm. Everything runs on one Windows desktop with a GTX 1080 Ti. This page is a lab notebook,
+    not a product page: numbers are measured, and things that don't work yet say so.
+  </p>
+
+  <div class="status" aria-label="project status">
+    <div class="status__bar"><span class="label">Status · 14 Sep 2026</span><span class="label">updated as it changes</span></div>
+    <div class="status__body">
+      <div class="status__item"><b>Rig</b><span class="ok">Built &amp; calibrated</span> — leader + follower, two cameras</div>
+      <div class="status__item"><b>Dashboard</b><span class="ok">Working</span> — live feeds, digital twin, training controls</div>
+      <div class="status__item"><b>Live 3D map</b><span class="wip">Working, accuracy in progress</span> — no markers, FK-anchored</div>
+      <div class="status__item"><b>First learned task</b><span class="todo">Not yet recorded</span> — stacking Jenga blocks, ACT policy</div>
+    </div>
+  </div>
+
+  <figure class="hero panel">
+    <div class="panel__bar"><span class="label">SO-101 dashboard</span><span class="tag">LIVE</span></div>
+    <img src="assets/dashboard.webp" width="1568" height="747" alt="The dashboard: overhead camera on the left, a 3D virtual twin of the arm over a reconstructed map of the bench in the middle, wrist camera on the right, and six joint telemetry readouts along the bottom." />
+    <figcaption>The browser dashboard for the rig: overhead camera, the follower's digital twin standing on the 3D map it built of the bench, the wrist camera, and joint telemetry at 8&nbsp;Hz.</figcaption>
+  </figure>
+</header>
+
+<main class="wrap">
+
+<!-- 01 rig -->
+<section class="sec" id="rig">
+  <div class="sec__head"><span class="sec__num">01 / rig</span><h2 class="sec__title">What's on the bench</h2></div>
+  <div class="spec">
+    <div><b>Arms</b><span>2 × SO-101, 6 joints each</span><small>Leader: STS3215 7.4&nbsp;V servos · Follower: STS3215 12&nbsp;V servos</small></div>
+    <div><b>Cameras</b><span>2 × Innomaker U20CAM</span><small>Overhead on the official tower mount, one on the wrist · MJPG 1280×960</small></div>
+    <div><b>Compute</b><span>Windows desktop, GTX 1080 Ti</span><small>Pascal: CUDA 11.8 wheels only, no bf16 — everything is sized to that</small></div>
+    <div><b>Software</b><span>LeRobot 0.4.4 · PyTorch 2.7.1 · ACT</span><small>Custom Python server + Three.js dashboard on top</small></div>
+    <div><b>Parts</b><span>Printed on a Bambu P1S</span><small>Printer status is piped into the same dashboard</small></div>
+  </div>
+
+  <div class="sec__body">
+    <p>Most of the first week went into making the stock LeRobot setup behave on Windows. The things that actually cost time:</p>
+    <ul>
+      <li><b>Serial ports.</b> Bluetooth had claimed COM3–COM6 and Windows gave the two identical CH343 servo boards duplicate names. I pinned each board's port number to its USB serial in the registry; they now survive replugging.</li>
+      <li><b>Calibration.</b> The leader's shoulder-pan horn is clocked so its mechanical mid-travel sits at encoder count 4092 — two counts under the 4094 ceiling the calibration routine allows — so calibration failed with <code>Magnitude exceeds 2047</code>. Parking that joint off-centre (~3800) before calibrating fixes it and costs no range of motion, since the sweep records the real min/max anyway.</li>
+      <li><b>Servo bus.</b> Teleop dropped out on bus errors, so I patched a retry into the bus layer and run teleop through a small wrapper instead of the stock command.</li>
+      <li><b>USB.</b> Both cameras and one servo board share a single USB&nbsp;2 hub. The wrist camera's stream wedges for ~10&nbsp;s whenever the arm moves (a cable/connector issue at the wrist). The mapper waits for an accepted frame rather than mapping from a stale one; the real fix is the cable.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 02 dashboard -->
+<section class="sec" id="dashboard">
+  <div class="sec__head"><span class="sec__num">02 / dashboard</span><h2 class="sec__title">One page to run the rig from</h2></div>
+  <div class="split">
+    <div class="sec__body">
+      <p>I wanted to see the arm, the cameras, and the training runs in one place, from any device, without a terminal open. The dashboard is a Python server on the desktop and a Three.js page:</p>
+      <ul>
+        <li>Live overhead and wrist feeds, with a swap button because Windows re-enumerates the two identical cameras in a different order after any USB disturbance.</li>
+        <li>A <b>virtual twin</b> of the follower driven from the URDF and the servo telemetry (8&nbsp;Hz), standing on the 3D map from the next section.</li>
+        <li>Calibrate, teleop, record, and train from the browser. The training panel builds the LeRobot record/train commands and validates them by parsing them with LeRobot's own config classes before anything runs.</li>
+        <li>Served through a Cloudflare tunnel so I can check on a training run from my phone.</li>
+      </ul>
+    </div>
+    <figure class="panel">
+      <div class="panel__bar"><span class="label">Overhead camera</span><span class="tag">CAM-01</span></div>
+      <img src="assets/bench-overhead.webp" width="1600" height="900" alt="Overhead camera view of the workbench: the leader arm at bottom-left, the follower arm at right, on a green cutting mat." loading="lazy" />
+      <figcaption>The bench from the overhead camera: leader bottom-left, follower right.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- 03 map -->
+<section class="sec" id="map">
+  <div class="sec__head"><span class="sec__num">03 / live 3D map</span><h2 class="sec__title">Mapping the bench from the wrist camera</h2></div>
+  <div class="split">
+    <div class="sec__body">
+      <p>Goal: while the arm sweeps, build a 3D map of the workspace inside the twin — with <b>no markers, no fiducials, and no dependence on my cutting mat</b>, so the same code works on anyone's SO-101. Camera pose comes from the arm's forward kinematics (FK); geometry comes from a learned depth model rather than per-scene optimisation.</p>
+      <p>Per keyframe:</p>
+      <ol class="pipe">
+        <li><b>undistort</b></li>
+        <li>mask the arm out <b>via URDF</b></li>
+        <li><b>MoGe-2</b> monocular depth</li>
+        <li>rectify depth to the <b>FK table plane</b></li>
+        <li><b>surfel fusion</b>, best view per region</li>
+        <li>render as <b>splats</b></li>
+      </ol>
+      <p>About 1.4&nbsp;s per frame on the 1080&nbsp;Ti; one 28-view sweep takes ~90&nbsp;s and gives a ghost-free scene.</p>
+    </div>
+    <figure class="panel">
+      <div class="panel__bar"><span class="label">Virtual twin + map</span><span class="tag">21,424 splats</span></div>
+      <img src="assets/twin-crop.webp" width="680" height="548" alt="The virtual twin of the arm standing on a splat reconstruction of the bench." loading="lazy" />
+      <figcaption>The follower's twin standing on the map it built.</figcaption>
+    </figure>
+  </div>
+
+  <div class="tablewrap">
+  <table class="meas">
+    <thead><tr><th>What I measured</th><th>Result</th><th>What it changed</th></tr></thead>
+    <tbody>
+      <tr><td>FK rotation error</td><td class="n">0.2 – 0.8°</td><td>Good enough to use FK as the pose prior.</td></tr>
+      <tr><td>FK translation error</td><td class="n">3 – 22 mm, median 8</td><td>Not good enough on its own; measured against a mat-grid anchor I use only for development.</td></tr>
+      <tr><td>MoGe-2 support-plane tilt</td><td class="n">1 – 4°</td><td>Correcting the <em>pose</em> to that plane made things worse; correcting the <em>depth</em> with a per-pixel ratio field fitted on FK-plane pixels brings on-plane error to <span class="n">0.2 – 0.8 mm</span>. A plain scale+shift is degenerate on one plane.</td></tr>
+      <tr><td>View-to-view surface disagreement</td><td class="n">5 – 25 mm</td><td>Even with ~1&nbsp;mm poses, MoGe surfaces disagree between viewpoints — so ICP, guided SIFT PnP, and bird's-eye ECC tracking all failed to beat FK and are switched off. Keeping the best view per region instead of averaging is what removed the ghosting.</td></tr>
+      <tr><td>Splat size vs. viewer</td><td class="n">≥ ~2.5 mm</td><td>Below that the viewer silently draws nothing at bench distance.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="note"><b>Next</b> — a one-time self-calibration of the ~11 FK parameters (five servo zero-offsets plus a 6-DoF hand-eye transform) from overlapping frames of any textured scene, then live frame-to-model tracking with FK as the prior. Markers stay an optional accuracy add-on, never a requirement.</div>
+</section>
+
+<!-- 04 task -->
+<section class="sec" id="jenga">
+  <div class="sec__head"><span class="sec__num">04 / first task</span><h2 class="sec__title">Teaching it to stack Jenga blocks</h2></div>
+  <div class="sec__body">
+    <p>The first policy the arm learns will be pick-and-place: build a tower from a pile of loose Jenga blocks, as high as it can reach, and recover when blocks fall. I picked it over the obvious "play Jenga" for concrete reasons:</p>
+    <ul>
+      <li>±5&nbsp;mm tolerances and a task that is already known to work on this class of arm.</li>
+      <li>Progress is fully visible in the images, so a memoryless reactive policy (ACT) doesn't need to count blocks — it reads the tower top and the pile.</li>
+      <li>Every placement in an episode is a distinct (observation, action) situation, so one full-tower episode is many demonstrations.</li>
+      <li>Recovery is designed in: 2–3 failures are injected per episode and fumbled episodes are never re-recorded, because recovery data is the point.</li>
+    </ul>
+    <p>Pulling blocks out of a real tower is explicitly out of scope for now. Every published robot that has done it used force/torque sensing to tell a loose block from a stuck one, and the STS3215's load register is unlikely to resolve the ~0.3&nbsp;N that matters. Vision alone can't tell the difference.</p>
+    <p><b>Plan.</b> ACT first, Diffusion Policy second. Training measures 0.40&nbsp;s/step at batch&nbsp;8 with two 640×480 cameras on the 1080&nbsp;Ti — so 30k steps is about 3.3&nbsp;h. A first checkpoint after 20 six-layer episodes (~360 pick-place cycles); 50–70 episodes total, with one DAgger-style correction round. Honest expectation for a first pass: 40–70&nbsp;% success on the simplest level.</p>
+    <p><b>Where it is.</b> A 15-minute teleop trial says the task is doable on this rig. CUDA training is verified on a synthetic dataset. Recording hasn't started, and no learned policy has run on the real arm yet.</p>
+  </div>
+</section>
+
+<!-- 05 timeline -->
+<section class="sec" id="timeline">
+  <div class="sec__head"><span class="sec__num">05 / log</span><h2 class="sec__title">Timeline</h2></div>
+  <ul class="tl">
+    <li><b>4 Sep 2026</b>Both arms built, COM ports pinned, leader and follower calibrated.</li>
+    <li><b>8 Sep</b>Printer status wired into the dashboard.</li>
+    <li><b>10 Sep</b>Camera routing and the swap fix; live-map project started; dashboard reachable remotely.</li>
+    <li><b>11 Sep</b>First 41-keyframe dataset from a real sweep — the ground truth for offline development.</li>
+    <li><b>13 Sep</b>Reconstruction engine v2 (MoGe-2 depth + plane rectification + best-view surfel fusion). First ghost-free scene from one sweep.</li>
+    <li><b>14 Sep</b>CUDA training verified end to end on a synthetic dataset; Jenga task chosen and specced.</li>
+  </ul>
+</section>
+
+</main>
+
+<footer class="foot wrap">
+  <div class="row">
+    <span>SO-101 project log · Chase Bonfiglio · 2026</span>
+    <a href="../projects.html">← all projects</a>
+    <a href="../index.html#contact">contact</a>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var nav = document.getElementById('mininav'), btn = document.getElementById('nav-toggle');
+    if (!nav || !btn) return;
+    btn.addEventListener('click', function () {
+      var open = nav.classList.toggle('open');
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    nav.querySelectorAll('.mininav__menu a').forEach(function (a) {
+      a.addEventListener('click', function () { nav.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); });
+    });
+  })();
+</script>
+</body>
+</html>
