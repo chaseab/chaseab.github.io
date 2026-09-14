@@ -10,7 +10,7 @@
 <meta property="og:description" content="Undergraduate research on parallel Flexinol wire arrays as low-cost linear actuators for biomimetic robotics: the idea, the rig, and what is not claimed yet." />
 <meta property="og:image" content="https://chasebonfiglio.com/assets/imgs/og-card.png" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="description" content="Undergraduate research in Dr. Scott Kennedy's Intelligent Materials for Biomimetic Sensors and Actuators Lab at Virginia Tech's Hume Center: a test rig for parallel Flexinol wire arrays as low-cost linear actuators for biomimetic robotics." />
+<meta name="description" content="Undergraduate research in Dr. Scott Kennedy's Intelligent Materials for Biomimetic Sensors and Actuators Lab at Virginia Tech's Hume Center: a drive-and-sensing rig for parallel Flexinol wire arrays as low-cost linear actuators, with resistance self-sensing and closed-loop firing. Method and instrumentation; results held for the paper." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
@@ -46,21 +46,29 @@
   <p class="kicker">Undergraduate research · Kennedy Lab, Hume Center · since November 2025 · <span class="live">in progress</span></p>
   <h1 class="entry__title">Shape-memory-alloy wires as cheap, small linear actuators</h1>
   <p class="entry__lead">
-    Since November 2025 I've been an undergraduate researcher in <b>Dr. Scott Kennedy's Intelligent Materials for Biomimetic
-    Sensors and Actuators Lab</b> at Virginia Tech's Hume Center. The lab works on shape-memory-alloy (SMA) actuated
-    robotic ankle systems; my piece is a test rig for characterizing <b>parallel Flexinol wire arrays</b>. This page
-    describes the idea and the rig. Results are held for the paper.
+    Since November 2025 I've been an undergraduate researcher in <b>Dr. Scott Kennedy's Intelligent Materials for
+    Biomimetic Sensors and Actuators Lab</b> at Virginia Tech's Hume Center. The lab works toward shape-memory-alloy
+    (SMA) actuated robotic ankle systems; my piece is the rig that <b>drives and characterizes parallel Flexinol wire
+    arrays</b> — the firing electronics, the resistance self-sensing, and the data path. This page describes the idea,
+    how I drive it, and how I read it. The characterization <b>results are held for the paper.</b>
   </p>
 
   <div class="status" aria-label="project status">
     <div class="status__bar"><span class="label">Status · 14 Sep 2026</span><span class="label">updated as it changes</span></div>
     <div class="status__body">
-      <div class="status__item"><b>Rig</b><span class="wip">Single-channel bring-up</span> — design and instrumentation in place</div>
-      <div class="status__item"><b>Results</b><span class="todo">Not published yet</span> — characterization runs to come</div>
+      <div class="status__item"><b>Rig &amp; drive</b><span class="wip">Single-channel bring-up</span> — firing electronics + instrumentation in place</div>
+      <div class="status__item"><b>Sensing &amp; DAQ</b><span class="ok">Working</span> — resistance self-sensing on a multichannel DAQ, live dashboard</div>
+      <div class="status__item"><b>Results</b><span class="todo">Held for the paper</span> — characterization runs in progress</div>
       <div class="status__item"><b>Writing</b><span class="wip">Manuscript in preparation</span> — first author</div>
       <div class="status__item"><b>Presented</b><span class="ok">VT Hume Colloquium, May 2026</span> — with Ethan Yueh and Christine Robinson</div>
     </div>
   </div>
+
+  <figure class="hero panel">
+    <div class="panel__bar"><span class="label">The lab bench</span><span class="tag">RIG</span></div>
+    <img src="assets/lab-bench.webp" width="1500" height="1002" alt="The lab bench: the Flexinol wire test rig, a bench power supply and multimeter, and a laptop running the acquisition dashboard." />
+    <figcaption>The bench: the Flexinol test rig, a bench supply and multimeter, and the laptop running the acquisition dashboard that reads the wires.</figcaption>
+  </figure>
 </header>
 
 <main class="wrap">
@@ -73,32 +81,64 @@
     <ul>
       <li><b>Parallel arrays.</b> Several thin Flexinol wires share the load instead of one thick wire, so each cools faster.</li>
       <li><b>One continuous zigzag.</b> The wire is routed back and forth as a single length, which keeps tension equal across every segment — while each electrical post along the route stays independently controllable.</li>
-      <li><b>Sequenced firing.</b> Wire pairs activate in turn: some contract while others are still cooling. Output frequency goes up without any individual wire cycling faster.</li>
-      <li><b>Readiness from resistance.</b> A wire's electrical resistance changes as it recovers thermally, so monitoring resistance tells the controller which wires are ready to fire — no extra sensors on the actuator.</li>
+      <li><b>Sequenced firing.</b> Wire sections activate in turn: some contract while others are still cooling, so output frequency goes up without any individual wire cycling faster.</li>
+      <li><b>Readiness from resistance.</b> A wire's electrical resistance changes as it recovers thermally, so watching resistance tells the controller which wires are ready to fire — no extra sensors on the actuator itself.</li>
     </ul>
+  </div>
+  <figure class="panel" style="margin-top:8px">
+    <div class="panel__bar"><span class="label">The actuator</span><span class="tag">FLEXINOL</span></div>
+    <img src="assets/wire-array.webp" width="1300" height="868" alt="Close-up of the actuator: a 3D-printed cradle holding the routed Flexinol wire with crimped electrical posts and small calibration weights hanging from it." />
+    <figcaption>A printed cradle holds the routed Flexinol with crimped posts; the small weights load the wire for characterization.</figcaption>
+  </figure>
+</section>
+
+<section class="sec" id="drive">
+  <div class="sec__head"><span class="sec__num">02 / driving it</span><h2 class="sec__title">The firing has to fail safe, so the PC never owns it</h2></div>
+  <div class="sec__body">
+    <p>An SMA wire that's left energized keeps heating until it's damaged, so the one thing the firing loop can't depend on is a laptop that might crash or drop USB mid-pulse. I split the system so that <b>gate authority lives on an Arduino Mega</b>, not the PC:</p>
+    <ul>
+      <li><b>The Mega owns the gates.</b> It enforces a hard <code>MAX_ON</code> ceiling on every pulse and a host heartbeat — if it stops hearing from the PC for ~100&nbsp;ms, it drops all gates. The PC sends <em>intent</em>; the Mega decides whether to honour it.</li>
+      <li><b>One-way serial.</b> The link is a fire-and-forget ASCII protocol (115200 baud, PC&nbsp;→ Mega only). The firing loop never blocks waiting on the host, and the timing base stays untouched.</li>
+      <li><b>MOSFET-switched sections.</b> Each section of the array is driven by its own low-side MOSFET; a small command set (<code>START</code>/<code>STOP</code>, <code>PERIOD</code>, <code>ONTIME</code>, per-section enable, and a manual <code>FIRE</code> for calibration) sets the rotation.</li>
+    </ul>
+  </div>
+  <div class="spec">
+    <div><b>Controller</b><span>Arduino Mega</span><small>Owns the gates: <code>MAX_ON</code> ceiling + host heartbeat fail-safe</small></div>
+    <div><b>Link</b><span>One-way USB serial</span><small>115200 baud ASCII, PC → Mega only, non-blocking</small></div>
+    <div><b>Drive</b><span>Per-section low-side MOSFETs</span><small>Sections fire in a scheduled rotation</small></div>
+    <div><b>Command set</b><span>START / STOP / PERIOD / ONTIME / FIRE</span><small>Sets the schedule; <code>FIRE</code> is manual, for calibration</small></div>
   </div>
 </section>
 
-<section class="sec" id="rig">
-  <div class="sec__head"><span class="sec__num">02 / the rig</span><h2 class="sec__title">What the test rig is for</h2></div>
-  <div class="spec">
-    <div><b>Actuator</b><span>Parallel Flexinol wire array</span><small>Continuous zigzag routing, independently driven posts</small></div>
-    <div><b>Drive</b><span>Per-post current control</span><small>Wire pairs scheduled in sequence</small></div>
-    <div><b>Sensing</b><span>Wire resistance</span><small>Used as the thermal-recovery signal for scheduling</small></div>
-    <div><b>Purpose</b><span>Characterize the array</span><small>Performance of parallel Flexinol wire arrays under sequenced firing</small></div>
-  </div>
+<section class="sec" id="sensing">
+  <div class="sec__head"><span class="sec__num">03 / sensing it</span><h2 class="sec__title">Read every wire without touching the firing</h2></div>
   <div class="sec__body">
-    <p>I designed and built the rig and its instrumentation, and it's at single-channel bring-up: one wire pair driven and measured end to end before scaling out to the full array. The characterization runs, and the numbers, are what the manuscript is for — they'll go here once it's submitted.</p>
+    <p>The wire is its own sensor. Its resistance tracks the phase transformation as it heats and cools, so I never poll the Arduino for state — I watch the wires directly on a data-acquisition card and infer everything from voltage:</p>
+    <ul>
+      <li><b>Always-on bias sense.</b> A resistor across each MOSFET pushes a few&nbsp;mA of continuous sense current — far too little to heat the wire — so there is a live resistance reading on every wire <em>between</em> firings, not just during them.</li>
+      <li><b>Resistance = the thermometer.</b> R = V / I per wire. Normalised against a per-wire calibration, it becomes a recovery fraction, <code>ρ = (R_start − R_min) / (R_0 − R_min)</code>, that says how far each wire has cooled — the signal the scheduler fires on.</li>
+      <li><b>Closed-loop cutoff.</b> Rather than trust a fixed on-time table, the plan is to fire a hot, short pulse and cut it the instant resistance says the wire has finished contracting — a per-wire, per-pulse decision. Fixed-duration open-loop firing is then just the baseline to beat.</li>
+      <li><b>One clock.</b> A multichannel differential DAQ samples the wire voltages, a shunt gives true current (so R and energy stop assuming a fixed current), and the firing sync line lands on a spare DAQ input — so every fire event sits on the same timebase as the resistance trace it caused, with no clock-stitching.</li>
+    </ul>
+    <ol class="pipe">
+      <li><b>bias</b> sense current</li>
+      <li><b>R = V/I</b></li>
+      <li>readiness <b>ρ</b></li>
+      <li>fire <b>hot</b></li>
+      <li><b>R-triggered</b> cutoff</li>
+    </ol>
+    <p>All of it lands in a browser dashboard I built for the lab: live voltage and resistance strip charts, a motor-unit-style <b>firing raster</b> (one bar per detected pulse, from a voltage-hysteresis detector), and a pulse table logging duration, energy, R&nbsp;start/end, ΔR and cycle count. Every run is written to disk for post-hoc analysis.</p>
   </div>
-  <div class="note"><b>What I'm not claiming yet</b> — no actuation force, bandwidth, or efficiency figures are published on this page. The design and the instrumentation exist; the measurements are in progress.</div>
+  <div class="note"><b>What I'm not claiming here</b> — no recruitment factor, actuation force, bandwidth, or efficiency numbers, and no closed- vs open-loop comparison. Those are the paper's results. What this page shows is the method and the instrumentation: the drive, the self-sensing, and the data path all exist and run.</div>
 </section>
 
 <section class="sec" id="timeline">
-  <div class="sec__head"><span class="sec__num">03 / log</span><h2 class="sec__title">Timeline</h2></div>
+  <div class="sec__head"><span class="sec__num">04 / log</span><h2 class="sec__title">Timeline</h2></div>
   <ul class="tl">
     <li><b>Nov 2025</b>Joined the lab as an undergraduate student researcher.</li>
-    <li><b>May 2026</b>Presented the parallel-array work at the Virginia Tech Hume Colloquium alongside two lab-mates; MITRE and MIT Lincoln Laboratory roundtables the same day.</li>
-    <li><b>Summer–fall 2026</b>Rig build and single-channel bring-up; manuscript in preparation.</li>
+    <li><b>May 2026</b>Presented the parallel-array work at the Virginia Tech Hume Colloquium alongside two lab-mates (Ethan Yueh, Christine Robinson); MITRE and MIT Lincoln Laboratory roundtables the same day.</li>
+    <li><b>Sep 2026</b>Drive electronics + acquisition dashboard bring-up; first single-channel resistance runs logged end to end.</li>
+    <li><b>Summer–fall 2026</b>Scaling from single-channel to the full array; manuscript in preparation.</li>
   </ul>
 </section>
 
