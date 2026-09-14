@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Replay archive — every ARC-AGI-3 episode, unedited · Chase Bonfiglio</title>
+<meta name="description" content="The full replay archive of my ARC-AGI-3 agent: every episode it has played, frame by frame, with the reasoning it wrote at each turn — played back on a CRT." />
+<meta property="og:title" content="ARC-AGI-3 replay archive · Chase Bonfiglio" />
+<meta property="og:description" content="Every episode the agent has played, frame by frame, with its reasoning at each turn." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800;900&family=Caveat:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css?v=13" />
+<link rel="stylesheet" href="archive.css?v=2" />
+</head>
+<body>
+
+<a class="skip" href="#days">Skip to the archive</a>
+<div class="grain" aria-hidden="true"></div>
+<div class="scanlines" aria-hidden="true"></div>
+
+<!-- sticky mini-nav (same component as the write-up page) -->
+<nav class="mininav" aria-label="site navigation">
+  <a class="mininav__brand" href="../index.html">Chase Bonfiglio</a>
+  <div class="mininav__links">
+    <a href="../index.html#home">Home</a>
+    <a href="../index.html#about">About</a>
+    <a href="../index.html#resume">Resume</a>
+    <a href="../projects.html">Projects</a>
+    <a href="../index.html#photography">Photography</a>
+    <a href="../index.html#contact">Contact</a>
+  </div>
+  <a href="index.html" class="mininav__cta">Read&nbsp;the&nbsp;write-up&nbsp;↗</a>
+</nav>
+
+<!-- ============ ENTRY ============ -->
+<header class="tape-entry" id="top">
+  <div class="tape-entry__inner">
+    <nav class="crumb" aria-label="breadcrumb">
+      <a href="https://chasebonfiglio.com">chasebonfiglio</a>
+      <span>/</span><a href="https://chasebonfiglio.com/projects.html">projects</a>
+      <span>/</span><a href="index.html">arc-agi-3</a>
+      <span>/</span><b>archive</b>
+    </nav>
+    <p class="kicker" id="kicker">Replay archive · loading the tape room…</p>
+    <h1>Every episode,<span>unedited.</span></h1>
+    <p class="tape-entry__sub">
+      Each of these is one run of my agent dropped into a game it has never
+      played, with no instructions. The board you see is the real engine frame;
+      the text under it is what the model actually wrote to itself at that turn.
+      Nothing is trimmed to look good — the dead ends are the interesting part.
+      <a href="index.html">What this project is →</a>
+    </p>
+    <div class="slate" id="slate" aria-label="archive totals"></div>
+  </div>
+</header>
+
+<main>
+
+<!-- ============ VIEW A · ARCHIVE LIBRARY ============ -->
+<section class="view" id="view-archive" aria-label="replay archive">
+
+  <div class="rail">
+    <div class="rail__inner">
+      <div class="rail__group">
+        <span class="rail__lab">GAME</span>
+        <select class="fsel" id="f-env" aria-label="filter by game">
+          <option value="">all games</option>
+        </select>
+      </div>
+      <div class="rail__group" role="group" aria-label="filter by outcome">
+        <span class="rail__lab">OUTCOME</span>
+        <button class="fchip fchip--lvl" id="f-tick" aria-pressed="false">cleared a level</button>
+        <button class="fchip" id="f-notick" aria-pressed="false">no level</button>
+        <button class="fchip fchip--die" id="f-death" aria-pressed="false">has a death</button>
+      </div>
+      <div class="rail__group" role="group" aria-label="filter by start">
+        <span class="rail__lab">START</span>
+        <button class="fchip" id="f-fresh" aria-pressed="false">fresh</button>
+        <button class="fchip" id="f-cont" aria-pressed="false">continuation</button>
+      </div>
+      <div class="rail__group">
+        <span class="rail__lab">SORT</span>
+        <select class="fsel" id="f-sort" aria-label="sort runs">
+          <option value="new">newest first</option>
+          <option value="levels">most levels</option>
+          <option value="fewest">fewest actions</option>
+          <option value="longest">most turns</option>
+        </select>
+      </div>
+      <button class="rail__reset" id="f-reset" hidden>clear filters</button>
+      <span class="rail__count" id="f-count" role="status"></span>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="days" id="days"></div>
+    <div class="nothing" id="nothing" hidden>
+      <b>Nothing matches that.</b>
+      Loosen a filter — or <button class="rail__reset" id="nothing-reset">clear them all</button>.
+    </div>
+  </div>
+</section>
+
+<!-- ============ VIEW B · RETRO TV PLAYER ============ -->
+<section class="view player" id="view-player" hidden aria-label="replay player">
+
+  <div class="player__bar">
+    <button class="backbtn" id="back">◀&nbsp;&nbsp;archive</button>
+    <div class="player__id">
+      <span class="player__env" id="p-env">—</span>
+      <span class="player__run" id="p-run">—</span>
+      <span class="pchip" id="p-start">—</span>
+      <span class="pchip" id="p-lvl" hidden>—</span>
+      <span class="pchip" id="p-die" hidden>—</span>
+    </div>
+    <div class="player__step">
+      <button class="backbtn" id="p-prev" title="previous run in the archive">↑ prev run</button>
+      <button class="backbtn" id="p-next" title="next run in the archive">next run ↓</button>
+    </div>
+  </div>
+
+  <div class="player__grid">
+
+    <!-- the set -->
+    <div class="set">
+      <div class="tv" id="tv">
+        <div class="tv__screen">
+          <canvas id="board" width="512" height="512" role="img"
+                  aria-label="game board at the current turn"></canvas>
+          <canvas id="fx" width="512" height="512" aria-hidden="true"></canvas>
+          <div class="tv__hud" aria-hidden="true">
+            <span id="hud-env">—</span>
+            <span id="hud-turn">TURN 0</span>
+            <span id="hud-act">—</span>
+          </div>
+          <div class="tv__stamp" id="stamp" data-kind="level" aria-hidden="true"></div>
+          <div class="tv__vig" aria-hidden="true"></div>
+          <div class="tv__scan" aria-hidden="true"></div>
+          <div class="tv__glare" aria-hidden="true"></div>
+          <div class="tv__static" aria-hidden="true"></div>
+          <div class="tv__flash" aria-hidden="true"></div>
+        </div>
+        <div class="tv__chin" aria-hidden="true">
+          <span class="tv__brand">ARCTRON&nbsp;64</span>
+          <span class="tv__grille"></span>
+          <span class="tv__led"></span>
+        </div>
+      </div>
+
+      <!-- transport deck -->
+      <div class="deck">
+        <div class="track">
+          <input type="range" id="scrub" min="0" max="0" value="0" step="1"
+                 aria-label="scrub through turns" />
+          <div class="track__rail" aria-hidden="true">
+            <div class="track__fill" id="track-fill"></div>
+          </div>
+          <div class="track__head" id="track-head" aria-hidden="true"></div>
+          <div id="notches"></div>
+        </div>
+        <div class="track__meta">
+          <span>TURN <b id="counter">000 / 000</b></span>
+          <span id="stop-legend">◆ LEVEL &nbsp; ● DEATH</span>
+        </div>
+
+        <div class="deck__row">
+          <div class="keys">
+            <button class="key" id="k-first" title="first turn (Home)" aria-label="first turn">|◀</button>
+            <button class="key" id="k-back" title="step back (left arrow)" aria-label="step back">◀◀</button>
+            <button class="key key--play" id="k-play" aria-pressed="false"
+                    title="play / pause (space)" aria-label="play">▶</button>
+            <button class="key" id="k-fwd" title="step forward (right arrow)" aria-label="step forward">▶▶</button>
+            <button class="key" id="k-last" title="last turn (End)" aria-label="last turn">▶|</button>
+          </div>
+          <div class="knob-wrap">
+            <button class="knob" id="knob" aria-label="playback speed, currently 1x">
+              <i aria-hidden="true"></i>
+            </button>
+            <span>
+              <span class="knob__cap">SPEED</span>
+              <span class="knob__val" id="speed-val">1x</span>
+            </span>
+          </div>
+          <label class="rocker" title="dim the CRT effects">
+            <input type="checkbox" id="crtfx" checked />
+            <span class="rocker__body" aria-hidden="true"><i></i></span>
+            <span>CRT&nbsp;FX</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- readout -->
+    <aside class="readout">
+      <div class="readout__grid">
+        <div class="cellv"><span>TURN</span><b id="r-turn">—</b></div>
+        <div class="cellv"><span>SCORE · LEVELS</span><b id="r-score">—</b></div>
+        <div class="cellv cellv--wide"><span>ACTION THAT PRODUCED THIS FRAME</span><b id="r-act">—</b></div>
+        <div class="cellv"><span>CELLS CHANGED</span><b id="r-cells">—</b></div>
+        <div class="cellv cellv--state"><span>ENGINE STATE</span><b id="r-state">—</b></div>
+      </div>
+
+      <div class="panel">
+        <span class="panel__k">MOMENTS WORTH JUMPING TO</span>
+        <div class="stops" id="stops"></div>
+      </div>
+
+      <div class="panel">
+        <span class="panel__k">AGENT vs MEDIAN HUMAN</span>
+        <div class="vs" id="vs"></div>
+      </div>
+
+      <div class="panel" id="summary-panel" hidden>
+        <span class="panel__k">HOW THE EPISODE ENDED</span>
+        <div class="notecard" id="summary"></div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- lazy-loaded chain of thought -->
+  <details class="cot" id="cot">
+    <summary>
+      <span class="cot__caret" aria-hidden="true">▸</span>
+      What the model was thinking at this turn
+      <span class="cot__hint" id="cot-hint">LOADS ON OPEN</span>
+    </summary>
+    <div class="cot__body">
+      <div class="cot__col cot__col--think">
+        <h4>PRIVATE REASONING</h4>
+        <div class="cot__text" id="cot-think">—</div>
+        <p class="cot__meta" id="cot-meta"></p>
+      </div>
+      <div class="cot__col cot__col--say">
+        <h4>WHAT IT WROTE OUT</h4>
+        <div class="cot__text" id="cot-say">—</div>
+      </div>
+    </div>
+  </details>
+</section>
+
+</main>
+
+<footer class="foot-sec">
+  <div class="foot-sec__inner">
+    <p class="pixel">// ABOUT THIS ARCHIVE</p>
+    <h2>Raw tape, not a highlight reel.</h2>
+    <p>
+      Every run the harness has recorded is here, including the ones that went
+      nowhere. Boards are re-derived from the engine frames the model was shown,
+      not from anything it claimed. Human baselines are median actions-per-level
+      from the 340 public ARC-AGI-3 human replays.
+    </p>
+    <div class="foot-sec__links">
+      <a class="btn btn--ghost" href="index.html">← The write-up</a>
+      <a class="btn btn--ghost" href="https://arcprize.org/arc-agi/3" target="_blank" rel="noopener">About ARC-AGI-3&nbsp;↗</a>
+      <a class="btn btn--ghost" href="mailto:chasebonfiglio@gmail.com">Email&nbsp;✉</a>
+    </div>
+    <p class="foot-sec__by"><a href="https://chasebonfiglio.com" class="foot-sec__home">← chasebonfiglio.com</a> · ARC Prize 2026</p>
+  </div>
+</footer>
+
+<script src="archive.js?v=2"></script>
+</body>
+</html>
