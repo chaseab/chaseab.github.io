@@ -1,0 +1,17 @@
+# Static site - no build step. The CSS in assets/css is already compiled;
+# gulp is only used locally for scss work.
+[build]
+  publish = "."
+  command = ""
+
+# Carried over from .htaccess, which Netlify ignores:
+#   RewriteRule ^projects/?$ projects.html [L]
+[[redirects]]
+  from = "/projects"
+  to = "/projects.html"
+  status = 200
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"

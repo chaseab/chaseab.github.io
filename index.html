@@ -1043,7 +1043,10 @@
   <div id="fcf-form">
   <h3 class="fcf-h3">Contact me</h3>
 
-  <form id="fcf-form-id" class="fcf-form-class" method="post" action="contact-form-process.php">
+  <form id="fcf-form-id" class="fcf-form-class" method="post" name="contact" data-netlify="true" netlify-honeypot="bot-field">
+
+      <input type="hidden" name="form-name" value="contact">
+      <p class="d-none"><label>Leave this empty: <input name="bot-field"></label></p>
 
       <div class="fcf-form-group">
           <label for="Name" class="fcf-label">Name</label>

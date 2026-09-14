@@ -8,6 +8,9 @@ dist/
 .sass-cache/
 *.log
 
+# Netlify CLI local state (contains site link, not secrets, but machine-specific)
+.netlify/
+
 # OS / editor
 Thumbs.db
 desktop.ini
