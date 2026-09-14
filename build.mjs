@@ -32,7 +32,8 @@ const corpus = files.filter((f) => /\.(html|css|js|json)$/i.test(f)).map((f) => 
 let pruned = 0, prunedBytes = 0;
 for (const f of files) {
   if (!MEDIA.test(f) || !/[\\/]assets[\\/]/.test(f)) continue;
-  if (corpus.includes(basename(f))) continue;
+  const b = basename(f);
+  if (corpus.includes(b) || corpus.includes(encodeURI(b)) || corpus.includes(encodeURIComponent(b))) continue; // refs may be URL-encoded
   prunedBytes += statSync(f).size; unlinkSync(f); pruned++;
 }
 const kept = walk("dist").reduce((s, f) => s + statSync(f).size, 0);
