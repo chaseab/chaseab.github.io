@@ -11513,8 +11513,12 @@ pre .code {
   background-size: cover;
   background-position: center 65%;
   background-repeat: no-repeat;
-  background-attachment: fixed;
   color: #fff;
+}
+
+/* fixed backgrounds are ignored on iOS and slow to composite on phones; keep the parallax on desktop only */
+@media (min-width: 992px) {
+  .header { background-attachment: fixed; }
 }
 
 .header .container {
