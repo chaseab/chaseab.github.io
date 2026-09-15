@@ -86,29 +86,36 @@
       <li><b>Readiness from resistance.</b> A wire's electrical resistance changes as it recovers thermally, so watching resistance tells the controller which wires are ready to fire — no extra sensors on the actuator itself.</li>
     </ul>
   </div>
-    <figure class="panel">
-      <div class="panel__bar"><span class="label">The actuator</span><span class="tag">HARDWARE</span></div>
-      <img src="assets/rig-upright.webp" width="718" height="570" alt="The test rig standing upright: a white printed frame with six crimped posts across the top, red leads running down the routed wire to the carriage at the bottom, and the breadboarded drive to the left." loading="lazy" />
-      <figcaption>A printed frame holds the routed Flexinol between the crimped posts on top and the carriage at the bottom. Each post is one electrically independent section.</figcaption>
+    <figure class="panel panel--tall">
+      <div class="panel__bar"><span class="label">The rig, modelled</span><span class="tag">MUJOCO</span></div>
+      <img src="assets/mujoco-v2.webp" width="400" height="590" alt="MuJoCo render of the v2 test rig: a tall rectangular frame, a blue post block near the top, a bundle of wires running straight down from it to a carriage with a row of posts, all on a flat base plate." loading="lazy" />
+      <figcaption>A MuJoCo model of the rig (v2): the wire array runs from the post block down to the loaded carriage inside the frame.</figcaption>
     </figure>
   </div>
 </section>
 
 <section class="sec" id="drive">
   <div class="sec__head"><span class="sec__num">02 / driving it</span><h2 class="sec__title">The firing has to fail safe, so the PC never owns it</h2></div>
-  <div class="sec__body">
+  <div class="split">
+  <div class="sec__body sec__body--wide">
     <p>An SMA wire that's left energized keeps heating until it's damaged, so the one thing the firing loop can't depend on is a laptop that might crash or drop USB mid-pulse. I split the system so that <b>gate authority lives on an Arduino Mega</b>, not the PC:</p>
     <ul>
       <li><b>The Mega owns the gates.</b> It enforces a hard <code>MAX_ON</code> ceiling on every pulse and a host heartbeat — if it stops hearing from the PC for ~100&nbsp;ms, it drops all gates. The PC sends <em>intent</em>; the Mega decides whether to honour it.</li>
       <li><b>One-way serial.</b> The link is a fire-and-forget ASCII protocol (115200 baud, PC&nbsp;→ Mega only). The firing loop never blocks waiting on the host, and the timing base stays untouched.</li>
       <li><b>MOSFET-switched sections.</b> Each section of the array is driven by its own low-side MOSFET; a small command set (<code>START</code>/<code>STOP</code>, <code>PERIOD</code>, <code>ONTIME</code>, per-section enable, and a manual <code>FIRE</code> for calibration) sets the rotation.</li>
     </ul>
+    <div class="spec spec--2">
+      <div><b>Controller</b><span>Arduino Mega</span><small>Owns the gates: <code>MAX_ON</code> ceiling + host heartbeat fail-safe</small></div>
+      <div><b>Link</b><span>One-way USB serial</span><small>115200 baud ASCII, PC → Mega only, non-blocking</small></div>
+      <div><b>Drive</b><span>Per-section low-side MOSFETs</span><small>Sections fire in a scheduled rotation</small></div>
+      <div><b>Command set</b><span>START / STOP / PERIOD / ONTIME / FIRE</span><small>Sets the schedule; <code>FIRE</code> is manual, for calibration</small></div>
+    </div>
   </div>
-  <div class="spec spec--2">
-    <div><b>Controller</b><span>Arduino Mega</span><small>Owns the gates: <code>MAX_ON</code> ceiling + host heartbeat fail-safe</small></div>
-    <div><b>Link</b><span>One-way USB serial</span><small>115200 baud ASCII, PC → Mega only, non-blocking</small></div>
-    <div><b>Drive</b><span>Per-section low-side MOSFETs</span><small>Sections fire in a scheduled rotation</small></div>
-    <div><b>Command set</b><span>START / STOP / PERIOD / ONTIME / FIRE</span><small>Sets the schedule; <code>FIRE</code> is manual, for calibration</small></div>
+    <figure class="panel">
+      <div class="panel__bar"><span class="label">On the bench</span><span class="tag">HARDWARE</span></div>
+      <img src="assets/rig-upright.webp" width="718" height="570" alt="The test rig standing upright on the bench: a white printed frame with six crimped posts across the top, red leads running down the routed wire to the carriage at the bottom, breadboarded drive electronics to the left and a bench supply to the right." loading="lazy" />
+      <figcaption>The rig on the bench: crimped posts along the top bar, leads down to the carriage, the breadboarded drive on the left and the bench supply on the right.</figcaption>
+    </figure>
   </div>
 </section>
 
