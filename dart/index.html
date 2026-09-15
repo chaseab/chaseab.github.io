@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="style.css?v=1" />
+<link rel="stylesheet" href="style.css?v=2" />
 </head>
 <body>
 
@@ -83,15 +83,8 @@
 <!-- 01 rig -->
 <section class="sec" id="rig">
   <div class="sec__head"><span class="sec__num">01 / rig</span><h2 class="sec__title">What's on the bench</h2></div>
-  <div class="spec">
-    <div><b>Cameras</b><span>3 × OV9732</span><small>1280×720 @ 30&nbsp;fps MJPG on a powered USB hub · addressed by <code>/dev/v4l/by-path</code>, exposure &amp; white-balance locked manual</small></div>
-    <div><b>Compute</b><span>Raspberry Pi&nbsp;4B · <code>dartpi</code></span><small>RPi&nbsp;OS Lite 64-bit; OpenCV + V4L2; the detection server runs as a <code>systemd</code> service with a tuning UI on the LAN</small></div>
-    <div><b>Board</b><span>WDF/BDO regulation</span><small>451&nbsp;mm face, 340&nbsp;mm playing surface; radii measured to the centre of the wire</small></div>
-    <div><b>Mount</b><span>Printed camera mount, v1 → v4</span><small>SolidWorks-designed, on-board and off-board variants; printed in PLA on a Bambu&nbsp;P1S</small></div>
-    <div><b>Scoreboard</b><span>TypeScript · React&nbsp;19 · Vite · Tailwind</span><small>Runs in a browser; no backend needed to keep score</small></div>
-    <div><b>Vision</b><span>Python · OpenCV</span><small>Calibration, detection and fusion, covered by <code>pytest</code> (8 modules)</small></div>
-  </div>
-  <div class="sec__body">
+  <div class="split split--rig">
+  <div class="sec__body sec__body--wide">
     <p>
       The rig splits cleanly into two halves that I could build and test
       separately: the <b>vision</b> that turns three camera frames into a hit
@@ -99,12 +92,22 @@
       They only ever meet through one small message type, which is why the
       scoreboard already works without a single real camera attached.
     </p>
+    <div class="spec">
+      <div><b>Cameras</b><span>3 × OV9732</span><small>1280×720 @ 30&nbsp;fps MJPG on a powered USB hub · addressed by <code>/dev/v4l/by-path</code>, exposure &amp; white-balance locked manual</small></div>
+      <div><b>Compute</b><span>Raspberry Pi&nbsp;4B · <code>dartpi</code></span><small>RPi&nbsp;OS Lite 64-bit; OpenCV + V4L2; the detection server runs as a <code>systemd</code> service with a tuning UI on the LAN</small></div>
+      <div><b>Board</b><span>WDF/BDO regulation</span><small>451&nbsp;mm face, 340&nbsp;mm playing surface; radii measured to the centre of the wire</small></div>
+      <div><b>Mount</b><span>Printed camera mount, v1 → v4</span><small>SolidWorks-designed, on-board and off-board variants; printed in PLA on a Bambu&nbsp;P1S</small></div>
+      <div><b>Scoreboard</b><span>TypeScript · React&nbsp;19 · Vite · Tailwind</span><small>Runs in a browser; no backend needed to keep score</small></div>
+      <div><b>Vision</b><span>Python · OpenCV</span><small>Calibration, detection and fusion, covered by <code>pytest</code> (8 modules)</small></div>
+    </div>
   </div>
-  <figure class="panel" style="margin-top:8px">
-    <div class="panel__bar"><span class="label">The rig in place</span><span class="tag">HARDWARE</span></div>
-    <img src="assets/rig.webp" width="1200" height="844" alt="A TARGET dartboard on a black backing panel mounted on a wall, with three small camera modules on 3D-printed mounts clipped to the frame at the top, right and bottom, and wiring running off to the left toward the Pi." loading="lazy" />
-    <figcaption>The board mounted on the wall: three OV9732 cameras on printed mounts clip to the frame — top, right and bottom — with the wiring running back to the Pi off-frame.</figcaption>
-  </figure>
+    <figure class="panel panel--tall">
+      <div class="panel__bar"><span class="label">The rig in place</span><span class="tag">HARDWARE</span></div>
+      <img src="assets/rig-upright.webp" width="610" height="850" alt="A TARGET dartboard on a black backing panel, with three OV9732 cameras on printed mounts clipped to the frame — top, lower-left and lower-right — and their cables running off-frame." loading="lazy" />
+      <figcaption>The board on the wall with the three cameras on their printed mounts — top, lower-left, lower-right — wired back to the Pi off-frame.</figcaption>
+    </figure>
+  </div>
+
 </section>
 
 <!-- 02 vision -->
@@ -141,9 +144,9 @@
     </p>
   </div>
 
-  <figure class="panel" style="margin-top:8px">
+  <figure class="panel">
     <div class="panel__bar"><span class="label">Calibration tool</span><span class="tag">HOMOGRAPHY</span></div>
-    <img src="assets/calibrate-tool.webp" width="1200" height="622" alt="A browser calibration tool showing one camera's photo of the dartboard, with blue circle markers dropped on known points — the bull and the outer edges of the double ring at 20, 6, 3 and 11 — that it uses to solve the homography." loading="lazy" />
+    <img src="assets/calibrate-tool-trim.webp" width="1186" height="612" alt="A browser calibration tool showing one camera's photo of the dartboard, with blue circle markers dropped on known points — the bull and the outer edges of the double ring at 20, 6, 3 and 11 — that it uses to solve the homography." loading="lazy" />
     <figcaption>The calibration tool I wrote: it shows one camera's view of the board and I click a handful of known points — the bull and the double-ring edges at 20, 3, 6 and 11 — and it solves that camera's homography onto the board plane.</figcaption>
   </figure>
 
@@ -177,17 +180,7 @@
       <li><b>The simulator throws with realistic scatter.</b> Three skill levels apply 9 / 15 / 26&nbsp;mm of Gaussian spread, which is what stands in for the camera feed today.</li>
     </ul>
   </div>
-  <figure class="panel" style="margin-top:8px">
-    <div class="panel__bar"><span class="label">Board geometry</span><span class="tag">MM-SPACE</span></div>
-    <div class="board-fig">
-      <svg id="dartboard" viewBox="-118 -118 236 236" role="img" aria-label="A regulation dartboard drawn from the scorer's millimetre coordinates, treble-20 highlighted."></svg>
-    </div>
-    <figcaption>
-      The board the scorer reasons about, drawn from the same millimetre coordinates
-      the vision pipeline outputs — <code>coordToSegment</code> maps any point here to
-      a score. Treble-20 highlighted.
-    </figcaption>
-  </figure>
+
 </section>
 
 <!-- 04 last mile -->
@@ -240,44 +233,6 @@
   nav.querySelectorAll('.mininav__menu a').forEach(function(a){a.addEventListener('click',function(){nav.classList.remove('open');btn.setAttribute('aria-expanded','false')})});
 })();
 
-// regulation dartboard, drawn from millimetre geometry (treble-20 highlighted)
-(function(){
-  var order=[20,1,18,4,13,6,10,15,2,17,3,19,7,16,8,11,14,9,12,5];
-  var svg=document.getElementById('dartboard');if(!svg)return;
-  var NS='http://www.w3.org/2000/svg';
-  var R={dOut:100,dIn:95,tOut:63,tIn:58,bullOut:16,bull:6};
-  var seg=2*Math.PI/20, off=-Math.PI/2-seg/2;
-  function ring(a,ro,ri,fill){
-    var a0=off+a*seg,a1=a0+seg;
-    function p(r,ang){return [Math.cos(ang)*r,Math.sin(ang)*r]}
-    var A=p(ri,a0),B=p(ro,a0),C=p(ro,a1),D=p(ri,a1);
-    var path=document.createElementNS(NS,'path');
-    path.setAttribute('d','M'+A[0]+' '+A[1]+' L'+B[0]+' '+B[1]+' A'+ro+' '+ro+' 0 0 1 '+C[0]+' '+C[1]+' L'+D[0]+' '+D[1]+' A'+ri+' '+ri+' 0 0 0 '+A[0]+' '+A[1]+' Z');
-    path.setAttribute('fill',fill);svg.appendChild(path);
-  }
-  var BLK='#0f1319',WHT='#c9c2ac',RED='#a52a2f',GRN='#1f6b3a',RED_HI='#ff3355',GRN_HI='#00ff88';
-  for(var i=0;i<20;i++){
-    var alt=i%2===0;
-    ring(i,R.dIn,R.tOut,alt?BLK:WHT);
-    ring(i,R.tOut,R.tIn,alt?GRN:RED);
-    ring(i,R.tIn,R.bullOut,alt?BLK:WHT);
-    ring(i,R.dOut,R.dIn,alt?RED:GRN);
-  }
-  ring(0,R.tOut,R.tIn,GRN_HI);
-  ring(0,R.dOut,R.dIn,RED_HI);
-  function circle(r,f){var e=document.createElementNS(NS,'circle');e.setAttribute('r',r);e.setAttribute('fill',f);svg.appendChild(e)}
-  circle(R.bullOut,'#1f6b3a');circle(R.bull,'#ff3355');
-  order.forEach(function(num,i){
-    var ang=off+i*seg+seg/2,r=110;
-    var t=document.createElementNS(NS,'text');
-    t.setAttribute('x',Math.cos(ang)*r);t.setAttribute('y',Math.sin(ang)*r+3.5);
-    t.setAttribute('text-anchor','middle');
-    t.setAttribute('font-family',"'JetBrains Mono',monospace");
-    t.setAttribute('font-size','9');
-    t.setAttribute('fill',num===20?'#00ff88':'#8b9bb4');
-    t.textContent=num;svg.appendChild(t);
-  });
-})();
 </script>
 </body>
 </html>

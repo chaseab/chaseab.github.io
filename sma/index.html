@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="style.css?v=1" />
+<link rel="stylesheet" href="style.css?v=2" />
 </head>
 <body>
 
@@ -65,9 +65,9 @@
   </div>
 
   <figure class="hero panel">
-    <div class="panel__bar"><span class="label">The lab bench</span><span class="tag">RIG</span></div>
-    <img src="assets/lab-bench.webp" width="1500" height="1002" alt="The lab bench: the Flexinol wire test rig, a bench power supply and multimeter, and a laptop running the acquisition dashboard." />
-    <figcaption>The bench: the Flexinol test rig, a bench supply and multimeter, and the laptop running the acquisition dashboard that reads the wires.</figcaption>
+    <div class="panel__bar"><span class="label">The test rig</span><span class="tag">FLEXINOL</span></div>
+    <img src="assets/rig.webp" width="1300" height="868" alt="The Flexinol test rig on the lab bench: a white 3D-printed frame with a row of crimped electrical posts along the top bar, the wire routed down to a loaded carriage, breadboarded drive electronics on the left and a BK Precision bench supply on the right." />
+    <figcaption>The rig on the bench: a printed frame carries the crimped posts along its top bar and routes the wire down to the loaded carriage. Breadboards on the left hold the drive electronics; the bench supply on the right feeds it.</figcaption>
   </figure>
 </header>
 
@@ -75,6 +75,7 @@
 
 <section class="sec" id="idea">
   <div class="sec__head"><span class="sec__num">01 / the idea</span><h2 class="sec__title">Run many thin wires in parallel, and fire them in turns</h2></div>
+  <div class="split">
   <div class="sec__body">
     <p>A shape-memory-alloy wire contracts when it's heated (in practice, when you pass current through it) and relaxes as it cools. That makes it a linear actuator with no motor, no gearbox, and almost no volume — attractive for biomimetic joints where a muscle-like pull is what you want. The catch is speed: a wire can only contract again once it has cooled, and cooling is slow.</p>
     <p>The approach I'm testing works around the cooling limit instead of fighting it:</p>
@@ -85,11 +86,12 @@
       <li><b>Readiness from resistance.</b> A wire's electrical resistance changes as it recovers thermally, so watching resistance tells the controller which wires are ready to fire — no extra sensors on the actuator itself.</li>
     </ul>
   </div>
-  <figure class="panel" style="margin-top:8px">
-    <div class="panel__bar"><span class="label">The actuator</span><span class="tag">FLEXINOL</span></div>
-    <img src="assets/wire-array.webp" width="1300" height="868" alt="Close-up of the actuator: a 3D-printed cradle holding the routed Flexinol wire with crimped electrical posts and small calibration weights hanging from it." />
-    <figcaption>A printed cradle holds the routed Flexinol with crimped posts; the small weights load the wire for characterization.</figcaption>
-  </figure>
+    <figure class="panel">
+      <div class="panel__bar"><span class="label">The actuator</span><span class="tag">HARDWARE</span></div>
+      <img src="assets/rig-upright.webp" width="718" height="570" alt="The test rig standing upright: a white printed frame with six crimped posts across the top, red leads running down the routed wire to the carriage at the bottom, and the breadboarded drive to the left." loading="lazy" />
+      <figcaption>A printed frame holds the routed Flexinol between the crimped posts on top and the carriage at the bottom. Each post is one electrically independent section.</figcaption>
+    </figure>
+  </div>
 </section>
 
 <section class="sec" id="drive">
@@ -102,7 +104,7 @@
       <li><b>MOSFET-switched sections.</b> Each section of the array is driven by its own low-side MOSFET; a small command set (<code>START</code>/<code>STOP</code>, <code>PERIOD</code>, <code>ONTIME</code>, per-section enable, and a manual <code>FIRE</code> for calibration) sets the rotation.</li>
     </ul>
   </div>
-  <div class="spec">
+  <div class="spec spec--2">
     <div><b>Controller</b><span>Arduino Mega</span><small>Owns the gates: <code>MAX_ON</code> ceiling + host heartbeat fail-safe</small></div>
     <div><b>Link</b><span>One-way USB serial</span><small>115200 baud ASCII, PC → Mega only, non-blocking</small></div>
     <div><b>Drive</b><span>Per-section low-side MOSFETs</span><small>Sections fire in a scheduled rotation</small></div>
@@ -138,7 +140,7 @@
     <li><b>Nov 2025</b>Joined the lab as an undergraduate student researcher.</li>
     <li><b>May 2026</b>Presented the parallel-array work at the Virginia Tech Hume Colloquium alongside two lab-mates (Ethan Yueh, Christine Robinson); MITRE and MIT Lincoln Laboratory roundtables the same day.</li>
     <li><b>Sep 2026</b>Drive electronics + acquisition dashboard bring-up; first single-channel resistance runs logged end to end.</li>
-    <li><b>Summer–fall 2026</b>Scaling from single-channel to the full array; manuscript in preparation.</li>
+    <li><b>Fall 2026 →</b>Scaling from single-channel to the full array; manuscript in preparation.</li>
   </ul>
 </section>
 
