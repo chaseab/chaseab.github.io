@@ -13,7 +13,6 @@ const SKIP = new Set([
   "api", "contact-form-process.php",
   "project-admin.html", "project-template.html", "components.html", "arcagithree.html",
   "scss",
-  "sma",  // DRAFT — research page awaiting Chase's review; remove this line to publish
 ]);
 const MEDIA = /\.(jpe?g|png|webp|gif|mp4|mov|pdf|svg)$/i;
 

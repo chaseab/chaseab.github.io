@@ -212,6 +212,9 @@ img{max-width:100%;display:block}
 .tile--oche .tile__title,.tile--oche .tile__blurb,.tile--oche .tile__meta{color:#e2e8f0}
 .tile--oche .tile__blurb{color:#8b9bb4}
 .tile--oche .tile__accent{background:#ffaa22;opacity:1}
+.tile--sma{background:#f6f7f4;border-color:#d8dcd3;color:#1b2433}
+.tile--sma .tile__media{background:#eceee8}
+.tile--sma .tile__accent{background:#1f7a4d;opacity:1}
 .tile--so101{background:#0d1117;border-color:#1e2a3a;color:#e2e8f0}
 .tile--so101 .tile__media{background:#080b10}
 .tile--so101 .tile__title,.tile--so101 .tile__blurb,.tile--so101 .tile__meta{color:#e2e8f0}
@@ -318,6 +321,15 @@ img{max-width:100%;display:block}
 <script>
 /* ---- project data (edit here to add/retire projects) ---- */
 const PROJECTS = [
+  {
+    id:'sma', title:'Shape-Memory-Alloy Actuators · Kennedy Lab', cat:'Robotics',
+    tags:['research','SMA','actuators','instrumentation','DAQ','embedded'],
+    status:'live', statusLabel:'Research · paper in prep',
+    date:'2025-11', year:'2025', featured:true, theme:'sma',
+    img:'assets/imgs/sma-cover.webp', href:'sma/index.html',
+    meta:'Undergraduate researcher · Hume Center · since Nov 2025',
+    blurb:"Parallel Flexinol wire arrays as cheap, small linear actuators for a biomimetic ankle: a 12-wire bank with per-section MOSFET drive, a fail-safe firing controller, and resistance self-sensing on one DAQ timebase. Method and instrumentation only — results are held for the paper (first author, in preparation)."
+  },
   {
     id:'so101', title:'SO-101 Arm · Imitation Learning', cat:'Robotics',
     tags:['robotics','imitation learning','LeRobot','ACT','3D reconstruction'],
