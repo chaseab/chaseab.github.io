@@ -400,6 +400,159 @@
   </p>
 </section>
 
+<!-- ============ MID-COT TOOL CALLING ============ -->
+<section class="sec" id="midcot">
+  <div class="sec__head">
+    <span class="sec__num">06</span>
+    <h2 class="sec__title">Teaching the model to ask instead of re-derive</h2>
+  </div>
+  <p class="sec__intro">
+    When I autopsied a long reasoning turn, I found the model spending almost all
+    of it rebuilding facts the harness had <em>already computed</em> — remapping the
+    board, recounting the same inventory, re-deriving the ring topology every turn.
+    A chat API can't pause mid-thought, so whatever the model wants it has to
+    reconstruct in its head or lose. I'm building the channel that lets it just ask.
+  </p>
+
+  <div class="wall">
+    <div class="wall__row" data-arc="8">
+      <div class="wall__txt" style="grid-column:1/-1">
+        <span class="wall__env pixel">the measured waste</span>
+        <p>
+          In one autopsy of a ~38k-token turn, roughly
+          <span class="hl hl--magenta">85% of the chain</span> went to re-deriving
+          known facts — a single deep look at one episode, not a benchmark, but a
+          clear signal: the bottleneck isn't reasoning, it's the model doing
+          clerical work a lookup could hand it for free.
+        </p>
+      </div>
+    </div>
+
+    <div class="wall__row" data-arc="1">
+      <div class="wall__txt" style="grid-column:1/-1">
+        <span class="wall__env pixel">the fix — a read-only grammar the model queries mid-thought</span>
+        <p>
+          On a local backend I run generation in <em>segments</em>. When the model
+          writes a query inside its own reasoning — <code>QUERY_CELL</code>,
+          <code>QUERY_REGION</code>, <code>FIND_COLOR</code>, <code>HISTORY</code>,
+          <code>DIFF</code> — generation stops on the closing tag, the harness
+          answers it <em>mechanically</em>, splices the answer back in, and the same
+          generation resumes with its cache still warm. The grammar is strictly
+          read-only and the harness never reads the chain, judges the question, or
+          steers the answer — it just runs the lookup the model asked for. That's
+          the whole discipline of this project: <span class="hl hl--blue">the model
+          reasons; the harness computes, never interprets.</span>
+        </p>
+      </div>
+    </div>
+
+    <div class="wall__row wall__row--key" data-arc="6">
+      <div class="wall__txt" style="grid-column:1/-1">
+        <span class="wall__env pixel">what I've seen so far <span class="tag">small-n, honest</span></span>
+        <p>
+          Left alone, the model rarely opens the channel — in one probe it fired on
+          just <b>4 of 15</b> turns, but every one of those was a real request, and
+          it declined the rest. The interesting part: when I <em>seed</em> a single
+          opening tag, the behavior becomes self-sustaining — one nudge produced
+          <b>18</b> follow-up lookups the model initiated on its own. So the
+          approach I'm training toward is a learned <em>when-to-ask</em> prior that
+          keeps that decision inside the model, rather than a harness that pesters it
+          every turn (which would itself be an injected opinion).
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="honestpin">
+    <b>Status: in progress, not a finished result.</b>
+    The pause-and-resume channel is built and working. My first small finetune
+    aimed the gradient at the wrong tokens and taught the model nothing about
+    <em>when</em> to call; I found the bug, retrained cleanly at a smaller scale,
+    and the whole thing is gated behind one honest test before I spend real compute
+    on the full <span class="hl hl--yellow">Qwen3.8-27B</span> run. I'd rather report
+    the gate than a number I can't defend.
+  </div>
+</section>
+
+<!-- ============ GESTALT PROBE ============ -->
+<section class="sec" id="gestalt">
+  <div class="sec__head">
+    <span class="sec__num">07</span>
+    <h2 class="sec__title">Which perceptual priors is the model actually missing?</h2>
+  </div>
+  <p class="sec__intro">
+    Before finetuning anything, I wanted to know <em>which</em> parts of "seeing a
+    scene as objects" the model already has and which it fakes. So I probed it for
+    the classic Gestalt grouping principles — never using the vocabulary, just
+    asking it to list the separate things in a grid, or to spot an odd one out.
+  </p>
+
+  <div class="wall">
+    <div class="wall__row" data-arc="3">
+      <div class="wall__txt" style="grid-column:1/-1">
+        <span class="wall__env pixel">present — the model has these</span>
+        <p>
+          <b>Figure-ground</b> holds on clean grids: it reliably reads the majority
+          field as background. <b>Similarity</b> ("these belong to the same kind") is
+          there too — it can't express it when I ask for a plain partition, but on an
+          odd-one-out task it spots the deviant by color, shape and size. These are
+          priors worth <em>surfacing</em>, not installing.
+        </p>
+      </div>
+    </div>
+
+    <div class="wall__row" data-arc="2">
+      <div class="wall__txt" style="grid-column:1/-1">
+        <span class="wall__env pixel">absent — the model computes but doesn't perceive these</span>
+        <p>
+          <b>Closure</b> is weak: it pixel-traces a near-closed shape correctly
+          instead of <em>seeing</em> it as closed — it computes closure, it doesn't
+          perceive it. <b>Object-unity across color</b> fails — a two-color object
+          gets split into two. <b>Continuity</b> fails — an occluded line reads as
+          separate fragments. These are exactly the core-knowledge priors the model
+          lacks, so they're legitimate for the harness to compute and hand over —
+          without ever telling it what the game is.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <p class="sec__intro sec__intro--tight" style="margin-top:34px">
+    <b>Isolating the bottleneck.</b> To confirm that missing <em>structure-noticing</em>
+    — not missing reasoning — is what blocks goal inference, the ablation is to inject
+    a perfect perception/goal "oracle" and measure how much the model improves when
+    the noticing is done <em>for</em> it.
+  </p>
+
+  <!-- CHASE: CONFIRM THIS NUMBER BEFORE PUBLISHING.
+       The resume states the oracle-injection ablation moved goal inference from
+       0/5 to 4/5. That specific 0/5 -> 4/5 result was NOT found in the arc repo.
+       The oracle-injection METHOD exists (scratch/arc2_perception/ab_harness.py,
+       "Arm P" = prepend perfect GT perception), but on ARC-2 static tasks and with
+       no 0/5->4/5 result file. Either (a) point me at the run that produced it and
+       I'll uncomment the .lb comparison below, or (b) leave it phrased as the
+       approach (current state) and delete this block.
+
+  <div class="lb">
+    <div class="lb__head"><span class="pixel">GOAL INFERENCE — ORACLE ABLATION</span><span class="lb__scale pixel">OF 5 PROBES</span></div>
+    <div class="lb__rows">
+      <div class="lb__row"><span class="lb__lab">Model alone</span><div class="lb__track"><i class="lb__zero" style="--c:var(--arc-2)"></i></div><span class="lb__val">0/5</span></div>
+      <div class="lb__row"><span class="lb__lab">+ perception oracle</span><div class="lb__track"><i style="width:80%;--c:var(--arc-3)"></i></div><span class="lb__val">4/5</span></div>
+    </div>
+    <p class="foot">Handed the structure it can't notice on its own, goal inference goes from failing every probe to solving nearly all of them — the bottleneck is noticing, not reasoning.</p>
+  </div>
+  -->
+
+  <div class="honestpin">
+    <b>How I keep the finetune honest.</b>
+    I only train <em>task-agnostic</em> priors — objectness, number, geometry — never
+    a win condition or a game rule. And I grade it <span class="hl hl--magenta">leave-family-out</span>:
+    I hold one entire perceptual family out of training and only count a prior as
+    "installed" if it fires on the family the model was <em>never</em> trained on.
+    A prior that only works on what it saw is a memorized trick, not a prior.
+  </div>
+</section>
+
 </main>
 
 <footer class="foot-sec">
