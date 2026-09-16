@@ -144,3 +144,8 @@ figcaption{font-size:14px;color:var(--ink-dim);padding:10px 12px;border-top:1px 
 /* single column on phones: two 170px cells are too tight */
 @media(max-width:480px){.spec,.split .spec{grid-template-columns:1fr}.spec > div,.split .spec > div{grid-column:auto}}
 @media(max-width:480px){.status__bar .label:last-child{display:none}}
+
+/* dataset frames (wrist | overhead pairs): first one full width, the rest side by side */
+.frames{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:8px 0 32px}
+.frames .panel:first-child{grid-column:span 2}
+@media(max-width:820px){.frames{grid-template-columns:1fr}.frames .panel:first-child{grid-column:auto}}

@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="style.css?v=2" />
+<link rel="stylesheet" href="style.css?v=3" />
 </head>
 <body>
 
@@ -53,12 +53,12 @@
   </p>
 
   <div class="status" aria-label="project status">
-    <div class="status__bar"><span class="label">Status · 14 Sep 2026</span><span class="label">updated as it changes</span></div>
+    <div class="status__bar"><span class="label">Status · 16 Sep 2026</span><span class="label">updated as it changes</span></div>
     <div class="status__body">
       <div class="status__item"><b>Rig</b><span class="ok">Built &amp; calibrated</span> — leader + follower, two cameras</div>
-      <div class="status__item"><b>Dashboard</b><span class="ok">Working</span> — live feeds, digital twin, training controls</div>
+      <div class="status__item"><b>Dashboard</b><span class="ok">Working</span> — live feeds, digital twin, record / train / eval from the browser</div>
       <div class="status__item"><b>Live 3D map</b><span class="wip">Working, accuracy in progress</span> — no markers, FK-anchored</div>
-      <div class="status__item"><b>First learned task</b><span class="todo">Not yet recorded</span> — stacking Jenga blocks, ACT policy</div>
+      <div class="status__item"><b>First learned task</b><span class="wip">First policy on the arm</span> — 10 demos → ACT; places a handed block, can't pick from the pile yet</div>
     </div>
   </div>
 
@@ -166,20 +166,69 @@
     </ul>
     <p>Pulling blocks out of a real tower is explicitly out of scope for now. Every published robot that has done it used force/torque sensing to tell a loose block from a stuck one, and the STS3215's load register is unlikely to resolve the ~0.3&nbsp;N that matters. Vision alone can't tell the difference.</p>
     <p><b>Plan.</b> ACT first, Diffusion Policy second. Training measures 0.40&nbsp;s/step at batch&nbsp;8 with two 640×480 cameras on the 1080&nbsp;Ti — so 30k steps is about 3.3&nbsp;h. A first checkpoint after 20 six-layer episodes (~360 pick-place cycles); 50–70 episodes total, with one DAgger-style correction round. Honest expectation for a first pass: 40–70&nbsp;% success on the simplest level.</p>
-    <p><b>Where it is.</b> A 15-minute teleop trial says the task is doable on this rig. CUDA training is verified on a synthetic dataset. Recording hasn't started, and no learned policy has run on the real arm yet.</p>
+    <p><b>Where it started.</b> A 15-minute teleop trial said the task was doable on this rig, and CUDA training was verified on a synthetic dataset. The first real data and the first policy came the next evening — <a href="#firstrun">section 05</a>.</p>
   </div>
 </section>
 
-<!-- 05 timeline -->
+<!-- 05 first run -->
+<section class="sec" id="firstrun">
+  <div class="sec__head"><span class="sec__num">05 / first run</span><h2 class="sec__title">Ten demonstrations, one policy, one honest result</h2></div>
+  <div class="sec__body sec__body--wide">
+    <p>On the evening of 15 September the loop ran end to end for the first time: teleoperated demonstrations recorded through the dashboard, an ACT policy trained on the 1080&nbsp;Ti, and the checkpoint driven back on the real arm. The numbers below are from the run logs.</p>
+
+    <div class="spec">
+      <div><b>Dataset</b><span>10 episodes · 64,672 frames</span><small><code>local/stack_v2</code> · 35.9 min at 30 fps · 3.7 GB, two 640×480 AV1 streams · ~150 pick-and-place cycles</small></div>
+      <div><b>Timing</b><span>33.3 ms between frames, every episode</span><small>Max gap 33.4 ms — no dropped frames · bus retries over the whole 41-minute session: 2 reads, 0 writes</small></div>
+      <div><b>Policy</b><span>ACT, chunk 60, batch 8</span><small>ResNet-18 backbone, ~51.6 M params · VAE on, kl 10, lr 1e-5 · 2 s action chunks at 30 fps</small></div>
+      <div><b>Training</b><span>30,000 steps in 3 h 03 min</span><small>0.357 s/step · 3.71 epochs · peak 3.9 GB allocated under a 5.6 GB cap</small></div>
+      <div><b>Loss (L1 + KL)</b><span>10.4 → 0.115</span><small>10.4 @100 · 2.0 @1k · 0.43 @5k · 0.23 @10k · 0.15 @20k · 0.115 @30k</small></div>
+      <div><b>On the arm</b><span>5 rollouts attempted</span><small>Eval loop held a median 24.6 Hz against the 30 Hz target with inference in the loop (~30 ms per chunk)</small></div>
+    </div>
+
+    <p><b>Result.</b> The policy could not grasp a block from the pile. When a block was handed to the gripper, it <b>did carry it to the tower and place it</b>. Motion was jerky. As a stacker: effectively unusable — which is about what ten episodes should buy. The transport-and-place half of the skill exists; the pile grasp doesn't, at ~150 grasp examples over a random heap against the 300+ the plan budgets for it. The jerkiness is ACT executing 2-second action chunks open-loop and switching abruptly between them, made worse by two demo tempos in one dataset (episodes 0–4 careful at 4.5–5.5&nbsp;min each, 5–9 faster at 2–2.7&nbsp;min).</p>
+  </div>
+
+  <div class="frames">
+    <figure class="panel">
+      <div class="panel__bar"><span class="label">Episode 0 · frame 2500 · wrist | overhead</span><span class="tag">PICK</span></div>
+      <img src="assets/ep0-pick.webp" width="1280" height="480" alt="Two camera frames side by side: the wrist camera looking down at a single Jenga block on the green cutting mat between the open gripper jaws, and the overhead camera showing the follower arm reaching over the mat toward loose blocks." loading="lazy" />
+      <figcaption>What the policy sees. Wrist camera on the left, overhead on the right — the only two inputs besides the six joint angles.</figcaption>
+    </figure>
+    <figure class="panel">
+      <div class="panel__bar"><span class="label">Episode 0 · frame 7000</span><span class="tag">TOWER</span></div>
+      <img src="assets/ep0-tower.webp" width="1280" height="480" alt="Wrist view of a block held between the jaws above the mat, and the overhead view of a two-layer tower beside the arm." loading="lazy" />
+      <figcaption>Two layers up in a careful episode.</figcaption>
+    </figure>
+    <figure class="panel">
+      <div class="panel__bar"><span class="label">Episode 9 · near the end</span><span class="tag">FAST</span></div>
+      <img src="assets/ep9-end.webp" width="1280" height="480" alt="Wrist view of the gripper placing a block onto a stack of three, and the overhead view of the arm over the tower with one block left on the mat." loading="lazy" />
+      <figcaption>End of a fast episode: one block left on the mat.</figcaption>
+    </figure>
+  </div>
+
+  <div class="sec__body sec__body--wide">
+    <p><b>What had to be built to get here.</b> Most of the day's work was around the model, not in it:</p>
+    <ul>
+      <li><b>Retry-patched servo bus.</b> <code>robust_record.py</code> and <code>robust_eval.py</code> wrap LeRobot's own entrypoints and monkeypatch the Feetech bus with eight retries per read/write, so a dropped packet no longer ends the episode.</li>
+      <li><b>VRAM-capped trainer.</b> On Windows the 1080&nbsp;Ti runs in WDDM mode, where <code>cudaMalloc</code> never fails — it silently pages to system RAM and a 0.4&nbsp;s step becomes minutes. <code>robust_train.py</code> sets <code>torch.cuda.set_per_process_memory_fraction(0.5)</code> before handing off to <code>lerobot-train</code>; that is the only guard that works there.</li>
+      <li><b>Camera-dropout resilience.</b> Mid-episode the wrist camera's cable came loose; LeRobot released torque and the arm dropped. Now a camera that drops serves its last good frame and reconnects in the background for up to 20&nbsp;s, torque is held on any failure, and the recovery park is a self-pacing "leashed" move — the stock park had aborted on following error from a horizontal reach. Verified on the arm: 112° away → home in 22&nbsp;s.</li>
+      <li><b>Two smaller ones.</b> A hook that resets a stale sweep speed cap (<code>Goal_Velocity</code> 300 ≈ 26°/s) the moment the follower connects — LeRobot never resets it and it cost the first recording attempt — and a ramp that leashes the follower to the leader's live pose at session start so nothing snaps.</li>
+    </ul>
+    <p><b>Next.</b> Re-evaluate the same checkpoint with temporal ensembling (<code>n_action_steps=1</code>, <code>temporal_ensemble_coeff=0.01</code>) — the ACT paper's own smoother, no retraining, now the eval default. Then Run 2: 20–30 episodes with blocks laid out singly on the mat instead of heaped, one grasp approach, before a DAgger-style correction round from the policy's own failure states. Still on the list from the plan: angle the overhead camera to ~45° so tower height is visible, give the wrist camera its own USB root port, and print flat gripper pads.</p>
+  </div>
+</section>
+
+<!-- 06 timeline -->
 <section class="sec" id="timeline">
-  <div class="sec__head"><span class="sec__num">05 / log</span><h2 class="sec__title">Timeline</h2></div>
+  <div class="sec__head"><span class="sec__num">06 / log</span><h2 class="sec__title">Timeline</h2></div>
   <ul class="tl">
     <li><b>4 Sep 2026</b>Both arms built, COM ports pinned, leader and follower calibrated.</li>
     <li><b>8 Sep</b>Printer status wired into the dashboard.</li>
     <li><b>10 Sep</b>Camera routing and the swap fix; live-map project started; dashboard reachable remotely.</li>
     <li><b>11 Sep</b>First 41-keyframe dataset from a real sweep — the ground truth for offline development.</li>
     <li><b>13 Sep</b>Reconstruction engine v2 (MoGe-2 depth + plane rectification + best-view surfel fusion). First ghost-free scene from one sweep.</li>
-    <li><b>14 Sep</b>CUDA training verified end to end on a synthetic dataset; Jenga task chosen and specced.</li>
+    <li><b>14 Sep</b>CUDA training verified end to end on a synthetic dataset; Jenga task chosen and specced. Two stacking attempts lost to a stale servo speed cap and the UI stop button — 0 episodes kept.</li>
+    <li><b>15 Sep</b>First real data: 10 episodes of tower-stacking, 64,672 frames. ACT trained 30k steps in 3 h. Checkpoint on the arm the same evening: places a handed block, can't pick from the pile. Camera-dropout and torque-hold fixes written after the wrist cable came loose mid-episode.</li>
   </ul>
 </section>
 

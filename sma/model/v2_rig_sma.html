@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SMA v2 Rig — Actuation Sim</title>
+<style>
+  :root{--bg:#0d1117;--panel:#161b22;--line:#30363d;--ink:#c9d1d9;--mut:#8b949e;--accent:#3399e0;
+        --hot:#ff6b3d;--cool:#58a6ff;--str:#7ee787;--cur:#e3b341}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);
+    font-family:ui-sans-serif,system-ui,Segoe UI,Roboto,sans-serif;overflow:hidden}
+  #c{position:fixed;inset:0}
+  .panel{position:fixed;background:#161b22e0;border:1px solid var(--line);border-radius:10px;backdrop-filter:blur(6px)}
+  #top{top:12px;left:12px;padding:12px 14px;width:min(90vw,320px)}
+  #top h1{margin:0;font-size:15px}#top p{margin:3px 0 8px;font-size:12px;color:var(--mut)}
+  .lab{margin:10px 0 5px;font-size:10.5px;color:var(--mut);text-transform:uppercase;letter-spacing:.05em}
+  #pins,.seg{display:flex;flex-wrap:wrap;gap:6px}
+  .pin,.sg{font:600 11px/1 inherit;color:var(--ink);background:#21262d;border:1px solid var(--line);
+    border-radius:7px;padding:7px 8px;cursor:pointer;text-align:left}
+  .pin small{display:block;color:var(--mut);font-weight:400;margin-top:3px}
+  .pin.on,.sg.on{border-color:var(--accent);background:#1f3350;color:#fff}
+  .fld{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:6px 0;font-size:12px}
+  .fld input[type=range]{flex:1}.fld b{min-width:64px;text-align:right;color:#fff;font-variant-numeric:tabular-nums}
+  #fire{width:100%;margin-top:10px;padding:9px;border-radius:8px;border:1px solid #b8531f;
+    background:#c2410c;color:#fff;font:700 13px inherit;cursor:pointer}
+  #fire:disabled{opacity:.5;cursor:default}
+  #ds{margin-top:10px;font-size:11px;color:var(--mut);line-height:1.5}
+  #read{position:fixed;top:12px;right:12px;padding:10px 12px;font-size:12px;min-width:150px}
+  #read .r{display:flex;justify-content:space-between;gap:14px;margin:2px 0}
+  #read b{color:#fff;font-variant-numeric:tabular-nums}
+  #plotWrap{bottom:12px;left:50%;transform:translateX(-50%);padding:8px 10px 6px;width:min(94vw,720px)}
+  #plot{width:100%;height:130px;display:block}
+  #plleg{display:flex;gap:14px;font-size:11px;color:var(--mut);margin-top:2px;flex-wrap:wrap}
+  .dot{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:4px;vertical-align:middle}
+  input[type=range]{accent-color:var(--accent)}
+  #err{position:fixed;left:12px;bottom:170px;color:#ff7b72;font-size:12px}
+</style>
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+ "three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
+</script>
+</head>
+<body>
+<canvas id="c"></canvas>
+
+<div id="top" class="panel">
+  <h1>SMA v2 Rig — Actuation Sim</h1>
+  <p>Fire a current pulse → Joule heating → austenite transformation → wire contracts → ankle moves; then it cools & relaxes.</p>
+  <p><a href="../index.html#model" style="font-size:12px;color:#00ff88;text-decoration:none;pointer-events:auto">&larr; back to the SMA research page</a></p>
+  <div class="lab">Carriage pin (free length)</div>
+  <div id="pins"></div>
+  <div class="lab">Actuate</div>
+  <div class="seg" id="side">
+    <div class="sg on" data-side="toe">Toe → plantarflex</div>
+    <div class="sg" data-side="heel">Heel → dorsiflex</div>
+  </div>
+  <div class="lab">Pulse</div>
+  <div class="fld">Current <input id="cur" type="range" min="0.2" max="2.5" step="0.05" value="1.0"><b id="curv">1.00 A</b></div>
+  <div class="fld">Duration <input id="dur" type="range" min="0.2" max="6" step="0.1" value="1.5"><b id="durv">1.5 s</b></div>
+  <div class="fld">Ambient <input id="amb" type="range" min="10" max="40" step="1" value="25"><b id="ambv">25 °C</b></div>
+  <button id="fire">▶ Fire pulse</button>
+  <div id="ds"></div>
+</div>
+
+<div id="read" class="panel">
+  <div class="r"><span>t</span><b id="r_t">0.0 s</b></div>
+  <div class="r"><span>Current</span><b id="r_i">0.00 A</b></div>
+  <div class="r"><span>Temp</span><b id="r_T">25 °C</b></div>
+  <div class="r"><span>Austenite</span><b id="r_x">0 %</b></div>
+  <div class="r"><span>Contraction</span><b id="r_s">0.00 %</b></div>
+  <div class="r"><span>Ankle</span><b id="r_a">0.0°</b></div>
+</div>
+
+<div id="plotWrap" class="panel">
+  <canvas id="plot"></canvas>
+  <div id="pleg">
+    <span><span class="dot" style="background:var(--cur)"></span>current</span>
+    <span><span class="dot" style="background:var(--hot)"></span>temperature</span>
+    <span><span class="dot" style="background:var(--str)"></span>contraction</span>
+    <span><span class="dot" style="background:var(--cool)"></span>ankle</span>
+  </div>
+</div>
+<div id="err"></div>
+
+<script type="module">
+import * as THREE from 'three';
+import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {Line2} from 'three/addons/lines/Line2.js';
+import {LineMaterial} from 'three/addons/lines/LineMaterial.js';
+import {LineGeometry} from 'three/addons/lines/LineGeometry.js';
+const D=180/Math.PI, $=id=>document.getElementById(id), fail=m=>{$('err').textContent=m;console.error(m);};
+
+/* ---------------- SMA datasheet params (Flexinol-style, 90°C wire) ---------------- */
+const SMA={ d:0.25e-3, rho:6450, c:450, rhoE:80e-8, h:120, Lh:24000,
+            Mf:62, Ms:72, As:88, Af:98, epsL:0.05, Tamb:25 };
+$('ds').innerHTML=`<b style="color:#c9d1d9">Datasheet</b> · Ø${(SMA.d*1e3).toFixed(2)}mm NiTi · `+
+  `A<sub>s</sub>${SMA.As} A<sub>f</sub>${SMA.Af} · M<sub>s</sub>${SMA.Ms} M<sub>f</sub>${SMA.Mf} °C · `+
+  `ε<sub>L</sub>${(SMA.epsL*100).toFixed(1)}% · h${SMA.h} W/m²K`;
+
+function simulate(I,tP,freeLen,Tamb){
+  const A=Math.PI*SMA.d*SMA.d/4, R=SMA.rhoE*freeLen/A, mass=SMA.rho*A*freeLen, Asurf=Math.PI*SMA.d*freeLen;
+  const dt=0.01, horizon=Math.min(90, tP+35);
+  let T=Tamb, xa=0, t=0, px=0, out=[], n=0;
+  while(t<=horizon){
+    const cur=(t<=tP)?I:0;
+    const Q=cur*cur*R, conv=SMA.h*Asurf*(T-Tamb);
+    const heating=(Q-conv)>0;
+    const faH=0.5*(1-Math.cos(Math.PI*clg((T-SMA.As)/(SMA.Af-SMA.As))));
+    const faC=0.5*(1-Math.cos(Math.PI*clg((T-SMA.Mf)/(SMA.Ms-SMA.Mf))));
+    xa = heating ? Math.min(1,Math.max(xa,faH)) : Math.max(0,Math.min(xa,faC));
+    const dxa=xa-px; px=xa;
+    T += (Q*dt - conv*dt - mass*SMA.Lh*dxa)/(mass*SMA.c);
+    if(n% 5===0) out.push({t:+t.toFixed(2), I:cur, T, xa, s:SMA.epsL*xa});
+    t+=dt; n++;
+  }
+  return out;
+}
+function clg(x){return Math.max(0,Math.min(1,x));}
+
+/* ---------------- three.js scene ---------------- */
+const renderer=new THREE.WebGLRenderer({canvas:$('c'),antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+const scene=new THREE.Scene();scene.background=new THREE.Color(0x0d1117);
+const camera=new THREE.PerspectiveCamera(45,1,0.001,100);
+const controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=true;
+scene.add(new THREE.HemisphereLight(0xffffff,0x30343c,1.1));
+const dl=new THREE.DirectionalLight(0xffffff,1.4);dl.position.set(0.4,1,0.6);scene.add(dl);
+const root=new THREE.Group();root.rotation.x=-Math.PI/2;scene.add(root);
+const footGrp=new THREE.Group(),staticGrp=new THREE.Group(),tendonGrp=new THREE.Group();
+root.add(footGrp,staticGrp,tendonGrp);
+const loader=new GLTFLoader(), loadGLB=u=>new Promise((r,j)=>loader.load(u,g=>r(g.scene),undefined,j));
+
+let anim=null,lines=[],baseCols=[],settings=[],curPin=-1;
+const AXIS=new THREE.Vector3(0,-1,0), PIVOT=new THREE.Vector3(), HOT=new THREE.Color(0xff5a2a);
+let side='toe', sideFrames={toe:[],heel:[]};
+
+function fit(){const b=new THREE.Box3().setFromObject(root);if(b.isEmpty())return;
+  const c=b.getCenter(new THREE.Vector3()),s=b.getSize(new THREE.Vector3()),r=Math.max(s.x,s.y,s.z);
+  controls.target.copy(c);camera.position.copy(c).add(new THREE.Vector3(r*1.1,r*0.5,r*1.4));
+  camera.near=r/100;camera.far=r*20;camera.updateProjectionMatrix();}
+function buildTendons(){tendonGrp.clear();lines=[];baseCols=[];
+  const res=new THREE.Vector2(innerWidth,innerHeight);
+  anim.frames[0].tendons.forEach((pts,ti)=>{const g=new LineGeometry();g.setPositions(pts.flat());
+    const col=anim.tendonColors[ti]||[.9,.2,.1];const base=new THREE.Color(col[0],col[1],col[2]);
+    const mat=new LineMaterial({color:base.getHex(),linewidth:3});mat.resolution.copy(res);
+    const ln=new Line2(g,mat);tendonGrp.add(ln);lines.push(ln);baseCols.push(base);});}
+function indexSides(){sideFrames={toe:[],heel:[]};
+  anim.frames.forEach((f,i)=>sideFrames[f.side].push({s:f.strain,i}));
+  sideFrames.toe.sort((a,b)=>a.s-b.s);sideFrames.heel.sort((a,b)=>a.s-b.s);}
+function frameFor(sd,strain){const arr=sideFrames[sd];let best=arr[0];
+  for(const e of arr){if(Math.abs(e.s-strain)<Math.abs(best.s-strain))best=e;}return anim.frames[best.i];}
+
+function render(strain,heatFrac){
+  const fr=frameFor(side,Math.min(strain,SMA.epsL));
+  footGrp.quaternion.setFromAxisAngle(AXIS,fr.ankle);
+  for(let t=0;t<lines.length;t++){
+    lines[t].geometry.setPositions(fr.tendons[t].flat());
+    const activeSide = (side==='toe')? t<12 : t>=12;   // toe tendons 0-11, heel 12-23
+    const hf = activeSide? clg(heatFrac):0;
+    lines[t].material.color.copy(baseCols[t]).lerp(HOT,hf*0.9);
+    lines[t].material.linewidth=3+2.5*hf;
+  }
+  return fr.ankle;
+}
+
+/* ---------------- variant loading ---------------- */
+async function loadVariant(k){if(k===curPin)return;curPin=k;const st=settings[k];
+  document.querySelectorAll('.pin').forEach((b,j)=>b.classList.toggle('on',j===k));
+  try{staticGrp.clear();staticGrp.add(await loadGLB(st.static));
+    anim=await(await fetch(st.anim)).json();
+    PIVOT.fromArray(anim.pivot);footGrp.position.copy(PIVOT);AXIS.fromArray(anim.axis);
+    buildTendons();indexSides();fit();render(0,0);
+  }catch(e){fail('load: '+e.message);}}
+
+async function init(){try{
+  const man=await(await fetch('manifest.json')).json();settings=man.settings;
+  footGrp.add(await loadGLB(man.foot));
+  const pins=$('pins');settings.forEach((s,k)=>{const b=document.createElement('button');
+    b.className='pin';b.innerHTML=`${s.freeLen_mm}mm<small>pin ${s.pinY_in}″</small>`;
+    b.onclick=()=>loadVariant(k);pins.appendChild(b);});
+  await loadVariant(1);
+}catch(e){fail('init (serve over http): '+e.message);}}
+
+/* ---------------- controls ---------------- */
+const cur=$('cur'),dur=$('dur'),amb=$('amb');
+const upd=()=>{$('curv').textContent=(+cur.value).toFixed(2)+' A';
+  $('durv').textContent=(+dur.value).toFixed(1)+' s';$('ambv').textContent=(+amb.value)+' °C';};
+[cur,dur,amb].forEach(el=>el.oninput=upd);upd();
+document.querySelectorAll('.sg').forEach(el=>el.onclick=()=>{
+  document.querySelectorAll('.sg').forEach(s=>s.classList.remove('on'));el.classList.add('on');
+  side=el.dataset.side;render(0,0);});
+
+let trace=null, playT=0, playing=false;
+$('fire').onclick=()=>{
+  if(!anim)return;
+  const st=settings[curPin], freeLen=st.freeLen_mm/1000;
+  trace=simulate(+cur.value,+dur.value,freeLen,+amb.value);
+  drawPlot();playT=0;playing=true;$('fire').disabled=true;
+};
+
+/* ---------------- plot ---------------- */
+const pc=$('plot'), px=pc.getContext('2d');
+function drawPlot(cursor){
+  const w=pc.width,h=pc.height;px.clearRect(0,0,w,h);
+  if(!trace)return;
+  const tmax=trace[trace.length-1].t;
+  const Tmax=Math.max(...trace.map(p=>p.T)), Tmin=SMA.Tamb;
+  const Imax=Math.max(...trace.map(p=>p.I),0.1);
+  const amax=Math.max(...trace.map(p=>Math.abs(p.a||0)),1);
+  const X=t=>t/tmax*(w-8)+4;
+  const norm=(v,lo,hi)=>h-6-((v-lo)/(hi-lo||1))*(h-12);
+  const draw=(key,lo,hi,color)=>{px.strokeStyle=color;px.lineWidth=1.6;px.beginPath();
+    trace.forEach((p,i)=>{const y=norm(p[key],lo,hi);i?px.lineTo(X(p.t),y):px.moveTo(X(p.t),y);});px.stroke();};
+  // transition band (As-Af) on temp scale
+  px.fillStyle='#8b949e22';const y1=norm(SMA.As,Tmin,Tmax),y2=norm(SMA.Af,Tmin,Tmax);
+  px.fillRect(0,y2,w,y1-y2);
+  draw('I',0,Imax,getCSS('--cur'));
+  draw('T',Tmin,Tmax,getCSS('--hot'));
+  draw('s',0,SMA.epsL,getCSS('--str'));
+  draw('a',0,amax,getCSS('--cool'));
+  if(cursor!=null){px.strokeStyle='#ffffff88';px.lineWidth=1;px.beginPath();
+    px.moveTo(X(cursor),0);px.lineTo(X(cursor),h);px.stroke();}
+}
+function getCSS(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim();}
+
+function resize(){const w=innerWidth,h=innerHeight;renderer.setSize(w,h);
+  camera.aspect=w/h;camera.updateProjectionMatrix();lines.forEach(l=>l.material.resolution.set(w,h));
+  pc.width=pc.clientWidth*devicePixelRatio;pc.height=pc.clientHeight*devicePixelRatio;drawPlot();}
+addEventListener('resize',resize);
+
+let last=performance.now();
+function loop(now){const dt=(now-last)/1000;last=now;
+  if(playing&&trace){
+    playT+=dt;const tmax=trace[trace.length-1].t;
+    if(playT>tmax){playT=tmax;playing=false;$('fire').disabled=false;}
+    // sample trace at playT
+    let p=trace[0];for(const q of trace){if(q.t<=playT)p=q;else break;}
+    const hf=clg((p.T-SMA.Tamb)/(SMA.Af-SMA.Tamb));
+    const ang=render(p.s,hf); p.a=Math.abs(ang*D);
+    $('r_t').textContent=playT.toFixed(1)+' s';$('r_i').textContent=p.I.toFixed(2)+' A';
+    $('r_T').textContent=p.T.toFixed(0)+' °C';$('r_x').textContent=(p.xa*100).toFixed(0)+' %';
+    $('r_s').textContent=(p.s*100).toFixed(2)+' %';$('r_a').textContent=(ang*D).toFixed(1)+'°';
+    drawPlot(playT);
+  }
+  controls.update();renderer.render(scene,camera);requestAnimationFrame(loop);}
+requestAnimationFrame(loop);resize();init();
+</script>
+</body>
+</html>

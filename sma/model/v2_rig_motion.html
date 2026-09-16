@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SMA v2 Rig - Motion</title>
+<style>
+  :root{--bg:#0d1117;--panel:#161b22;--line:#30363d;--ink:#c9d1d9;--mut:#8b949e;--accent:#3399e0}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);
+    font-family:ui-sans-serif,system-ui,Segoe UI,Roboto,sans-serif;overflow:hidden}
+  #c{position:fixed;inset:0}
+  .panel{position:fixed;background:#161b22cc;border:1px solid var(--line);
+    border-radius:10px;backdrop-filter:blur(6px)}
+  #top{top:12px;left:12px;padding:12px 14px;max-width:min(92vw,350px)}
+  #top h1{margin:0;font-size:15px}#top p{margin:3px 0 0;font-size:12px;color:var(--mut)}
+  #stats{margin-top:8px;display:grid;grid-template-columns:auto auto;gap:2px 12px;font-size:12px}
+  #stats b{color:#fff;font-variant-numeric:tabular-nums}
+  .lab{margin:11px 0 5px;font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.04em}
+  #pins{display:flex;flex-wrap:wrap;gap:6px}
+  .pin{font:600 11px/1 inherit;color:var(--ink);background:#21262d;border:1px solid var(--line);
+    border-radius:7px;padding:7px 8px;cursor:pointer;text-align:left}
+  .pin small{display:block;color:var(--mut);font-weight:400;margin-top:3px}
+  .pin.on{border-color:var(--accent);background:#1f3350;color:#fff}
+  #strainRow{display:flex;align-items:center;gap:9px;margin-top:4px}
+  #strain{flex:1}
+  #ctl{bottom:12px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:12px;padding:10px 14px}
+  #play{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:#21262d;color:#fff;cursor:pointer;font-size:14px}
+  #scrub{width:min(52vw,420px)}#ph{font-size:12px;color:var(--mut);min-width:78px}
+  .legend{position:fixed;right:12px;bottom:12px;font-size:11px;padding:8px 10px}
+  .legend .r{display:flex;align-items:center;gap:7px;margin:2px 0}
+  .sw{width:11px;height:11px;border-radius:3px;display:inline-block}
+  #err{position:fixed;inset:auto 12px 64px 12px;color:#ff7b72;font-size:12px}
+  input[type=range]{accent-color:var(--accent)}
+</style>
+<script type="importmap">
+{"imports":{
+  "three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+}}
+</script>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="top" class="panel">
+  <h1>SMA v2 Wire Rig — Motion</h1>
+  <p>Slide the carriage to a pin, set SMA strain — watch the ankle ROM. Drag orbit / scroll zoom.</p>
+  <p><a href="../index.html#model" style="font-size:12px;color:#00ff88;text-decoration:none;pointer-events:auto">&larr; back to the SMA research page</a></p>
+  <div id="stats">
+    <span>Free length</span><b id="s_free">–</b>
+    <span>Ankle</span><b id="s_ang">–</b>
+    <span>ROM @ strain</span><b id="s_rom">–</b>
+    <span>Phase</span><b id="s_ph">–</b>
+  </div>
+  <div class="lab">Carriage pin (free length)</div>
+  <div id="pins"></div>
+  <div class="lab">SMA strain <span id="s_strain" style="color:#fff"></span></div>
+  <div id="strainRow"><input id="strain" type="range"><span id="strEnds" style="font-size:11px;color:var(--mut)"></span></div>
+</div>
+<div id="ctl" class="panel">
+  <button id="play">⏸</button>
+  <input id="scrub" type="range" min="0" max="1" value="0" step="1">
+  <span id="ph">frame</span>
+</div>
+<div class="legend panel">
+  <div class="r"><span class="sw" style="background:#3399e0"></span>carriage (slides on pins)</div>
+  <div class="r"><span class="sw" style="background:#dadde3"></span>side pin (active) / foot·frame</div>
+  <div class="r"><span class="sw" style="background:#bf9933"></span>bolt posts</div>
+  <div class="r"><span class="sw" style="background:#e63319"></span>toe SMA (plantarflex)</div>
+  <div class="r"><span class="sw" style="background:#e68019"></span>heel SMA (dorsiflex)</div>
+  <div class="r"><span class="sw" style="background:#fff2a8"></span>contracting (heated)</div>
+</div>
+<div id="err"></div>
+
+<script type="module">
+import * as THREE from 'three';
+import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {Line2} from 'three/addons/lines/Line2.js';
+import {LineMaterial} from 'three/addons/lines/LineMaterial.js';
+import {LineGeometry} from 'three/addons/lines/LineGeometry.js';
+const D=180/Math.PI, errEl=document.getElementById('err'), fail=m=>{errEl.textContent=m;console.error(m);};
+
+const renderer=new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+const scene=new THREE.Scene();scene.background=new THREE.Color(0x0d1117);
+const camera=new THREE.PerspectiveCamera(45,1,0.001,100);
+const controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=true;
+scene.add(new THREE.HemisphereLight(0xffffff,0x30343c,1.15));
+const dl=new THREE.DirectionalLight(0xffffff,1.4);dl.position.set(0.4,1,0.6);scene.add(dl);
+const dl2=new THREE.DirectionalLight(0xbcd4ff,0.5);dl2.position.set(-0.5,0.3,-0.4);scene.add(dl2);
+
+const root=new THREE.Group();root.rotation.x=-Math.PI/2;scene.add(root);
+const footGrp=new THREE.Group(),staticGrp=new THREE.Group(),tendonGrp=new THREE.Group();
+root.add(footGrp,staticGrp,tendonGrp);
+const loader=new GLTFLoader();
+const loadGLB=u=>new Promise((res,rej)=>loader.load(u,g=>res(g.scene),undefined,rej));
+
+let anim=null,lines=[],baseCols=[],playing=true,playIdx=0,tAcc=0,playlist=[];
+let curStrain=0.05, settings=[], curPin=-1, specMin=0.04, specMax=0.06;
+const AXIS=new THREE.Vector3(0,-1,0), PIVOT=new THREE.Vector3(), HOT=new THREE.Color(0xfff2a8);
+const scrub=document.getElementById('scrub'), playBtn=document.getElementById('play'),
+      strainSl=document.getElementById('strain');
+
+function fitCamera(){
+  const box=new THREE.Box3().setFromObject(root);if(box.isEmpty())return;
+  const c=box.getCenter(new THREE.Vector3()),s=box.getSize(new THREE.Vector3()),r=Math.max(s.x,s.y,s.z);
+  controls.target.copy(c);camera.position.copy(c).add(new THREE.Vector3(r*1.1,r*0.5,r*1.4));
+  camera.near=r/100;camera.far=r*20;camera.updateProjectionMatrix();
+}
+function buildTendons(){
+  tendonGrp.clear();lines=[];baseCols=[];
+  const res=new THREE.Vector2(innerWidth,innerHeight);
+  anim.frames[0].tendons.forEach((pts,ti)=>{
+    const geo=new LineGeometry();geo.setPositions(pts.flat());
+    const col=anim.tendonColors[ti]||[0.9,0.2,0.1];
+    const base=new THREE.Color(col[0],col[1],col[2]);
+    const mat=new LineMaterial({color:base.getHex(),linewidth:3});mat.resolution.copy(res);
+    const ln=new Line2(geo,mat);ln.computeLineDistances();
+    tendonGrp.add(ln);lines.push(ln);baseCols.push(base);
+  });
+}
+function buildPlaylist(){
+  const cap=curStrain+1e-6;playlist=[];
+  anim.frames.forEach((fr,i)=>{if(fr.strain<=cap)playlist.push(i);});
+  if(!playlist.length)playlist=[0];
+  scrub.max=playlist.length-1;if(playIdx>=playlist.length)playIdx=0;
+  // ROM at this strain cap
+  let mn=0,mx=0;playlist.forEach(i=>{const a=anim.frames[i].ankle;mn=Math.min(mn,a);mx=Math.max(mx,a);});
+  document.getElementById('s_rom').textContent=`${((mx-mn)*D).toFixed(1)}°  (P ${(-mn*D).toFixed(0)}° / D ${(mx*D).toFixed(0)}°)`;
+}
+function applyFrame(p){
+  const fr=anim.frames[playlist[p]];
+  footGrp.quaternion.setFromAxisAngle(AXIS,fr.ankle);
+  for(let t=0;t<lines.length;t++){
+    lines[t].geometry.setPositions(fr.tendons[t].flat());
+    const a=fr.act[t]||0;
+    lines[t].material.color.copy(baseCols[t]).lerp(HOT,Math.min(a,1)*0.85);
+    lines[t].material.linewidth=3+2.5*a;
+  }
+  const deg=fr.ankle*D;
+  document.getElementById('s_ang').textContent=`${deg>=0?'+':''}${deg.toFixed(1)}°`;
+  document.getElementById('s_ph').textContent=(fr.side==='toe'?'plantarflex':'dorsiflex')+` · ${(fr.strain*100).toFixed(1)}%`;
+  scrub.value=p;
+}
+async function loadVariant(k){
+  if(k===curPin)return;curPin=k;const st=settings[k];
+  document.querySelectorAll('.pin').forEach((b,j)=>b.classList.toggle('on',j===k));
+  try{
+    staticGrp.clear();staticGrp.add(await loadGLB(st.static));
+    anim=await(await fetch(st.anim)).json();
+    PIVOT.fromArray(anim.pivot);footGrp.position.copy(PIVOT);AXIS.fromArray(anim.axis);
+    buildTendons();buildPlaylist();fitCamera();applyFrame(playIdx);
+    document.getElementById('s_free').textContent=`${st.freeLen_mm} mm (pin ${st.pinY_in}″)`;
+  }catch(e){fail('load failed: '+e.message);}
+}
+async function init(){
+  try{
+    const man=await(await fetch('manifest.json')).json();
+    settings=man.settings;specMin=man.specMin;specMax=man.specMax;
+    footGrp.add(await loadGLB(man.foot));
+    const pins=document.getElementById('pins');
+    settings.forEach((s,k)=>{const b=document.createElement('button');b.className='pin';
+      b.innerHTML=`${s.freeLen_mm}mm<small>ROM ${s.rom4_deg}–${s.rom6_deg}°</small>`;
+      b.onclick=()=>loadVariant(k);pins.appendChild(b);});
+    strainSl.min=specMin;strainSl.max=specMax;strainSl.step=0.0025;
+    curStrain=Math.min(Math.max(0.05,specMin),specMax);strainSl.value=curStrain;
+    document.getElementById('strEnds').textContent=`${(specMin*100)|0}–${(specMax*100)|0}%`;
+    document.getElementById('s_strain').textContent=`${(curStrain*100).toFixed(1)}%`;
+    await loadVariant(Math.min(1,settings.length-1));
+  }catch(e){fail('init failed (serve the folder over http): '+e.message);}
+}
+strainSl.oninput=()=>{curStrain=+strainSl.value;
+  document.getElementById('s_strain').textContent=`${(curStrain*100).toFixed(1)}%`;
+  if(anim){buildPlaylist();applyFrame(Math.min(playIdx,playlist.length-1));}};
+playBtn.onclick=()=>{playing=!playing;playBtn.textContent=playing?'⏸':'▶';};
+scrub.oninput=()=>{playing=false;playBtn.textContent='▶';playIdx=+scrub.value;if(anim)applyFrame(playIdx);};
+function resize(){const w=innerWidth,h=innerHeight;renderer.setSize(w,h);
+  camera.aspect=w/h;camera.updateProjectionMatrix();lines.forEach(l=>l.material.resolution.set(w,h));}
+addEventListener('resize',resize);resize();
+let last=performance.now();
+function loop(now){const dt=(now-last)/1000;last=now;
+  if(playing&&anim){tAcc+=dt;while(tAcc>=anim.dt){tAcc-=anim.dt;playIdx=(playIdx+1)%playlist.length;applyFrame(playIdx);}}
+  controls.update();renderer.render(scene,camera);requestAnimationFrame(loop);}
+requestAnimationFrame(loop);init();
+</script>
+</body>
+</html>
