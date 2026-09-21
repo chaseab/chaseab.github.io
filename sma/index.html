@@ -102,15 +102,15 @@
   <div class="section__head"><h2>Firing has to fail safe</h2><span class="line"></span></div>
   <div class="split">
   <div class="reading reading--wide">
-    <p>An SMA wire that's left energized keeps heating until it's damaged, so the firing loop can't depend on a laptop that might crash or drop USB mid-pulse. <b>The Arduino Mega has the final say on the gates</b>, not the PC:</p>
+    <p>An SMA wire that's left energized keeps heating until it's damaged, so the firing loop can't depend on a laptop that might crash or drop USB mid-pulse. <b>The Arduino Uno has the final say on the gates</b>, not the PC:</p>
     <ul>
-      <li>The Mega enforces a hard <code>MAX_ON</code> ceiling on every pulse and a host heartbeat. If it stops hearing from the PC for ~100&nbsp;ms, it drops all gates. The PC only ever sends commands; the Mega decides whether to carry them out.</li>
-      <li>The serial link is one-way: a fire-and-forget ASCII protocol at 115200 baud, PC&nbsp;→ Mega only. The firing loop never blocks waiting on the host, and the timing base stays untouched.</li>
+      <li>The Uno enforces a hard <code>MAX_ON</code> ceiling on every pulse and a host heartbeat. If it stops hearing from the PC for ~100&nbsp;ms, it drops all gates. The PC only ever sends commands; the Uno decides whether to carry them out.</li>
+      <li>The serial link is one-way: a fire-and-forget ASCII protocol at 115200 baud, PC&nbsp;→ Uno only. The firing loop never blocks waiting on the host, and the timing base stays untouched.</li>
       <li>Each section of the array is driven by its own low-side MOSFET. A small command set (<code>START</code>/<code>STOP</code>, <code>PERIOD</code>, <code>ONTIME</code>, per-section enable, and a manual <code>FIRE</code> for calibration) sets the rotation.</li>
     </ul>
     <div class="spec spec--2">
-      <div><b>Controller</b><span>Arduino Mega</span><small><code>MAX_ON</code> ceiling + host heartbeat fail-safe</small></div>
-      <div><b>Link</b><span>One-way USB serial</span><small>115200 baud ASCII, PC → Mega only, non-blocking</small></div>
+      <div><b>Controller</b><span>Arduino Uno</span><small><code>MAX_ON</code> ceiling + host heartbeat fail-safe</small></div>
+      <div><b>Link</b><span>One-way USB serial</span><small>115200 baud ASCII, PC → Uno only, non-blocking</small></div>
       <div><b>Drive</b><span>Per-section low-side MOSFETs</span><small>Sections fire in a scheduled rotation</small></div>
       <div><b>Command set</b><span>START / STOP / PERIOD / ONTIME / FIRE</span><small>Sets the schedule; <code>FIRE</code> is manual, for calibration</small></div>
     </div>
@@ -130,7 +130,8 @@
       <li>A resistor across each MOSFET pushes a few&nbsp;mA of continuous sense current, far too little to heat the wire, so there's a live resistance reading on every wire <em>between</em> firings, not just during them.</li>
       <li>R = V / I per wire. Normalized against a per-wire calibration it becomes a recovery fraction, <code>ρ = (R_start − R_min) / (R_0 − R_min)</code>, that says how far each wire has cooled. That's the signal the scheduler will fire on.</li>
       <li>Rather than trust a fixed on-time table, the plan is to fire a hot, short pulse and cut it the moment resistance says the wire has finished contracting, per wire and per pulse. Fixed-duration open-loop firing is the baseline to beat.</li>
-      <li>A multichannel differential DAQ samples the wire voltages, a shunt gives true current (so R and energy don't assume a fixed current), and the firing sync line lands on a spare DAQ input. Every fire event sits on the same timebase as the resistance trace it caused, with no clock-stitching.</li>
+      <li>A multichannel differential DAQ samples the wire voltages, a shunt per wire gives true current (so R and energy don't assume a fixed current), and the firing sync line lands on a spare DAQ input. Every fire event sits on the same timebase as the resistance trace it caused, with no clock-stitching.</li>
+      <li>The channel count is the catch. Each wire needs two readings, its own voltage for resistance and its shunt's voltage for current, and each side has seven of them, plus a sense line for the shunts and one for the rail voltage. That's 16 for one side, which is the whole DAQ. 74HC4053 analog muxes switch the DAQ between the two sides fast enough to read both.</li>
     </ul>
     <ol class="flow">
       <li><b>bias</b> sense current</li>
