@@ -10,7 +10,7 @@
 <meta property="og:description" content="Undergraduate research on parallel Flexinol wire arrays as low-cost linear actuators for biomimetic robotics: the idea, the rig, and what is not claimed yet." />
 <meta property="og:image" content="https://chasebonfiglio.com/assets/imgs/sma-cover.webp" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="description" content="Undergraduate research in Dr. Scott Kennedy's Intelligent Materials for Biomimetic Sensors and Actuators Lab at Virginia Tech's Hume Center: a drive-and-sensing rig for parallel Flexinol wire arrays as low-cost linear actuators, with resistance self-sensing on one DAQ timebase. One channel proven end to end; the 12-wire array is wired and about to run." />
+<meta name="description" content="Undergraduate research in Dr. Scott Kennedy's lab at Virginia Tech's Hume Center: a drive-and-sensing rig for parallel Flexinol wire arrays as low-cost linear actuators, with resistance self-sensing on one DAQ timebase. One channel proven end to end; the 12-wire array is wired and about to run." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,600,700&display=swap" rel="stylesheet">
@@ -51,8 +51,8 @@
   <p class="eyebrow">Undergraduate research · Kennedy Lab, Hume Center · since November 2025 · <span class="pill">in progress</span></p>
   <h1>Firing shape-memory-alloy wires in parallel to get more frequency out of them</h1>
   <p class="lead">
-    Since November 2025 I've been an undergraduate researcher in <b>Dr. Scott Kennedy's Intelligent Materials for
-    Biomimetic Sensors and Actuators Lab</b> at Virginia Tech's Hume Center. The lab works toward shape-memory-alloy
+    Since November 2025 I've been an undergraduate researcher in <b>Dr. Scott Kennedy's lab</b> at Virginia Tech's
+    Hume Center. The lab works toward shape-memory-alloy
     (SMA) actuated robotic ankle systems; my piece is the rig that <b>drives and characterizes parallel Flexinol wire
     arrays</b>: the firing electronics, the resistance self-sensing, and the data path. One wire has been proven
     end to end; the full 12-wire array is wired up and about to run for the first time.
@@ -79,7 +79,7 @@
 
 <section class="section" id="idea">
   <div class="section__head"><h2>Run many thin wires in parallel, and fire them in turns</h2><span class="line"></span></div>
-  <div class="split">
+  <div>
   <div class="reading">
     <p>A shape-memory-alloy wire contracts when it's heated (in practice, when you pass current through it) and relaxes as it cools. That makes it a linear actuator with no motor, no gearbox, and almost no volume, which is what you want in a biomimetic joint that needs a muscle-like pull. The problem is speed. A wire can only contract again once it has cooled, and cooling is slow.</p>
     <p>The approach I'm testing works around the cooling limit:</p>
@@ -90,10 +90,6 @@
       <li>A wire's resistance changes as it recovers thermally, so watching resistance tells the controller which wires are ready to fire again, with no extra sensors on the actuator itself.</li>
     </ul>
   </div>
-    <figure class="panel panel--tall">
-      <img src="assets/mujoco-v2.webp" width="400" height="590" alt="MuJoCo render of the v2 test rig: a tall rectangular frame, a blue post block near the top, a bundle of wires running straight down from it to a carriage with a row of posts, all on a flat base plate." loading="lazy" />
-      <figcaption><span class="figure__title">The rig, modeled</span><span class="figure__text">The v2 rig in MuJoCo. We built the model to simulate the rig and check the wire routing: the wire array runs from the post block down to the loaded carriage inside the frame. <a href="#model">How the model works ↓</a></span></figcaption>
-    </figure>
   </div>
 </section>
 
@@ -164,6 +160,10 @@
       <li>The carriage slides to one of four side-pin holes, and that sets the free wire length. <code>gen_variants.py</code> rebuilds the rig at each pin, then sweeps SMA strain kinematically: for each commanded strain it solves the ankle angle where the active side's tendon length equals <code>L₀·(1&nbsp;−&nbsp;s)</code>, and exports the geometry and motion for the viewers below.</li>
     </ul>
   </div>
+  <div class="reading">
+    <p>The current renders and range-of-motion numbers came from a model with the bottom pins in the wrong place, so they're pulled until the corrected model is in. The viewers and the ROM table come back with it.</p>
+  </div>
+  <!-- PARKED until the corrected MuJoCo model (fixed pin placement) lands from the laptop:
     <div class="table-wrap table-wrap--hint">
     <table class="data">
       <thead><tr><th>Carriage pin</th><th>Free length</th><th>Ankle ROM @ 4&nbsp;% strain</th><th>Ankle ROM @ 6&nbsp;% strain</th></tr></thead>
@@ -191,6 +191,7 @@
     <div><b>Source</b><span><a href="model/v2_rig.xml">v2_rig.xml</a> · <a href="model/build_v2_rig.py">build_v2_rig.py</a> · <a href="model/gen_variants.py">gen_variants.py</a></span><small>MJCF plus the two scripts that generate it and the variants</small></div>
   </div>
   <div class="note"><b>These numbers are kinematics, not measurements.</b> The ROM table comes from tendon length vs. ankle angle and the datasheet strain range, and the actuation sim runs on datasheet thermal constants. Measured numbers from the real wire replace them as the array runs.</div>
+  -->
 </section>
 
 <section class="section" id="timeline">
