@@ -1,7 +1,7 @@
 # Build v2_rig.xml from assembly-positioned STL exports (V2/stlv2/).
 # Assembly coords: inches, Y = vertical (up), pivot axis along Z (depth).
 #
-# Mechanism (rig photos + user):
+# Mechanism:
 #   - "Base plate" part is the FOOT: pivots about the dot2in pin at center.
 #   - M4 bolts stand in the foot's edge hole rows and stick out of the
 #     slidable carriage (height_adjust) hole column.
