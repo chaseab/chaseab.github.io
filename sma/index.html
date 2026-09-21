@@ -10,7 +10,7 @@
 <meta property="og:description" content="Undergraduate research on parallel Flexinol wire arrays as low-cost linear actuators for biomimetic robotics: the idea, the rig, and what is not claimed yet." />
 <meta property="og:image" content="https://chasebonfiglio.com/assets/imgs/sma-cover.webp" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="description" content="Undergraduate research in Dr. Scott Kennedy's lab at Virginia Tech's Hume Center: a drive-and-sensing rig for parallel Flexinol wire arrays as low-cost linear actuators, with resistance self-sensing on one DAQ timebase. One channel proven end to end; the 12-wire array is wired and about to run." />
+<meta name="description" content="Undergraduate research in Dr. Scott Kennedy's Intelligent Materials for Biomimetic Sensors and Actuators Lab at Virginia Tech's Hume Center: a drive-and-sensing rig for parallel Flexinol wire arrays as low-cost linear actuators, with resistance self-sensing on one DAQ timebase. One channel proven end to end; the 12-wire array is wired and about to run." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,600,700&display=swap" rel="stylesheet">
@@ -18,6 +18,9 @@
 <style>
   /* SMA: the Flexinol wire. Deep red for text, coral for rules and tints. */
   :root { --accent: #81303a; --accent-soft: #ff8882; --accent-tint: rgba(255, 136, 130, .18); }
+  .sim__frame { display: block; width: 100%; aspect-ratio: 4 / 3; border: 0; background: #0d1117; }
+  .sim__open { display: none; margin: 20px 18px 4px; }
+  @media (max-width: 640px) { .sim__frame { display: none; } .sim__open { display: inline-block; } }
 </style>
 </head>
 <body>
@@ -51,8 +54,7 @@
   <p class="eyebrow">Undergraduate research · Kennedy Lab, Hume Center · since November 2025 · <span class="pill">in progress</span></p>
   <h1>Firing shape-memory-alloy wires in parallel to get more frequency out of them</h1>
   <p class="lead">
-    Since November 2025 I've been an undergraduate researcher in <b>Dr. Scott Kennedy's lab</b> at Virginia Tech's
-    Hume Center. The lab works toward shape-memory-alloy
+    Since November 2025 I've been an undergraduate researcher in <b>Dr. Scott Kennedy's Intelligent Materials for Biomimetic Sensors and Actuators Lab</b> at Virginia Tech's Hume Center. The lab works toward shape-memory-alloy
     (SMA) actuated robotic ankle systems; my piece is the rig that <b>drives and characterizes parallel Flexinol wire
     arrays</b>: the firing electronics, the resistance self-sensing, and the data path. One wire has been proven
     end to end; the full 12-wire array is wired up and about to run for the first time.
@@ -161,8 +163,13 @@
     </ul>
   </div>
   <div class="reading">
-    <p>The current renders and range-of-motion numbers came from a model with the bottom pins in the wrong place, so they're pulled until the corrected model is in. The viewers and the ROM table come back with it.</p>
+    <p>The renders and the range-of-motion table came from a model with the bottom pins in the wrong place, so they're pulled until the corrected model is in. The actuation sim still runs: pick a carriage pin and a side, set a current and a pulse length, and fire. It's a lumped thermal model, Joule heating → austenite fraction → contraction → ankle angle, on datasheet constants, with the traces drawn as it goes.</p>
   </div>
+  <figure class="panel sim">
+    <iframe class="sim__frame" src="model/v2_rig_sma.html" title="SMA v2 rig actuation sim: fire a current pulse and watch temperature, austenite fraction, contraction and ankle angle" loading="lazy" allow="fullscreen"></iframe>
+    <a class="btn sim__open" href="model/v2_rig_sma.html">Open the actuation sim ↗</a>
+    <figcaption><span class="figure__title">Fire a current pulse</span><span class="figure__text">Lumped thermal model of one side of the rig. Datasheet constants, not measured ones; the pin placement in the 3D view is the pre-fix model. <a href="model/v2_rig_sma.html">Open it full screen ↗</a></span></figcaption>
+  </figure>
   <!-- PARKED until the corrected MuJoCo model (fixed pin placement) lands from the laptop:
     <div class="table-wrap table-wrap--hint">
     <table class="data">
