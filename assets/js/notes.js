@@ -26,6 +26,7 @@
   .cbn-launch svg{width:22px;height:22px;fill:none;stroke:#fff;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
   .cbn-launch .cbn-badge{position:absolute;top:-6px;right:-6px;min-width:18px;height:18px;padding:0 5px;background:#ff8882;color:#1c2e4a;font-size:11px;font-weight:700;line-height:18px;text-align:center}
   .cbn{position:fixed;right:18px;bottom:18px;z-index:9001;width:min(380px,calc(100vw - 24px));height:min(560px,calc(100vh - 36px));display:flex;flex-direction:column;background:#fff;border:1px solid rgba(0,0,0,.2);box-shadow:0 12px 40px rgba(0,0,0,.22);font:15px/1.5 "Source Sans Pro",system-ui,sans-serif;color:#212529}
+  .cbn[hidden],.cbn-launch[hidden]{display:none}
   .cbn[data-mode="expanded"]{width:min(680px,calc(100vw - 24px));height:min(84vh,calc(100vh - 36px))}
   .cbn[data-mode="min"]{height:auto}
   .cbn[data-mode="min"] .cbn-body,.cbn[data-mode="min"] .cbn-compose,.cbn[data-mode="min"] .cbn-tabs{display:none}
