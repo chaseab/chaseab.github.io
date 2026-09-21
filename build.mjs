@@ -7,7 +7,7 @@ import { cpSync, rmSync, readdirSync, mkdirSync, readFileSync, statSync, unlinkS
 import { basename, join } from "node:path";
 
 const SKIP = new Set([
-  ".git", ".gitignore", ".netlify", "dist", "node_modules",
+  ".git", ".gitignore", ".claude", ".netlify", "dist", "node_modules",
   "build.mjs", "netlify.toml", "package.json", "package-lock.json", "gulpfile.js",
   "CMS-SETUP-GUIDE.md", "README.txt", "chase",
   "api", "contact-form-process.php",
