@@ -3,29 +3,40 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>OCHE — an autodart scoring rig · Chase Bonfiglio</title>
+<title>The A-Dartment — darts scored by cameras · Chase Bonfiglio</title>
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://chasebonfiglio.com/dart/" />
-<meta property="og:title" content="OCHE — an autodart scoring rig" />
-<meta property="og:description" content="Three cameras on a Raspberry Pi find where each dart landed and feed a 501 scoreboard. Vision and scoreboard built and tested; wiring them together is the last mile." />
+<meta property="og:title" content="The A-Dartment — darts scored by cameras" />
+<meta property="og:description" content="A camera-scored dartboard for the apartment, inspired by Autodarts. Three cameras on a Raspberry Pi find where each dart lands; a hand-drawn scoreboard keeps 501. Rig built, calibrating now." />
 <meta property="og:image" content="https://chasebonfiglio.com/assets/imgs/oche-cover.webp" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="description" content="Project log: a DIY autodart scoring rig — three cameras and computer vision to find where each dart lands, and a 501 scoreboard built on a replayable event log. Honest about what's built and what isn't wired up yet." />
+<meta name="description" content="A camera-scored dartboard for the apartment, inspired by Autodarts. Three cameras on a Raspberry Pi and OpenCV find where each dart lands; a hand-drawn React scoreboard keeps 501. Rig built and mounted, cameras being calibrated." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,600,700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/css/project.css">
 <style>
-  /* OCHE: the board. Dark green for text, board green for rules and tints. */
-  :root { --accent: #4f6a12; --accent-soft: #a3c14a; --accent-tint: rgba(163, 193, 74, .22); }
-  /* The pipeline strip borrows the board's alternating green / red segment wires as a thin top rule. */
-  .flow li { border-top: 3px solid var(--accent-soft); }
-  .flow li:nth-child(even) { border-top-color: var(--deep-red); }
+  /* The A-Dartment: dartboard green. Deep for text, a shade lighter for rules and tints. */
+  :root { --accent: #1f5a2e; --accent-soft: #2e7d3f; --accent-tint: rgba(46, 125, 63, .14); }
+  /* Header: title and lead centred; scoreboard and rig photo side by side at equal height below. */
+  .page-head { padding-top: 40px; text-align: center; }
+  .page-head .crumb { justify-content: center; }
+  .page-head h1 { max-width: none; }
+  .page-head h1::after { margin-left: auto; margin-right: auto; }
+  .page-head .lead { margin: 0 auto; }
+  .page-head .split { grid-template-columns: 16fr 7fr; gap: 24px; align-items: start; margin-top: 36px; text-align: left; }
+  .page-head .hero, .page-head .rig { margin: 0; }
+  .page-head .hero img { aspect-ratio: 16 / 9; object-fit: cover; }
+  .page-head .rig img { aspect-ratio: 7 / 9; object-fit: cover; object-position: 50% 30%; }
+  @media (max-width: 820px) {
+    .page-head .split { grid-template-columns: 1fr; }
+    .page-head .rig img { aspect-ratio: 4 / 5; }
+  }
 </style>
 </head>
 <body>
 
-<a class="skip-link" href="#scoreboard">Skip&nbsp;to&nbsp;the&nbsp;build&nbsp;↓</a>
+<a class="skip-link" href="#rig">Skip&nbsp;to&nbsp;the&nbsp;build&nbsp;↓</a>
 
 <nav class="site-nav" aria-label="site navigation">
   <div class="site-nav__inner">
@@ -48,171 +59,156 @@
   <nav class="crumb" aria-label="breadcrumb">
     <a href="../index.html">chasebonfiglio</a>
     <span>/</span><a href="../projects.html">projects</a>
-    <span>/</span><b>oche</b>
+    <span>/</span><b>the a-dartment</b>
   </nav>
 
-  <p class="eyebrow">Project log · personal · <span class="pill">in progress</span></p>
-  <h1>Scoring darts with cameras instead of a pen</h1>
-  <p class="lead">
-    I'm building <b>OCHE</b>, a DIY autodart scoring rig: three cameras watch the
-    board, computer vision works out where each dart landed, and a scoreboard I
-    wrote keeps a <b>501 double-out</b> match. The two hard halves — the vision
-    pipeline and the scoreboard — are built and unit-tested on their own. What I
-    haven't done yet is wire a real dart in the board to a number on the screen.
-    This page is a lab notebook, not a product page: the parts that don't work
-    yet say so.
-  </p>
-
-  <div class="status" aria-label="project status">
-    <div class="status__bar"><span>Status</span><span class="pill">in progress</span></div>
-    <div class="status__grid">
-      <div class="status__item"><b>Vision pipeline</b><span class="pill pill--ok">Built &amp; unit-tested</span> — homography, detection, fusion, triangulation</div>
-      <div class="status__item"><b>Scoreboard (501)</b><span class="pill pill--ok">Working</span> — rules, checkout solver, live stats, replayable log</div>
-      <div class="status__item"><b>Simulator</b><span class="pill pill--ok">Working</span> — a scatter model stands in for the rig</div>
-      <div class="status__item"><b>Camera → score, end&nbsp;to&nbsp;end</b><span class="pill pill--todo">Not wired</span> — the rig-to-UI adapter is still a stub</div>
-      <div class="status__item"><b>Camera mount</b><span class="pill pill--ok">Built</span> — 3D-printed, four revisions</div>
-      <div class="status__item"><b>Mobile layout</b><span class="pill pill--todo">Not built</span> — laptop was the first target</div>
-    </div>
+  <div class="intro">
+      <p class="eyebrow">Personal project · <span class="pill">in progress</span></p>
+      <h1>The A-Dartment</h1>
+      <p class="lead">
+        A camera-scored dartboard for the apartment, inspired by
+        <a href="https://autodarts.io" rel="noopener">Autodarts</a>. Three cameras
+        on a Raspberry&nbsp;Pi find where each dart lands and a scoreboard I drew by
+        hand keeps <b>501</b>. The rig is built and mounted; I'm calibrating the
+        cameras now.
+      </p>
   </div>
-
-  <figure class="panel hero">
-    <img src="assets/scoreboard-hand.webp" width="1600" height="900" alt="The OCHE scoreboard mid-leg, drawn by hand: two green chalkboard columns headed Chase and Cade with the running 501 subtraction written in hand-drawn digits, a sketched dartboard in the centre with cross markers where the last three darts landed, and a strip below with each player’s best round and the head-to-head tallies." loading="eager" />
-    <figcaption><span class="figure__title">OCHE scoreboard · 501 double-out</span><span class="figure__text">The scoreboard mid-leg — here driven by the simulator, not a real board, since
-      the camera feed isn't wired yet. Player columns, three-dart averages, the
-      suggested finish, and the hit-map all read off the same replayable event log.</span></figcaption>
-  </figure>
+  <div class="split">
+    <figure class="panel hero">
+      <img src="assets/scoreboard-hand.webp" width="1600" height="900" alt="The A-Dartment scoreboard mid-leg: two green chalkboard columns headed Chase and Cade with the running 501 subtraction in hand-drawn digits, a sketched dartboard in the centre with cross markers where the last three darts landed, and a strip below with each player’s best round and the head-to-head tallies." loading="eager" />
+      <figcaption>The scoreboard mid-leg, running on the simulator.</figcaption>
+    </figure>
+    <figure class="panel rig">
+      <img src="assets/rig-upright.webp" width="610" height="850" alt="A TARGET dartboard on a black backing panel, with three OV9732 cameras on printed mounts clipped to the frame — top, lower-left and lower-right — and their cables running off-frame." loading="eager" />
+      <figcaption><span class="figure__title">The rig in place</span><span class="figure__text">Three cameras on their printed mounts — top, lower-left, lower-right — wired back to the Pi off-frame.</span></figcaption>
+    </figure>
+  </div>
 </header>
 
 <main class="container">
 
 <section class="section" id="rig">
-  <div class="section__head"><h2>What's on the bench</h2><span class="line"></span></div>
-  <div class="split">
-  <div class="reading reading--wide">
+  <div class="section__head"><h2>Rig</h2><span class="line"></span></div>
+  <div class="reading">
     <p>
-      The rig splits cleanly into two halves that I could build and test
-      separately: the <b>vision</b> that turns three camera frames into a hit
-      location, and the <b>scoreboard</b> that turns hit locations into a match.
-      They only ever meet through one small message type, which is why the
-      scoreboard already works without a single real camera attached.
+      Vision and scoreboard were built and tested separately and meet through
+      one message type, so the scoreboard was running before a camera was
+      attached.
     </p>
     <div class="spec">
       <div><b>Cameras</b><span>3 × OV9732</span><small>1280×720 @ 30&nbsp;fps MJPG on a powered USB hub · addressed by <code>/dev/v4l/by-path</code>, exposure &amp; white-balance locked manual</small></div>
-      <div><b>Compute</b><span>Raspberry Pi&nbsp;4B · <code>dartpi</code></span><small>RPi&nbsp;OS Lite 64-bit; OpenCV + V4L2; the detection server runs as a <code>systemd</code> service with a tuning UI on the LAN</small></div>
+      <div><b>Compute</b><span>Raspberry Pi&nbsp;4B</span><small>RPi&nbsp;OS Lite 64-bit; OpenCV + V4L2; the detection server runs as a <code>systemd</code> service with a tuning UI on the LAN</small></div>
       <div><b>Board</b><span>WDF/BDO regulation</span><small>451&nbsp;mm face, 340&nbsp;mm playing surface; radii measured to the centre of the wire</small></div>
-      <div><b>Mount</b><span>Printed camera mount, v1 → v4</span><small>SolidWorks-designed, on-board and off-board variants; printed in PLA on a Bambu&nbsp;P1S</small></div>
+      <div><b>Mount</b><span>Printed camera mount, v1 → v4</span><small>SolidWorks, on-board and off-board variants; PLA on a Bambu&nbsp;P1S</small></div>
       <div><b>Scoreboard</b><span>TypeScript · React&nbsp;19 · Vite · Tailwind</span><small>Runs in a browser; no backend needed to keep score</small></div>
-      <div><b>Vision</b><span>Python · OpenCV</span><small>Calibration, detection and fusion, covered by <code>pytest</code> (8 modules)</small></div>
+      <div><b>Vision</b><span>Python · OpenCV · PyTorch</span><small>Calibration, detection, fusion and a learned tip detector; <code>pytest</code> across 8 modules</small></div>
     </div>
-  </div>
-    <figure class="panel panel--tall">
-      <img src="assets/rig-upright.webp" width="610" height="850" alt="A TARGET dartboard on a black backing panel, with three OV9732 cameras on printed mounts clipped to the frame — top, lower-left and lower-right — and their cables running off-frame." loading="lazy" />
-      <figcaption><span class="figure__title">The rig in place</span><span class="figure__text">The board on the wall with the three cameras on their printed mounts — top, lower-left, lower-right — wired back to the Pi off-frame.</span></figcaption>
-    </figure>
   </div>
 </section>
 
 <section class="section" id="vision">
-  <div class="section__head"><h2>Finding the dart</h2><span class="line"></span></div>
-  <div class="reading">
-    <p>The pipeline goes from raw frames to one coordinate in millimetres from the bullseye:</p>
-  </div>
-  <ol class="flow">
-    <li><b>capture</b> 3 views</li>
-    <li>per-camera <b>homography</b></li>
-    <li><b>detect</b> the tip</li>
-    <li><b>fuse / triangulate</b></li>
-    <li><b>(x, y) in mm</b></li>
-    <li><b>score</b> the segment</li>
-  </ol>
+  <div class="section__head"><h2>Vision</h2><span class="line"></span></div>
   <div class="reading">
     <p>
-      Each camera is calibrated in two steps: a checkerboard pass for its
-      intrinsics, then a homography that maps its view onto the board plane. A
-      dart is found by <b>frame differencing</b> — the server watches for the
-      spike a thrown dart makes and waits for the frame to settle — but only
-      inside the board region: every pixel is projected through the homography,
-      and anything past ~180&nbsp;mm (the rim, the background, a reaching hand)
-      is masked out. The per-camera detections become one point in millimetres,
-      and <code>coordToSegment</code> turns that into a score — the single
-      authority both the hardware and the simulator defer to.
+      Three frames in, one point out. Each camera undistorts its frame and maps
+      it onto the board plane through its calibration; a dart is found by
+      <b>frame differencing</b> inside the board region only — anything past
+      ~180&nbsp;mm (rim, background, a reaching hand) is masked out. The three
+      per-camera tips fuse into one (x,&nbsp;y) in millimetres from the bull, and
+      <code>coordToSegment</code> turns that into a score. The hardware and the
+      simulator both defer to that one function.
     </p>
     <p>
-      On the Pi, a browser tuning UI shows the guess plus the tip it found in
-      each camera; I confirm or correct it, every confirmation is logged as
-      labelled data, and the scored dart is folded into the background so the
-      next throw is detected incrementally. The pipeline carries eight
-      <code>pytest</code> modules — board, camera_config, detect, fusion,
-      homography, labels, pipeline and triangulate.
+      The detection server on the Pi serves a tuning UI: it shows its guess and
+      the tip it found in each camera, I confirm or correct it, and every
+      confirmation is saved as a labelled throw. The scored dart is folded into
+      the background so the next throw is detected incrementally.
     </p>
   </div>
 
   <figure class="panel">
-    <img src="assets/calibrate-tool-trim.webp" width="1186" height="612" alt="A browser calibration tool showing one camera's photo of the dartboard, with blue circle markers dropped on known points — the bull and the outer edges of the double ring at 20, 6, 3 and 11 — that it uses to solve the homography." loading="lazy" />
-    <figcaption><span class="figure__title">Calibration tool</span><span class="figure__text">The calibration tool I wrote: it shows one camera's view of the board and I click a handful of known points — the bull and the double-ring edges at 20, 3, 6 and 11 — and it solves that camera's homography onto the board plane.</span></figcaption>
+    <img src="assets/tip-labeller.webp" width="1600" height="610" alt="The tip-labelling tool: one camera’s frame of the board with a dart in the 14, a green crosshair on the tip where it enters the board, and a 4× zoom lens panel on the right showing the tip pixels under the cursor." loading="lazy" />
+    <figcaption><span class="figure__title">Tip labelling</span><span class="figure__text">Each recorded throw gets the tip clicked in all three camera views, with a 4× lens to land it on the pixel. Those labels train a ResNet-18 heatmap tip detector, exported to ONNX for the Pi, that will take over from raw differencing for cluttered throws.</span></figcaption>
+  </figure>
+</section>
+
+<section class="section" id="calibration">
+  <div class="section__head"><h2>Calibration</h2><span class="line"></span></div>
+  <div class="reading">
+    <p>
+      No checkerboard. The board’s own geometry is known exactly — twenty
+      sector wires and five ring radii — so each camera projects those curves
+      into its image, snaps every sample to the strongest edge along the curve
+      normal, and jointly least-squares fits lens distortion (k<sub>1</sub>,
+      k<sub>2</sub>) and the homography onto the board plane. A pure homography
+      can’t bend, so its residual on those points is the lens distortion.
+    </p>
+  </div>
+
+  <figure class="panel">
+    <img src="assets/calibration-fit.webp" width="1280" height="720" alt="One camera’s view of the dartboard with the fitted board model projected back onto it as dotted green lines that sit on top of the real ring and sector wires." loading="lazy" />
+    <figcaption><span class="figure__title">Fit check, cam0</span><span class="figure__text">The board model projected back through the fitted calibration. Green samples were used in the fit; they sit on the wires.</span></figcaption>
   </figure>
 
   <div class="table-wrap table-wrap--hint">
   <table class="data">
-    <thead><tr><th>What I measured</th><th>Result</th><th>What it means</th></tr></thead>
+    <thead><tr><th>Measured</th><th>Result</th><th>Meaning</th></tr></thead>
     <tbody>
-      <tr><td>Per-camera calibration reprojection error</td><td class="n">0.29 – 0.86&nbsp;mm</td><td>The three homographies land sub-millimetre, so the board-plane mapping is good enough to trust for scoring.</td></tr>
-      <tr><td>End-to-end hit-location error on real throws</td><td class="n">not yet measured</td><td>Needs the camera&nbsp;→&nbsp;score loop closed — this is the number that actually decides whether it can score a real match.</td></tr>
+      <tr><td>Calibration RMS, per camera</td><td class="n">0.46 / 0.71 / 0.56&nbsp;mm</td><td>Over ~1,200 snapped edge points each. Sub-millimetre on all three, so the board-plane mapping is good enough to score off.</td></tr>
+      <tr><td>End-to-end hit error on real throws</td><td class="n">not yet measured</td><td>The number that decides whether it can score a real match. Measured against hand-scored throws once the loop is closed.</td></tr>
     </tbody>
   </table>
   </div>
-
-  <div class="note"><b>Next</b> — close the loop and measure hit-location error against hand-scored throws. The calibration is sub-millimetre; the open question is what the full pipeline does on real darts.</div>
+  <div class="reading">
+    <p>
+      That’s the current stage: close the loop from camera to scoreboard and
+      measure hit error against hand-scored throws.
+    </p>
+  </div>
 </section>
 
 <section class="section" id="scoreboard">
-  <div class="section__head"><h2>Keeping the match</h2><span class="line"></span></div>
+  <div class="section__head"><h2>Scoreboard</h2><span class="line"></span></div>
   <div class="reading">
     <p>
-      The scoreboard is deliberately boring in one direction only:
-      <b>feed → events → reducer → state → render</b>. The UI never mutates match
-      state, so undo is just "drop the last dart and replay," and the whole match
-      is a log I can replay from the start.
+      One direction only: <b>feed → events → reducer → state → render</b>. The
+      UI never touches match state, so undo is “drop the last dart and replay”
+      and a whole match is a log I can replay from the start. 501 and double-out
+      rules are pure functions with no framework in them. The checkout is
+      computed by a finish-path solver instead of a 170-row table, and the
+      simulator aims with the same solver, so the suggested finish and the sim
+      can’t drift apart. The interface is drawn by hand and sliced into the
+      board, the digits and the names by a script, so it scales without going
+      blocky.
     </p>
-    <ul>
-      <li><b>The seam is one message type.</b> Everything upstream — a real camera or the simulator — converts into the same event, so nothing downstream knows or cares which produced the hit. That's why I could finish and test the scoreboard before the rig existed.</li>
-      <li><b>The checkout is computed, not tabulated.</b> The finish-path solver works out how to end a leg instead of shipping a 170-row lookup table — and the simulator aims with the <em>same</em> solver, so the suggested finish and the sim can't drift apart.</li>
-      <li><b>501 rules are pure.</b> Bust, double-out, legs and sets are plain functions with no framework in them — easy to test, easy to reason about.</li>
-      <li><b>The simulator throws with realistic scatter.</b> Three skill levels apply 9 / 15 / 26&nbsp;mm of Gaussian spread, which is what stands in for the camera feed today.</li>
-    </ul>
-  </div>
-  <figure class="panel">
-    <img src="assets/sketch-dashboard.webp" width="1400" height="1011" alt="The original pen-and-paper sketch the scoreboard is built from: two green chalkboard columns labelled Player 1 and Player 2, a hand-drawn dartboard between them, and a strip underneath for each player’s best round and the head-to-head tallies. The drawing is sliced into pieces and used directly as the interface." loading="lazy" />
-  </figure>
-</section>
-
-<section class="section" id="last-mile">
-  <div class="section__head"><h2>The last mile</h2><span class="line"></span></div>
-  <div class="reading">
-    <p>
-      Everything is staged for one integration and no more: the rig-to-scoreboard
-      adapter (<code>wsFeed</code>) is still a stub. The job is to normalise the
-      rig's WebSocket frames into the one event type the scoreboard already
-      speaks, then run a single real dart from board to screen. After that:
-    </p>
-    <ul>
-      <li>A <b>mobile / TV layout</b> — the scoreboard was built laptop-first.</li>
-      <li><b>Game modes beyond 501</b> — the rules are shaped so these are new files, not a rewrite.</li>
-    </ul>
-    <p><b>Where it is.</b> Both halves work and are unit-tested; the camera-to-score loop has not yet run as one system.</p>
   </div>
 </section>
 
-<section class="section" id="log">
-  <div class="section__head"><h2>Build log</h2><span class="line"></span></div>
+<section class="section" id="next">
+  <div class="section__head"><h2>Coming next</h2><span class="line"></span></div>
   <div class="reading">
     <p>
-      I didn't keep a dated commit log on this one. Where it stands as of
-      <b>14&nbsp;Sep&nbsp;2026</b>: the three cameras are calibrated
-      (sub-millimetre reprojection error), the Pi is recording and labelling real
-      throws through the tuning UI, and the scoreboard runs on the simulator feed.
-      The missing piece is the adapter that turns those recorded detections into
-      live scoreboard events.
+      <b>Live scoring.</b> Wire the rig’s detections into the scoreboard’s
+      event feed, measure hit error against hand-scored throws, then play real
+      matches on it. The learned tip detector goes onto the Pi in the same pass
+      (~50&nbsp;ms per frame at 640×360) for the throws differencing gets wrong —
+      a dart behind another dart, a hand still in frame.
+    </p>
+    <p>
+      <b>Practice mode.</b> The board calls a segment at random, you throw at
+      it, and you’re scored on how far the dart landed from the target rather
+      than what it happened to hit. Same event feed, different rules file.
+    </p>
+    <p>
+      <b>Player profiles.</b> Every dart from practice and real matches is saved
+      per player with where it landed and what it was aimed at. From that: a
+      map of where you actually land versus where you aim, which segments you hit
+      reliably, how you miss (short, wide, high), and strengths and weaknesses
+      tracked over time so practice mode can call the segments you’re worst at.
+    </p>
+    <p>
+      <b>Other games.</b> Cricket and around-the-clock. The rules are shaped so
+      each is a new file, not a rewrite.
     </p>
   </div>
 </section>
@@ -221,7 +217,7 @@
 
 <footer class="site-footer">
   <div class="container site-footer__inner">
-    <p class="site-footer__note">OCHE project log · Chase Bonfiglio · 2026</p>
+    <p class="site-footer__note">The A-Dartment · Chase Bonfiglio · 2026</p>
     <nav class="site-footer__links" aria-label="footer">
       <a href="../projects.html">← all projects</a>
       <a href="../index.html#contact">contact</a>
@@ -229,5 +225,6 @@
   </div>
 </footer>
 
+<script src="../assets/js/notes.js" defer></script>
 </body>
 </html>

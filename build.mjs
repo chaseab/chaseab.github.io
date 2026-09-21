@@ -12,7 +12,7 @@ const SKIP = new Set([
   "CMS-SETUP-GUIDE.md", "README.txt", "chase",
   "api", "contact-form-process.php",
   "project-admin.html", "project-template.html", "components.html", "arcagithree.html",
-  "scss",
+  "scss", "netlify",
 ]);
 const MEDIA = /\.(jpe?g|png|webp|gif|mp4|mov|pdf|svg)$/i;
 
