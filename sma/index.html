@@ -11,41 +11,46 @@
 <meta property="og:image" content="https://chasebonfiglio.com/assets/imgs/sma-cover.webp" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="description" content="Undergraduate research in Dr. Scott Kennedy's Intelligent Materials for Biomimetic Sensors and Actuators Lab at Virginia Tech's Hume Center: a drive-and-sensing rig for parallel Flexinol wire arrays as low-cost linear actuators, with resistance self-sensing and closed-loop firing. Method and instrumentation; results held for the paper." />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="style.css?v=2" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,600,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/project.css">
+<style>
+  /* SMA: the Flexinol wire. Deep red for text, coral for rules and tints. */
+  :root { --accent: #81303a; --accent-soft: #ff8882; --accent-tint: rgba(255, 136, 130, .18); }
+</style>
 </head>
 <body>
 
-<nav class="mininav" id="mininav" aria-label="site navigation">
-  <a class="mininav__brand" href="../index.html">Chase Bonfiglio</a>
-  <button class="mininav__toggle" id="nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="nav-menu">
-    <span></span><span></span><span></span>
-  </button>
-  <div class="mininav__menu" id="nav-menu">
-    <div class="mininav__links">
-      <a href="../index.html#home">Home</a>
-      <a href="../index.html#about">About</a>
-      <a href="../index.html#resume">Resume</a>
-      <a href="../projects.html">Projects</a>
-      <a href="../index.html#photography">Photography</a>
-      <a href="../index.html#contact">Contact</a>
-    </div>
-    <a href="#idea" class="mininav__cta">Skip&nbsp;to&nbsp;the&nbsp;idea&nbsp;↓</a>
+<a class="skip-link" href="#idea">Skip&nbsp;to&nbsp;the&nbsp;idea&nbsp;↓</a>
+
+<nav class="site-nav" aria-label="site navigation">
+  <div class="site-nav__inner">
+    <ul class="site-nav__links site-nav__links--left">
+      <li><a href="../index.html#home">Home</a></li>
+      <li><a href="../index.html#about">About</a></li>
+      <li><a href="../index.html#resume">Resume</a></li>
+    </ul>
+    <a class="site-nav__brand" href="../index.html">Chase Bonfiglio</a>
+    <ul class="site-nav__links site-nav__links--right">
+      <li class="site-nav__phone"><a href="../index.html#home">Home</a></li>
+      <li><a href="../projects.html" class="is-active">Projects</a></li>
+      <li class="site-nav__more"><a href="../index.html#photography">Photography</a></li>
+      <li><a href="../index.html#contact">Contact</a></li>
+    </ul>
   </div>
 </nav>
 
-<header class="entry wrap" id="top">
+<header class="page-head container" id="top">
   <nav class="crumb" aria-label="breadcrumb">
     <a href="../index.html">chasebonfiglio</a>
     <span>/</span><a href="../projects.html">projects</a>
     <span>/</span><b>sma-actuators</b>
   </nav>
 
-  <p class="kicker">Undergraduate research · Kennedy Lab, Hume Center · since November 2025 · <span class="live">in progress</span></p>
-  <h1 class="entry__title">Shape-memory-alloy wires as cheap, small linear actuators</h1>
-  <p class="entry__lead">
+  <p class="eyebrow">Undergraduate research · Kennedy Lab, Hume Center · since November 2025 · <span class="pill">in progress</span></p>
+  <h1>Shape-memory-alloy wires as cheap, small linear actuators</h1>
+  <p class="lead">
     Since November 2025 I've been an undergraduate researcher in <b>Dr. Scott Kennedy's Intelligent Materials for
     Biomimetic Sensors and Actuators Lab</b> at Virginia Tech's Hume Center. The lab works toward shape-memory-alloy
     (SMA) actuated robotic ankle systems; my piece is the rig that <b>drives and characterizes parallel Flexinol wire
@@ -54,29 +59,28 @@
   </p>
 
   <div class="status" aria-label="project status">
-    <div class="status__bar"><span class="label">Status · 14 Sep 2026</span><span class="label">in progress</span></div>
-    <div class="status__body">
-      <div class="status__item"><b>Rig &amp; drive</b><span class="wip">Single-channel bring-up</span> — firing electronics + instrumentation in place</div>
-      <div class="status__item"><b>Sensing &amp; DAQ</b><span class="ok">Working</span> — resistance self-sensing on a multichannel DAQ, live dashboard</div>
-      <div class="status__item"><b>Results</b><span class="todo">Held for the paper</span> — characterization runs in progress</div>
-      <div class="status__item"><b>Writing</b><span class="wip">Manuscript in preparation</span> — first author</div>
-      <div class="status__item"><b>Presented</b><span class="ok">VT Hume Colloquium, May 2026</span> — with Ethan Yueh and Christine Robinson</div>
+    <div class="status__bar"><span>Status · 14 Sep 2026</span><span class="pill">in progress</span></div>
+    <div class="status__grid">
+      <div class="status__item"><b>Rig &amp; drive</b><span class="pill pill--wip">Single-channel bring-up</span> — firing electronics + instrumentation in place</div>
+      <div class="status__item"><b>Sensing &amp; DAQ</b><span class="pill pill--ok">Working</span> — resistance self-sensing on a multichannel DAQ, live dashboard</div>
+      <div class="status__item"><b>Results</b><span class="pill pill--todo">Held for the paper</span> — characterization runs in progress</div>
+      <div class="status__item"><b>Writing</b><span class="pill pill--wip">Manuscript in preparation</span> — first author</div>
+      <div class="status__item"><b>Presented</b><span class="pill pill--ok">VT Hume Colloquium, May 2026</span> — with Ethan Yueh and Christine Robinson</div>
     </div>
   </div>
 
-  <figure class="hero panel">
-    <div class="panel__bar"><span class="label">The test rig</span><span class="tag">FLEXINOL</span></div>
+  <figure class="panel hero">
     <img src="assets/rig.webp" width="1300" height="868" alt="The Flexinol test rig on the lab bench: a white 3D-printed frame with a row of crimped electrical posts along the top bar, the wire routed down to a loaded carriage, breadboarded drive electronics on the left and a BK Precision bench supply on the right." />
-    <figcaption>The rig on the bench: a printed frame carries the crimped posts along its top bar and routes the wire down to the loaded carriage. Breadboards on the left hold the drive electronics; the bench supply on the right feeds it.</figcaption>
+    <figcaption><span class="figure__title">The test rig</span><span class="figure__text">The rig on the bench: a printed frame carries the crimped posts along its top bar and routes the wire down to the loaded carriage. Breadboards on the left hold the drive electronics; the bench supply on the right feeds it.</span></figcaption>
   </figure>
 </header>
 
-<main class="wrap">
+<main class="container">
 
-<section class="sec" id="idea">
-  <div class="sec__head"><span class="sec__num">01 / the idea</span><h2 class="sec__title">Run many thin wires in parallel, and fire them in turns</h2></div>
+<section class="section" id="idea">
+  <div class="section__head"><h2>Run many thin wires in parallel, and fire them in turns</h2><span class="line"></span></div>
   <div class="split">
-  <div class="sec__body">
+  <div class="reading">
     <p>A shape-memory-alloy wire contracts when it's heated (in practice, when you pass current through it) and relaxes as it cools. That makes it a linear actuator with no motor, no gearbox, and almost no volume, which is what you want in a biomimetic joint that needs a muscle-like pull. The problem is speed. A wire can only contract again once it has cooled, and cooling is slow.</p>
     <p>The approach I'm testing works around the cooling limit:</p>
     <ul>
@@ -87,24 +91,24 @@
     </ul>
   </div>
     <figure class="panel panel--tall">
-      <div class="panel__bar"><span class="label">The rig, modelled</span><span class="tag">MUJOCO</span></div>
       <img src="assets/mujoco-v2.webp" width="400" height="590" alt="MuJoCo render of the v2 test rig: a tall rectangular frame, a blue post block near the top, a bundle of wires running straight down from it to a carriage with a row of posts, all on a flat base plate." loading="lazy" />
-      <figcaption>The v2 rig in MuJoCo — I modelled it for the initial design and to simulate it before building: the wire array runs from the post block down to the loaded carriage inside the frame. <a href="#model">How the model works ↓</a></figcaption>
+      <figcaption><span class="figure__title">The rig, modelled</span><span class="figure__text">The v2 rig in MuJoCo — I modelled it for the initial design and to simulate it before building: the wire array runs from the post block down to the loaded carriage inside the frame. <a href="#model">How the model works ↓</a></span></figcaption>
     </figure>
   </div>
 </section>
 
-<section class="sec" id="model">
-  <div class="sec__head"><span class="sec__num">02 / the model</span><h2 class="sec__title">Simulate the rig before building it</h2></div>
-  <div class="sec__body sec__body--wide">
+<section class="section" id="model">
+  <div class="section__head"><h2>Simulate the rig before building it</h2><span class="line"></span></div>
+  <div class="reading">
     <p>Before the printed frame existed I built the v2 rig in <b>MuJoCo</b>, from the assembly STLs, to check that the wire routing would produce the ankle motion I wanted and to size the free wire length. The model is generated by a script rather than hand-placed, so a geometry change in CAD re-derives every bolt, turn-point and tendon path.</p>
     <ul>
       <li>The foot plate pivots on the ankle pin. M4 bolts stand in the foot's edge holes and in the slidable height-adjust carriage above it; one continuous wire per side zigzags foot bolt → under the saddle arc → carriage bolt → back down. The under-arc wrap on the swappable <b>R&nbsp;=&nbsp;25.4&nbsp;mm saddles</b> is what turns wire tension into ankle torque: the toe side pulls plantarflex, the heel side dorsiflex.</li>
       <li>Each side's zigzag is modelled as <b>12 independent spatial tendons</b> rather than one, since capstan friction at every bolt wrap stops the wire slipping. That way a MOSFET can heat its own post-pair section and the sim actuates per strand, the same as the drive on the bench. 24 tendons, 24 actuators, one hinge joint with a ±0.8&nbsp;rad stop.</li>
       <li>The carriage slides to one of four side-pin holes, and that sets the free wire length. <code>gen_variants.py</code> rebuilds the rig at each pin, then sweeps SMA strain kinematically: for each commanded strain it solves the ankle angle where the active side's tendon length equals <code>L₀·(1&nbsp;−&nbsp;s)</code>, and exports the geometry and motion for the viewers below.</li>
     </ul>
-    <div class="tablewrap">
-    <table class="meas">
+  </div>
+    <div class="table-wrap table-wrap--hint">
+    <table class="data">
       <thead><tr><th>Carriage pin</th><th>Free length</th><th>Ankle ROM @ 4&nbsp;% strain</th><th>Ankle ROM @ 6&nbsp;% strain</th></tr></thead>
       <tbody>
         <tr><td>7.4″</td><td class="n">178 mm</td><td><span class="n">63.7°</span> — 32.3° plantar / 31.5° dorsi</td><td><span class="n">91.7°</span> — hits the stop both ways</td></tr>
@@ -114,13 +118,13 @@
       </tbody>
     </table>
     </div>
+  <div class="reading">
     <p>Flexinol's datasheet recoverable strain is 4–6&nbsp;%. At 6&nbsp;% every pin setting saturates at the ±45.8° joint stop; at 4&nbsp;% only the longest free length gets there, and the shortest reaches two-thirds of it. That spread is why the carriage is adjustable.</p>
   </div>
 
   <figure class="panel">
-    <div class="panel__bar"><span class="label">v2 rig, strands routed</span><span class="tag">24 TENDONS</span></div>
     <img src="assets/mujoco-v2-strands.webp" width="1260" height="720" alt="Three MuJoCo views of the v2 rig: a side view showing the wire fanning from the foot bolts up to the carriage; an isometric view of the frame with the blue carriage block and twelve red and orange strands zigzagging down to the foot's bolt posts; and a close-up of the saddle arc with the strands wrapping under it." loading="lazy" />
-    <figcaption>Side, isometric and saddle close-up. Toe strands in red, heel strands in orange; the brass posts are the M4 bolts each turn wraps around.</figcaption>
+    <figcaption><span class="figure__title">v2 rig, strands routed</span><span class="figure__text">Side, isometric and saddle close-up. Toe strands in red, heel strands in orange; the brass posts are the M4 bolts each turn wraps around.</span></figcaption>
   </figure>
 
   <div class="spec">
@@ -132,10 +136,10 @@
   <div class="note"><b>These numbers are kinematics, not measurements.</b> The ROM table comes from tendon length vs. ankle angle and the datasheet strain range, and the actuation sim runs on datasheet thermal constants. The measured behaviour of the real wire is going in the paper.</div>
 </section>
 
-<section class="sec" id="drive">
-  <div class="sec__head"><span class="sec__num">03 / driving it</span><h2 class="sec__title">Firing has to fail safe</h2></div>
+<section class="section" id="drive">
+  <div class="section__head"><h2>Firing has to fail safe</h2><span class="line"></span></div>
   <div class="split">
-  <div class="sec__body sec__body--wide">
+  <div class="reading reading--wide">
     <p>An SMA wire that's left energized keeps heating until it's damaged, so the firing loop can't depend on a laptop that might crash or drop USB mid-pulse. <b>The Arduino Mega has the final say on the gates</b>, not the PC:</p>
     <ul>
       <li>The Mega enforces a hard <code>MAX_ON</code> ceiling on every pulse and a host heartbeat. If it stops hearing from the PC for ~100&nbsp;ms, it drops all gates. The PC only ever sends commands; the Mega decides whether to carry them out.</li>
@@ -150,16 +154,15 @@
     </div>
   </div>
     <figure class="panel">
-      <div class="panel__bar"><span class="label">On the bench</span><span class="tag">HARDWARE</span></div>
       <img src="assets/rig-upright.webp" width="718" height="570" alt="The test rig standing upright on the bench: a white printed frame with six crimped posts across the top, red leads running down the routed wire to the carriage at the bottom, breadboarded drive electronics to the left and a bench supply to the right." loading="lazy" />
-      <figcaption>The rig on the bench: crimped posts along the top bar, leads down to the carriage, the breadboarded drive on the left and the bench supply on the right.</figcaption>
+      <figcaption><span class="figure__title">On the bench</span><span class="figure__text">The rig on the bench: crimped posts along the top bar, leads down to the carriage, the breadboarded drive on the left and the bench supply on the right.</span></figcaption>
     </figure>
   </div>
 </section>
 
-<section class="sec" id="sensing">
-  <div class="sec__head"><span class="sec__num">04 / sensing it</span><h2 class="sec__title">Reading the wires</h2></div>
-  <div class="sec__body">
+<section class="section" id="sensing">
+  <div class="section__head"><h2>Reading the wires</h2><span class="line"></span></div>
+  <div class="reading">
     <p>The wire's resistance tracks the phase transformation as it heats and cools, so it works as its own sensor. I don't poll the Arduino for state at all. The DAQ watches the wires directly and everything is inferred from voltage:</p>
     <ul>
       <li>A resistor across each MOSFET pushes a few&nbsp;mA of continuous sense current, far too little to heat the wire, so there's a live resistance reading on every wire <em>between</em> firings, not just during them.</li>
@@ -167,7 +170,7 @@
       <li>Rather than trust a fixed on-time table, the plan is to fire a hot, short pulse and cut it the moment resistance says the wire has finished contracting, per wire and per pulse. Fixed-duration open-loop firing is the baseline to beat.</li>
       <li>A multichannel differential DAQ samples the wire voltages, a shunt gives true current (so R and energy don't assume a fixed current), and the firing sync line lands on a spare DAQ input. Every fire event sits on the same timebase as the resistance trace it caused, with no clock-stitching.</li>
     </ul>
-    <ol class="pipe">
+    <ol class="flow">
       <li><b>bias</b> sense current</li>
       <li><b>R = V/I</b></li>
       <li>readiness <b>ρ</b></li>
@@ -179,9 +182,9 @@
   <div class="note"><b>No results on this page.</b> No recruitment factor, actuation force, bandwidth, or efficiency numbers, and no closed- vs open-loop comparison. Those are the paper's. What's here is the method and the instrumentation.</div>
 </section>
 
-<section class="sec" id="timeline">
-  <div class="sec__head"><span class="sec__num">05 / log</span><h2 class="sec__title">Timeline</h2></div>
-  <ul class="tl">
+<section class="section" id="timeline">
+  <div class="section__head"><h2>Timeline</h2><span class="line"></span></div>
+  <ul class="timeline">
     <li><b>Nov 2025</b>Joined the lab as an undergraduate student researcher.</li>
     <li><b>May 2026</b>Presented the parallel-array work at the Virginia Tech Hume Colloquium alongside two lab-mates (Ethan Yueh, Christine Robinson); MITRE and MIT Lincoln Laboratory roundtables the same day.</li>
     <li><b>Sep 2026</b>Drive electronics + acquisition dashboard bring-up; first single-channel resistance runs logged end to end.</li>
@@ -191,26 +194,15 @@
 
 </main>
 
-<footer class="foot wrap">
-  <div class="row">
-    <span>Kennedy Lab research log · Chase Bonfiglio · 2026</span>
-    <a href="../projects.html">← all projects</a>
-    <a href="../index.html#contact">contact</a>
+<footer class="site-footer">
+  <div class="container site-footer__inner">
+    <p class="site-footer__note">Kennedy Lab research log · Chase Bonfiglio · 2026</p>
+    <nav class="site-footer__links" aria-label="footer">
+      <a href="../projects.html">← all projects</a>
+      <a href="../index.html#contact">contact</a>
+    </nav>
   </div>
 </footer>
 
-<script>
-  (function () {
-    var nav = document.getElementById('mininav'), btn = document.getElementById('nav-toggle');
-    if (!nav || !btn) return;
-    btn.addEventListener('click', function () {
-      var open = nav.classList.toggle('open');
-      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-    });
-    nav.querySelectorAll('.mininav__menu a').forEach(function (a) {
-      a.addEventListener('click', function () { nav.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); });
-    });
-  })();
-</script>
 </body>
 </html>

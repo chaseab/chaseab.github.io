@@ -11,41 +11,53 @@
 <meta property="og:image" content="https://chasebonfiglio.com/assets/imgs/avionics-cover.webp" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="description" content="MachWorks (Virginia Tech) avionics for the ICARUS test jet: leading the preliminary design of a camera-tracking system as project manager, then validating the servo harness against the jet's environment. Design and bench work — honest about what was built." />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="style.css?v=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,600,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/project.css">
+<style>
+  /* Avionics: navy on white, the engineering report. The failure-mode table is the centrepiece. */
+  :root { --accent: #1c2e4a; --accent-soft: #1c2e4a; --accent-tint: rgba(28, 46, 74, .10); }
+  table.table--report { min-width: 680px; }
+  table.table--report th, table.table--report td { border: 1px solid var(--border); }
+  table.table--report th { background: var(--navy); color: var(--white); border-color: var(--navy); }
+  table.table--report th:first-child, table.table--report td:first-child { width: 22%; }
+  table.table--report td:first-child { color: var(--navy); }
+  table.table--report td { line-height: 1.5; padding: 12px 14px; }
+  .table-wrap--report { border-color: var(--navy); border-width: 1px; border-top-width: 3px; }
+</style>
 </head>
 <body>
 
-<nav class="mininav" id="mininav" aria-label="site navigation">
-  <a class="mininav__brand" href="../index.html">Chase Bonfiglio</a>
-  <button class="mininav__toggle" id="nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="nav-menu">
-    <span></span><span></span><span></span>
-  </button>
-  <div class="mininav__menu" id="nav-menu">
-    <div class="mininav__links">
-      <a href="../index.html#home">Home</a>
-      <a href="../index.html#about">About</a>
-      <a href="../index.html#resume">Resume</a>
-      <a href="../projects.html">Projects</a>
-      <a href="../index.html#photography">Photography</a>
-      <a href="../index.html#contact">Contact</a>
-    </div>
-    <a href="#tracking" class="mininav__cta">Skip&nbsp;to&nbsp;the&nbsp;work&nbsp;↓</a>
+<a class="skip-link" href="#tracking">Skip&nbsp;to&nbsp;the&nbsp;work&nbsp;↓</a>
+
+<nav class="site-nav" aria-label="site navigation">
+  <div class="site-nav__inner">
+    <ul class="site-nav__links site-nav__links--left">
+      <li><a href="../index.html#home">Home</a></li>
+      <li><a href="../index.html#about">About</a></li>
+      <li><a href="../index.html#resume">Resume</a></li>
+    </ul>
+    <a class="site-nav__brand" href="../index.html">Chase Bonfiglio</a>
+    <ul class="site-nav__links site-nav__links--right">
+      <li class="site-nav__phone"><a href="../index.html#home">Home</a></li>
+      <li><a href="../projects.html" class="is-active">Projects</a></li>
+      <li class="site-nav__more"><a href="../index.html#photography">Photography</a></li>
+      <li><a href="../index.html#contact">Contact</a></li>
+    </ul>
   </div>
 </nav>
 
-<header class="entry wrap" id="top">
+<header class="page-head container" id="top">
   <nav class="crumb" aria-label="breadcrumb">
     <a href="../index.html">chasebonfiglio</a>
     <span>/</span><a href="../projects.html">projects</a>
     <span>/</span><b>machworks-avionics</b>
   </nav>
 
-  <p class="kicker">MachWorks · Virginia Tech · avionics · Nov 2025 → present</p>
-  <h1 class="entry__title">MachWorks avionics: designing the camera tracker, then hardening the servo harness</h1>
-  <p class="entry__lead">
+  <p class="eyebrow">MachWorks · Virginia Tech · avionics · Nov 2025 → present</p>
+  <h1>MachWorks avionics: designing the camera tracker, then hardening the servo harness</h1>
+  <p class="lead">
     <b>MachWorks</b> is Virginia Tech's high-performance aircraft team; its <b>ICARUS</b> program builds and flies a
     Mach&nbsp;0.3+ test jet at the Kentland Experimental Aerial Test Range. I worked the avionics — the electronics that
     keep the aircraft observable and controllable in flight — in two stages. First, as <b>project manager</b>, I led the
@@ -56,21 +68,21 @@
   </p>
 
   <div class="status" aria-label="project status">
-    <div class="status__bar"><span class="label">Status</span><span class="label">MachWorks · ICARUS</span></div>
-    <div class="status__body">
-      <div class="status__item"><b>Role</b><span class="ok">PM → avionics subteam</span> — led camera-tracking design, then servo validation</div>
-      <div class="status__item"><b>Camera tracking</b><span class="wip">Preliminary design (PDR)</span> — designed, not built to flight</div>
-      <div class="status__item"><b>Servo-harness validation</b><span class="wip">Bench stage</span> — FMEA + test benches; full-system test pending</div>
-      <div class="status__item"><b>Team</b><span class="ok">4 people</span> — I was PM; Kent&nbsp;Lam, Nick&nbsp;Marrero, Amogh&nbsp;Saunshimath</div>
+    <div class="status__bar"><span>Status</span><span>MachWorks · ICARUS</span></div>
+    <div class="status__grid">
+      <div class="status__item"><b>Role</b><span class="pill pill--ok">PM → avionics subteam</span> — led camera-tracking design, then servo validation</div>
+      <div class="status__item"><b>Camera tracking</b><span class="pill pill--wip">Preliminary design (PDR)</span> — designed, not built to flight</div>
+      <div class="status__item"><b>Servo-harness validation</b><span class="pill pill--wip">Bench stage</span> — FMEA + test benches; full-system test pending</div>
+      <div class="status__item"><b>Team</b><span class="pill pill--ok">4 people</span> — I was PM; Kent&nbsp;Lam, Nick&nbsp;Marrero, Amogh&nbsp;Saunshimath</div>
     </div>
   </div>
 </header>
 
-<main class="wrap">
+<main class="container">
 
-<section class="sec" id="mission">
-  <div class="sec__head"><span class="sec__num">01 / mission</span><h2 class="sec__title">What the avionics are for</h2></div>
-  <div class="sec__body">
+<section class="section" id="mission">
+  <div class="section__head"><h2>What the avionics are for</h2><span class="line"></span></div>
+  <div class="reading">
     <p>
       ICARUS is a fast, small test aircraft, and a fast aircraft is only useful if you can <em>see</em> it and
       <em>trust</em> it during a flight. The avionics I worked on cover both halves of that: a ground system that keeps a
@@ -81,9 +93,9 @@
   </div>
 </section>
 
-<section class="sec" id="tracking">
-  <div class="sec__head"><span class="sec__num">02 / camera tracking</span><h2 class="sec__title">Designed the tracker — as project manager</h2></div>
-  <div class="sec__body">
+<section class="section" id="tracking">
+  <div class="section__head"><h2>Designed the tracker — as project manager</h2><span class="line"></span></div>
+  <div class="reading">
     <p>
       The camera-tracking system autonomously points a camera at the aircraft throughout a mission: the ground station
       (or a small module on the aircraft) streams GPS, the system estimates where the aircraft is and will be, and a
@@ -119,9 +131,9 @@
   </div>
 </section>
 
-<section class="sec" id="servos">
-  <div class="sec__head"><span class="sec__num">03 / servo harness</span><h2 class="sec__title">Then: will the servos survive a jet?</h2></div>
-  <div class="sec__body">
+<section class="section" id="servos">
+  <div class="section__head"><h2>Then: will the servos survive a jet?</h2><span class="line"></span></div>
+  <div class="reading">
     <p>
       On the avionics subteam I took on the servo harness — the wiring and servos that move ICARUS's control surfaces.
       Next to a running engine that harness faces current surges, electrical noise, vibration and heat, and a control
@@ -129,8 +141,8 @@
       harness could fail, a bench test to provoke it and measure the margin.
     </p>
   </div>
-  <div class="tablewrap">
-  <table class="meas">
+  <div class="table-wrap table-wrap--report table-wrap--hint">
+  <table class="data table--report">
     <thead><tr><th>Failure mode</th><th>What provokes it</th><th>How I test it</th></tr></thead>
     <tbody>
       <tr><td>Brownout / voltage sag</td><td>Several control surfaces slewing at once, drawing peak current together</td><td>Adjustable-load bench; measure current at stall and near-stall on paired servos</td></tr>
@@ -144,9 +156,9 @@
   <div class="note"><b>Where it stands</b> — the FMEA and the test benches are designed and the first runs (EMI, brownout, torque) are underway; the full end-to-end servo-harness validation is still pending. What's real here is the test method and the initial benches, not a signed-off flight harness.</div>
 </section>
 
-<section class="sec" id="timeline">
-  <div class="sec__head"><span class="sec__num">04 / log</span><h2 class="sec__title">Timeline</h2></div>
-  <ul class="tl">
+<section class="section" id="timeline">
+  <div class="section__head"><h2>Timeline</h2><span class="line"></span></div>
+  <ul class="timeline">
     <li><b>Nov 2025</b>Delivered the Camera-Tracking Preliminary Design Report as project manager (gimbal + telemetry + ROS 2 estimation, with trade studies, V&amp;V plan, risk and budget).</li>
     <li><b>Early 2026</b>Moved onto the avionics subteam; built servo test benches (brownout, engine-EMI, torque) and started runs on the ICARUS servo harness.</li>
     <li><b>Ongoing</b>Full-system servo-harness validation; integrating with the rest of the avionics for a flight-ready harness.</li>
@@ -155,26 +167,15 @@
 
 </main>
 
-<footer class="foot wrap">
-  <div class="row">
-    <span>MachWorks avionics · Chase Bonfiglio · 2026</span>
-    <a href="../projects.html">← all projects</a>
-    <a href="../index.html#contact">contact</a>
+<footer class="site-footer">
+  <div class="container site-footer__inner">
+    <p class="site-footer__note">MachWorks avionics · Chase Bonfiglio · 2026</p>
+    <nav class="site-footer__links" aria-label="footer">
+      <a href="../projects.html">← all projects</a>
+      <a href="../index.html#contact">contact</a>
+    </nav>
   </div>
 </footer>
 
-<script>
-  (function () {
-    var nav = document.getElementById('mininav'), btn = document.getElementById('nav-toggle');
-    if (!nav || !btn) return;
-    btn.addEventListener('click', function () {
-      var open = nav.classList.toggle('open');
-      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-    });
-    nav.querySelectorAll('.mininav__menu a').forEach(function (a) {
-      a.addEventListener('click', function () { nav.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); });
-    });
-  })();
-</script>
 </body>
 </html>

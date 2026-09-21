@@ -11,41 +11,62 @@
 <meta property="og:image" content="https://chasebonfiglio.com/assets/imgs/so101-cover.webp" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="description" content="Project log: a leader/follower SO-101 arm pair, a browser dashboard with a digital twin and a live 3D map built from the wrist camera, and a first imitation-learning task (stacking Jenga blocks) — all on one Windows desktop with a GTX 1080 Ti." />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="style.css?v=3" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,600,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/project.css">
+<style>
+  /* SO-101: the dashboard. Dark cyan for text, the live-map splat cyan for rules and tints. */
+  :root { --accent: #1f7f86; --accent-soft: #47d8e0; --accent-tint: rgba(71, 216, 224, .18); }
+  /* project.css's later .panel margin zeroes .hero's top margin; restore the gap after the status card */
+  .page-head .panel.hero { margin-top: 40px; }
+  /* long code tokens (a torch call) must wrap on phones */
+  .reading code { white-space: normal; overflow-wrap: anywhere; }
+  /* the measurement table is the heart of the page: one cyan rule, nothing else */
+  .table-wrap--lab { border-top: 3px solid var(--accent-soft); border-radius: 0 0 6px 6px; }
+  /* five bench cells in one row; six run cells as two rows of three */
+  #rig .spec { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+  #firstrun .spec { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+  .figure__title .pill { margin-left: 8px; vertical-align: 1px; }
+  /* dataset frames (wrist | overhead pairs): first one full width, the rest side by side */
+  .frames { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 8px 0 32px; }
+  .frames .panel { margin: 0; }
+  .frames .panel:first-child { grid-column: span 2; }
+  @media (max-width: 820px) { .frames { grid-template-columns: 1fr; } .frames .panel:first-child { grid-column: auto; } }
+  @media (max-width: 640px) { #rig .spec, #firstrun .spec { grid-template-columns: 1fr; } }
+</style>
 </head>
 <body>
 
-<nav class="mininav" id="mininav" aria-label="site navigation">
-  <a class="mininav__brand" href="../index.html">Chase Bonfiglio</a>
-  <button class="mininav__toggle" id="nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="nav-menu">
-    <span></span><span></span><span></span>
-  </button>
-  <div class="mininav__menu" id="nav-menu">
-    <div class="mininav__links">
-      <a href="../index.html#home">Home</a>
-      <a href="../index.html#about">About</a>
-      <a href="../index.html#resume">Resume</a>
-      <a href="../projects.html">Projects</a>
-      <a href="../index.html#photography">Photography</a>
-      <a href="../index.html#contact">Contact</a>
-    </div>
-    <a href="#map" class="mininav__cta">Skip&nbsp;to&nbsp;the&nbsp;measurements&nbsp;↓</a>
+<a class="skip-link" href="#map">Skip&nbsp;to&nbsp;the&nbsp;measurements&nbsp;↓</a>
+
+<nav class="site-nav" aria-label="site navigation">
+  <div class="site-nav__inner">
+    <ul class="site-nav__links site-nav__links--left">
+      <li><a href="../index.html#home">Home</a></li>
+      <li><a href="../index.html#about">About</a></li>
+      <li><a href="../index.html#resume">Resume</a></li>
+    </ul>
+    <a class="site-nav__brand" href="../index.html">Chase Bonfiglio</a>
+    <ul class="site-nav__links site-nav__links--right">
+      <li class="site-nav__phone"><a href="../index.html#home">Home</a></li>
+      <li><a href="../projects.html" class="is-active">Projects</a></li>
+      <li class="site-nav__more"><a href="../index.html#photography">Photography</a></li>
+      <li><a href="../index.html#contact">Contact</a></li>
+    </ul>
   </div>
 </nav>
 
-<header class="entry wrap" id="top">
+<header class="page-head container" id="top">
   <nav class="crumb" aria-label="breadcrumb">
     <a href="../index.html">chasebonfiglio</a>
     <span>/</span><a href="../projects.html">projects</a>
     <span>/</span><b>so-101</b>
   </nav>
 
-  <p class="kicker">Project log · started September 2026 · <span class="live">in progress</span></p>
-  <h1 class="entry__title">An SO-101 arm, a dashboard, and a first imitation-learning task</h1>
-  <p class="entry__lead">
+  <p class="eyebrow">Project log · started September 2026 · <span class="pill">in progress</span></p>
+  <h1>An SO-101 arm, a dashboard, and a first imitation-learning task</h1>
+  <p class="lead">
     In September 2026 I built a pair of <b>SO-101 arms</b> — a leader I move by hand and a follower that mirrors it — to
     learn imitation learning on real hardware end to end: wiring and calibration, data collection, training a policy, and
     running it back on the arm. Everything runs on one Windows desktop with a GTX 1080 Ti. This page is a lab notebook,
@@ -53,27 +74,25 @@
   </p>
 
   <div class="status" aria-label="project status">
-    <div class="status__bar"><span class="label">Status · 16 Sep 2026</span><span class="label">updated as it changes</span></div>
-    <div class="status__body">
-      <div class="status__item"><b>Rig</b><span class="ok">Built &amp; calibrated</span> — leader + follower, two cameras</div>
-      <div class="status__item"><b>Dashboard</b><span class="ok">Working</span> — live feeds, digital twin, record / train / eval from the browser</div>
-      <div class="status__item"><b>Live 3D map</b><span class="wip">Working, accuracy in progress</span> — no markers, FK-anchored</div>
-      <div class="status__item"><b>First learned task</b><span class="wip">First policy on the arm</span> — 10 demos → ACT; places a handed block, can't pick from the pile yet</div>
+    <div class="status__bar"><span>Status · 16 Sep 2026</span><span class="pill">in progress</span></div>
+    <div class="status__grid">
+      <div class="status__item"><b>Rig</b><span class="pill pill--ok">Built &amp; calibrated</span> — leader + follower, two cameras</div>
+      <div class="status__item"><b>Dashboard</b><span class="pill pill--ok">Working</span> — live feeds, digital twin, record / train / eval from the browser</div>
+      <div class="status__item"><b>Live 3D map</b><span class="pill pill--wip">Working, accuracy in progress</span> — no markers, FK-anchored</div>
+      <div class="status__item"><b>First learned task</b><span class="pill pill--wip">First policy on the arm</span> — 10 demos → ACT; places a handed block, can't pick from the pile yet</div>
     </div>
   </div>
 
-  <figure class="hero panel">
-    <div class="panel__bar"><span class="label">The bench</span><span class="tag">SEP 2026</span></div>
+  <figure class="panel hero">
     <img src="assets/bench.webp" width="1500" height="1002" alt="The bench: leader arm on the left, follower arm on the right with its green overhead-camera tower between them, a pile of Jenga blocks in front, and the dashboard on the monitor behind." />
-    <figcaption>Leader (left), follower (right) and the overhead-camera tower between them, with the dashboard on the monitor behind. The Jenga blocks are the first task.</figcaption>
+    <figcaption><span class="figure__title">The bench</span><span class="figure__text">Leader (left), follower (right) and the overhead-camera tower between them, with the dashboard on the monitor behind. The Jenga blocks are the first task.</span></figcaption>
   </figure>
 </header>
 
-<main class="wrap">
+<main class="container">
 
-<!-- 01 rig -->
-<section class="sec" id="rig">
-  <div class="sec__head"><span class="sec__num">01 / rig</span><h2 class="sec__title">What's on the bench</h2></div>
+<section class="section" id="rig">
+  <div class="section__head"><h2>What's on the bench</h2><span class="line"></span></div>
   <div class="spec">
     <div><b>Arms</b><span>2 × SO-101, 6 joints each</span><small>Leader: STS3215 7.4&nbsp;V servos · Follower: STS3215 12&nbsp;V servos</small></div>
     <div><b>Cameras</b><span>2 × Innomaker U20CAM</span><small>Overhead on the official tower mount, one on the wrist · MJPG 1280×960</small></div>
@@ -82,7 +101,7 @@
     <div><b>Parts</b><span>Printed on a Bambu P1S</span><small>Structural parts printed at home; a separate printer dashboard watches the jobs</small></div>
   </div>
 
-  <div class="sec__body">
+  <div class="reading">
     <p>Most of the first week went into making the stock LeRobot setup behave on Windows. The things that actually cost time:</p>
     <ul>
       <li><b>Serial ports.</b> Bluetooth had claimed COM3–COM6 and Windows gave the two identical CH343 servo boards duplicate names. I pinned each board's port number to its USB serial in the registry; they now survive replugging.</li>
@@ -93,34 +112,29 @@
   </div>
 </section>
 
-<!-- 02 dashboard -->
-<section class="sec" id="dashboard">
-  <div class="sec__head"><span class="sec__num">02 / dashboard</span><h2 class="sec__title">One page to run the rig from</h2></div>
-  <div class="split">
-    <div class="sec__body">
-      <p>I wanted to see the arm, the cameras, and the training runs in one place, from any device, without a terminal open. The dashboard is a Python server on the desktop and a Three.js page:</p>
-      <ul>
-        <li>Live overhead and wrist feeds, with a swap button because Windows re-enumerates the two identical cameras in a different order after any USB disturbance.</li>
-        <li>A <b>virtual twin</b> of the follower driven from the URDF and the servo telemetry (8&nbsp;Hz), standing on the 3D map from the next section.</li>
-        <li>Calibrate, teleop, record, and train from the browser. The training panel builds the LeRobot record/train commands and validates them by parsing them with LeRobot's own config classes before anything runs.</li>
-      </ul>
-    </div>
-    <figure class="panel">
-      <div class="panel__bar"><span class="label">SO-101 dashboard</span><span class="tag">LIVE</span></div>
-      <img src="assets/dashboard.webp" width="1568" height="747" alt="The dashboard: overhead camera on the left, a 3D virtual twin of the arm over a reconstructed map of the bench in the middle, wrist camera on the right, and six joint telemetry readouts along the bottom." loading="lazy" />
-      <figcaption>Overhead camera, the follower's digital twin standing on the 3D map it built of the bench, the wrist camera, and joint telemetry at 8&nbsp;Hz.</figcaption>
-    </figure>
+<section class="section" id="dashboard">
+  <div class="section__head"><h2>One page to run the rig from</h2><span class="line"></span></div>
+  <div class="reading">
+    <p>I wanted to see the arm, the cameras, and the training runs in one place, from any device, without a terminal open. The dashboard is a Python server on the desktop and a Three.js page:</p>
+    <ul>
+      <li>Live overhead and wrist feeds, with a swap button because Windows re-enumerates the two identical cameras in a different order after any USB disturbance.</li>
+      <li>A <b>virtual twin</b> of the follower driven from the URDF and the servo telemetry (8&nbsp;Hz), standing on the 3D map from the next section.</li>
+      <li>Calibrate, teleop, record, and train from the browser. The training panel builds the LeRobot record/train commands and validates them by parsing them with LeRobot's own config classes before anything runs.</li>
+    </ul>
   </div>
+  <figure class="panel">
+    <img src="assets/dashboard.webp" width="1568" height="747" alt="The dashboard: overhead camera on the left, a 3D virtual twin of the arm over a reconstructed map of the bench in the middle, wrist camera on the right, and six joint telemetry readouts along the bottom." loading="lazy" />
+    <figcaption><span class="figure__title">SO-101 dashboard</span><span class="figure__text">Overhead camera, the follower's digital twin standing on the 3D map it built of the bench, the wrist camera, and joint telemetry at 8&nbsp;Hz.</span></figcaption>
+  </figure>
 </section>
 
-<!-- 03 map -->
-<section class="sec" id="map">
-  <div class="sec__head"><span class="sec__num">03 / live 3D map</span><h2 class="sec__title">Mapping the bench from the wrist camera</h2></div>
+<section class="section" id="map">
+  <div class="section__head"><h2>Mapping the bench from the wrist camera</h2><span class="line"></span></div>
   <div class="split">
-    <div class="sec__body">
+    <div class="reading reading--wide">
       <p>Goal: while the arm sweeps, build a 3D map of the workspace inside the twin — with <b>no markers, no fiducials, and no dependence on my cutting mat</b>, so the same code works on anyone's SO-101. Camera pose comes from the arm's forward kinematics (FK); geometry comes from a learned depth model rather than per-scene optimisation.</p>
       <p>Per keyframe:</p>
-      <ol class="pipe">
+      <ol class="flow">
         <li><b>undistort</b></li>
         <li>mask the arm out <b>via URDF</b></li>
         <li><b>MoGe-2</b> monocular depth</li>
@@ -131,14 +145,13 @@
       <p>About 1.4&nbsp;s per frame on the 1080&nbsp;Ti; one 28-view sweep takes ~90&nbsp;s and gives a ghost-free scene.</p>
     </div>
     <figure class="panel">
-      <div class="panel__bar"><span class="label">Virtual twin + map</span><span class="tag">21,424 splats</span></div>
       <img src="assets/twin-crop.webp" width="680" height="548" alt="The virtual twin of the arm standing on a splat reconstruction of the bench." loading="lazy" />
-      <figcaption>The follower's twin standing on the map it built.</figcaption>
+      <figcaption><span class="figure__title">Virtual twin + map <span class="pill">21,424 splats</span></span><span class="figure__text">The follower's twin standing on the map it built.</span></figcaption>
     </figure>
   </div>
 
-  <div class="tablewrap">
-  <table class="meas">
+  <div class="table-wrap table-wrap--lab table-wrap--hint">
+  <table class="data">
     <thead><tr><th>What I measured</th><th>Result</th><th>What it changed</th></tr></thead>
     <tbody>
       <tr><td>FK rotation error</td><td class="n">0.2 – 0.8°</td><td>Good enough to use FK as the pose prior.</td></tr>
@@ -153,10 +166,9 @@
   <div class="note"><b>Next</b> — a one-time self-calibration of the ~11 FK parameters (five servo zero-offsets plus a 6-DoF hand-eye transform) from overlapping frames of any textured scene, then live frame-to-model tracking with FK as the prior. Markers stay an optional accuracy add-on, never a requirement.</div>
 </section>
 
-<!-- 04 task -->
-<section class="sec" id="jenga">
-  <div class="sec__head"><span class="sec__num">04 / first task</span><h2 class="sec__title">Teaching it to stack Jenga blocks</h2></div>
-  <div class="sec__body">
+<section class="section" id="jenga">
+  <div class="section__head"><h2>Teaching it to stack Jenga blocks</h2><span class="line"></span></div>
+  <div class="reading">
     <p>The first policy the arm learns will be pick-and-place: build a tower from a pile of loose Jenga blocks, as high as it can reach, and recover when blocks fall. I picked it over the obvious "play Jenga" for concrete reasons:</p>
     <ul>
       <li>±5&nbsp;mm tolerances and a task that is already known to work on this class of arm.</li>
@@ -170,10 +182,9 @@
   </div>
 </section>
 
-<!-- 05 first run -->
-<section class="sec" id="firstrun">
-  <div class="sec__head"><span class="sec__num">05 / first run</span><h2 class="sec__title">Ten demonstrations, one policy, one honest result</h2></div>
-  <div class="sec__body sec__body--wide">
+<section class="section" id="firstrun">
+  <div class="section__head"><h2>Ten demonstrations, one policy, one honest result</h2><span class="line"></span></div>
+  <div class="reading reading--wide">
     <p>On the evening of 15 September the loop ran end to end for the first time: teleoperated demonstrations recorded through the dashboard, an ACT policy trained on the 1080&nbsp;Ti, and the checkpoint driven back on the real arm. The numbers below are from the run logs.</p>
 
     <div class="spec">
@@ -190,23 +201,20 @@
 
   <div class="frames">
     <figure class="panel">
-      <div class="panel__bar"><span class="label">Episode 0 · frame 2500 · wrist | overhead</span><span class="tag">PICK</span></div>
       <img src="assets/ep0-pick.webp" width="1280" height="480" alt="Two camera frames side by side: the wrist camera looking down at a single Jenga block on the green cutting mat between the open gripper jaws, and the overhead camera showing the follower arm reaching over the mat toward loose blocks." loading="lazy" />
-      <figcaption>What the policy sees. Wrist camera on the left, overhead on the right — the only two inputs besides the six joint angles.</figcaption>
+      <figcaption><span class="figure__title">Episode 0 · frame 2500 · wrist | overhead</span><span class="figure__text">What the policy sees. Wrist camera on the left, overhead on the right — the only two inputs besides the six joint angles.</span></figcaption>
     </figure>
     <figure class="panel">
-      <div class="panel__bar"><span class="label">Episode 0 · frame 7000</span><span class="tag">TOWER</span></div>
       <img src="assets/ep0-tower.webp" width="1280" height="480" alt="Wrist view of a block held between the jaws above the mat, and the overhead view of a two-layer tower beside the arm." loading="lazy" />
-      <figcaption>Two layers up in a careful episode.</figcaption>
+      <figcaption><span class="figure__title">Episode 0 · frame 7000</span><span class="figure__text">Two layers up in a careful episode.</span></figcaption>
     </figure>
     <figure class="panel">
-      <div class="panel__bar"><span class="label">Episode 9 · near the end</span><span class="tag">FAST</span></div>
       <img src="assets/ep9-end.webp" width="1280" height="480" alt="Wrist view of the gripper placing a block onto a stack of three, and the overhead view of the arm over the tower with one block left on the mat." loading="lazy" />
-      <figcaption>End of a fast episode: one block left on the mat.</figcaption>
+      <figcaption><span class="figure__title">Episode 9 · near the end</span><span class="figure__text">End of a fast episode: one block left on the mat.</span></figcaption>
     </figure>
   </div>
 
-  <div class="sec__body sec__body--wide">
+  <div class="reading reading--wide">
     <p><b>What had to be built to get here.</b> Most of the day's work was around the model, not in it:</p>
     <ul>
       <li><b>Retry-patched servo bus.</b> <code>robust_record.py</code> and <code>robust_eval.py</code> wrap LeRobot's own entrypoints and monkeypatch the Feetech bus with eight retries per read/write, so a dropped packet no longer ends the episode.</li>
@@ -218,10 +226,9 @@
   </div>
 </section>
 
-<!-- 06 timeline -->
-<section class="sec" id="timeline">
-  <div class="sec__head"><span class="sec__num">06 / log</span><h2 class="sec__title">Timeline</h2></div>
-  <ul class="tl">
+<section class="section" id="timeline">
+  <div class="section__head"><h2>Timeline</h2><span class="line"></span></div>
+  <ul class="timeline">
     <li><b>4 Sep 2026</b>Both arms built, COM ports pinned, leader and follower calibrated.</li>
     <li><b>8 Sep</b>Printer status wired into the dashboard.</li>
     <li><b>10 Sep</b>Camera routing and the swap fix; live-map project started; dashboard reachable remotely.</li>
@@ -234,26 +241,15 @@
 
 </main>
 
-<footer class="foot wrap">
-  <div class="row">
-    <span>SO-101 project log · Chase Bonfiglio · 2026</span>
-    <a href="../projects.html">← all projects</a>
-    <a href="../index.html#contact">contact</a>
+<footer class="site-footer">
+  <div class="container site-footer__inner">
+    <p class="site-footer__note">SO-101 project log · Chase Bonfiglio · 2026</p>
+    <nav class="site-footer__links" aria-label="footer">
+      <a href="../projects.html">← all projects</a>
+      <a href="../index.html#contact">contact</a>
+    </nav>
   </div>
 </footer>
 
-<script>
-  (function () {
-    var nav = document.getElementById('mininav'), btn = document.getElementById('nav-toggle');
-    if (!nav || !btn) return;
-    btn.addEventListener('click', function () {
-      var open = nav.classList.toggle('open');
-      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-    });
-    nav.querySelectorAll('.mininav__menu a').forEach(function (a) {
-      a.addEventListener('click', function () { nav.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); });
-    });
-  })();
-</script>
 </body>
 </html>

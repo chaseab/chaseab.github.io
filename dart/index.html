@@ -11,41 +11,49 @@
 <meta property="og:image" content="https://chasebonfiglio.com/assets/imgs/oche-cover.webp" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="description" content="Project log: a DIY autodart scoring rig — three cameras and computer vision to find where each dart lands, and a 501 scoreboard built on a replayable event log. Honest about what's built and what isn't wired up yet." />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="style.css?v=2" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,600,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/project.css">
+<style>
+  /* OCHE: the board. Dark green for text, board green for rules and tints. */
+  :root { --accent: #4f6a12; --accent-soft: #a3c14a; --accent-tint: rgba(163, 193, 74, .22); }
+  /* The pipeline strip borrows the board's alternating green / red segment wires as a thin top rule. */
+  .flow li { border-top: 3px solid var(--accent-soft); }
+  .flow li:nth-child(even) { border-top-color: var(--deep-red); }
+</style>
 </head>
 <body>
 
-<nav class="mininav" id="mininav" aria-label="site navigation">
-  <a class="mininav__brand" href="../index.html">Chase Bonfiglio</a>
-  <button class="mininav__toggle" id="nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="nav-menu">
-    <span></span><span></span><span></span>
-  </button>
-  <div class="mininav__menu" id="nav-menu">
-    <div class="mininav__links">
-      <a href="../index.html#home">Home</a>
-      <a href="../index.html#about">About</a>
-      <a href="../index.html#resume">Resume</a>
-      <a href="../projects.html">Projects</a>
-      <a href="../index.html#photography">Photography</a>
-      <a href="../index.html#contact">Contact</a>
-    </div>
-    <a href="#scoreboard" class="mininav__cta">Skip&nbsp;to&nbsp;the&nbsp;build&nbsp;↓</a>
+<a class="skip-link" href="#scoreboard">Skip&nbsp;to&nbsp;the&nbsp;build&nbsp;↓</a>
+
+<nav class="site-nav" aria-label="site navigation">
+  <div class="site-nav__inner">
+    <ul class="site-nav__links site-nav__links--left">
+      <li><a href="../index.html#home">Home</a></li>
+      <li><a href="../index.html#about">About</a></li>
+      <li><a href="../index.html#resume">Resume</a></li>
+    </ul>
+    <a class="site-nav__brand" href="../index.html">Chase Bonfiglio</a>
+    <ul class="site-nav__links site-nav__links--right">
+      <li class="site-nav__phone"><a href="../index.html#home">Home</a></li>
+      <li><a href="../projects.html" class="is-active">Projects</a></li>
+      <li class="site-nav__more"><a href="../index.html#photography">Photography</a></li>
+      <li><a href="../index.html#contact">Contact</a></li>
+    </ul>
   </div>
 </nav>
 
-<header class="entry wrap" id="top">
+<header class="page-head container" id="top">
   <nav class="crumb" aria-label="breadcrumb">
     <a href="../index.html">chasebonfiglio</a>
     <span>/</span><a href="../projects.html">projects</a>
     <span>/</span><b>oche</b>
   </nav>
 
-  <p class="kicker">Project log · personal · <span class="live">in progress</span></p>
-  <h1 class="entry__title">Scoring darts with cameras instead of a pen</h1>
-  <p class="entry__lead">
+  <p class="eyebrow">Project log · personal · <span class="pill">in progress</span></p>
+  <h1>Scoring darts with cameras instead of a pen</h1>
+  <p class="lead">
     I'm building <b>OCHE</b>, a DIY autodart scoring rig: three cameras watch the
     board, computer vision works out where each dart landed, and a scoreboard I
     wrote keeps a <b>501 double-out</b> match. The two hard halves — the vision
@@ -56,35 +64,31 @@
   </p>
 
   <div class="status" aria-label="project status">
-    <div class="status__bar"><span class="label">Status</span><span class="label">updated as it changes</span></div>
-    <div class="status__body">
-      <div class="status__item"><b>Vision pipeline</b><span class="ok">Built &amp; unit-tested</span> — homography, detection, fusion, triangulation</div>
-      <div class="status__item"><b>Scoreboard (501)</b><span class="ok">Working</span> — rules, checkout solver, live stats, replayable log</div>
-      <div class="status__item"><b>Simulator</b><span class="ok">Working</span> — a scatter model stands in for the rig</div>
-      <div class="status__item"><b>Camera → score, end&nbsp;to&nbsp;end</b><span class="todo">Not wired</span> — the rig-to-UI adapter is still a stub</div>
-      <div class="status__item"><b>Camera mount</b><span class="ok">Built</span> — 3D-printed, four revisions</div>
-      <div class="status__item"><b>Mobile layout</b><span class="todo">Not built</span> — laptop was the first target</div>
+    <div class="status__bar"><span>Status</span><span class="pill">in progress</span></div>
+    <div class="status__grid">
+      <div class="status__item"><b>Vision pipeline</b><span class="pill pill--ok">Built &amp; unit-tested</span> — homography, detection, fusion, triangulation</div>
+      <div class="status__item"><b>Scoreboard (501)</b><span class="pill pill--ok">Working</span> — rules, checkout solver, live stats, replayable log</div>
+      <div class="status__item"><b>Simulator</b><span class="pill pill--ok">Working</span> — a scatter model stands in for the rig</div>
+      <div class="status__item"><b>Camera → score, end&nbsp;to&nbsp;end</b><span class="pill pill--todo">Not wired</span> — the rig-to-UI adapter is still a stub</div>
+      <div class="status__item"><b>Camera mount</b><span class="pill pill--ok">Built</span> — 3D-printed, four revisions</div>
+      <div class="status__item"><b>Mobile layout</b><span class="pill pill--todo">Not built</span> — laptop was the first target</div>
     </div>
   </div>
 
-  <figure class="hero panel">
-    <div class="panel__bar"><span class="label">OCHE scoreboard · 501 double-out</span><span class="tag">SIMULATOR</span></div>
+  <figure class="panel hero">
     <img src="assets/scoreboard.webp" width="1137" height="728" alt="The OCHE scoreboard mid-match: two player columns with three-dart averages and visit history, a large remaining-score readout, a suggested checkout route, and a dartboard hit-map in the centre." loading="eager" />
-    <figcaption>
-      The scoreboard mid-leg — here driven by the simulator, not a real board, since
+    <figcaption><span class="figure__title">OCHE scoreboard · 501 double-out</span><span class="figure__text">The scoreboard mid-leg — here driven by the simulator, not a real board, since
       the camera feed isn't wired yet. Player columns, three-dart averages, the
-      suggested finish, and the hit-map all read off the same replayable event log.
-    </figcaption>
+      suggested finish, and the hit-map all read off the same replayable event log.</span></figcaption>
   </figure>
 </header>
 
-<main class="wrap">
+<main class="container">
 
-<!-- 01 rig -->
-<section class="sec" id="rig">
-  <div class="sec__head"><span class="sec__num">01 / rig</span><h2 class="sec__title">What's on the bench</h2></div>
-  <div class="split split--rig">
-  <div class="sec__body sec__body--wide">
+<section class="section" id="rig">
+  <div class="section__head"><h2>What's on the bench</h2><span class="line"></span></div>
+  <div class="split">
+  <div class="reading reading--wide">
     <p>
       The rig splits cleanly into two halves that I could build and test
       separately: the <b>vision</b> that turns three camera frames into a hit
@@ -102,27 +106,26 @@
     </div>
   </div>
     <figure class="panel panel--tall">
-      <div class="panel__bar"><span class="label">The rig in place</span><span class="tag">HARDWARE</span></div>
       <img src="assets/rig-upright.webp" width="610" height="850" alt="A TARGET dartboard on a black backing panel, with three OV9732 cameras on printed mounts clipped to the frame — top, lower-left and lower-right — and their cables running off-frame." loading="lazy" />
-      <figcaption>The board on the wall with the three cameras on their printed mounts — top, lower-left, lower-right — wired back to the Pi off-frame.</figcaption>
+      <figcaption><span class="figure__title">The rig in place</span><span class="figure__text">The board on the wall with the three cameras on their printed mounts — top, lower-left, lower-right — wired back to the Pi off-frame.</span></figcaption>
     </figure>
   </div>
-
 </section>
 
-<!-- 02 vision -->
-<section class="sec" id="vision">
-  <div class="sec__head"><span class="sec__num">02 / vision</span><h2 class="sec__title">Finding the dart</h2></div>
-  <div class="sec__body">
+<section class="section" id="vision">
+  <div class="section__head"><h2>Finding the dart</h2><span class="line"></span></div>
+  <div class="reading">
     <p>The pipeline goes from raw frames to one coordinate in millimetres from the bullseye:</p>
-    <ol class="pipe">
-      <li><b>capture</b> 3 views</li>
-      <li>per-camera <b>homography</b></li>
-      <li><b>detect</b> the tip</li>
-      <li><b>fuse / triangulate</b></li>
-      <li><b>(x, y) in mm</b></li>
-      <li><b>score</b> the segment</li>
-    </ol>
+  </div>
+  <ol class="flow">
+    <li><b>capture</b> 3 views</li>
+    <li>per-camera <b>homography</b></li>
+    <li><b>detect</b> the tip</li>
+    <li><b>fuse / triangulate</b></li>
+    <li><b>(x, y) in mm</b></li>
+    <li><b>score</b> the segment</li>
+  </ol>
+  <div class="reading">
     <p>
       Each camera is calibrated in two steps: a checkerboard pass for its
       intrinsics, then a homography that maps its view onto the board plane. A
@@ -145,13 +148,12 @@
   </div>
 
   <figure class="panel">
-    <div class="panel__bar"><span class="label">Calibration tool</span><span class="tag">HOMOGRAPHY</span></div>
     <img src="assets/calibrate-tool-trim.webp" width="1186" height="612" alt="A browser calibration tool showing one camera's photo of the dartboard, with blue circle markers dropped on known points — the bull and the outer edges of the double ring at 20, 6, 3 and 11 — that it uses to solve the homography." loading="lazy" />
-    <figcaption>The calibration tool I wrote: it shows one camera's view of the board and I click a handful of known points — the bull and the double-ring edges at 20, 3, 6 and 11 — and it solves that camera's homography onto the board plane.</figcaption>
+    <figcaption><span class="figure__title">Calibration tool</span><span class="figure__text">The calibration tool I wrote: it shows one camera's view of the board and I click a handful of known points — the bull and the double-ring edges at 20, 3, 6 and 11 — and it solves that camera's homography onto the board plane.</span></figcaption>
   </figure>
 
-  <div class="tablewrap">
-  <table class="meas">
+  <div class="table-wrap table-wrap--hint">
+  <table class="data">
     <thead><tr><th>What I measured</th><th>Result</th><th>What it means</th></tr></thead>
     <tbody>
       <tr><td>Per-camera calibration reprojection error</td><td class="n">0.29 – 0.86&nbsp;mm</td><td>The three homographies land sub-millimetre, so the board-plane mapping is good enough to trust for scoring.</td></tr>
@@ -163,10 +165,9 @@
   <div class="note"><b>Next</b> — close the loop and measure hit-location error against hand-scored throws. The calibration is sub-millimetre; the open question is what the full pipeline does on real darts.</div>
 </section>
 
-<!-- 03 scoreboard -->
-<section class="sec" id="scoreboard">
-  <div class="sec__head"><span class="sec__num">03 / scoreboard</span><h2 class="sec__title">Keeping the match</h2></div>
-  <div class="sec__body">
+<section class="section" id="scoreboard">
+  <div class="section__head"><h2>Keeping the match</h2><span class="line"></span></div>
+  <div class="reading">
     <p>
       The scoreboard is deliberately boring in one direction only:
       <b>feed → events → reducer → state → render</b>. The UI never mutates match
@@ -180,13 +181,11 @@
       <li><b>The simulator throws with realistic scatter.</b> Three skill levels apply 9 / 15 / 26&nbsp;mm of Gaussian spread, which is what stands in for the camera feed today.</li>
     </ul>
   </div>
-
 </section>
 
-<!-- 04 last mile -->
-<section class="sec" id="last-mile">
-  <div class="sec__head"><span class="sec__num">04 / next</span><h2 class="sec__title">The last mile</h2></div>
-  <div class="sec__body">
+<section class="section" id="last-mile">
+  <div class="section__head"><h2>The last mile</h2><span class="line"></span></div>
+  <div class="reading">
     <p>
       Everything is staged for one integration and no more: the rig-to-scoreboard
       adapter (<code>wsFeed</code>) is still a stub. The job is to normalise the
@@ -201,38 +200,31 @@
   </div>
 </section>
 
-<!-- 05 log -->
-<section class="sec" id="log">
-  <div class="sec__head"><span class="sec__num">05 / log</span><h2 class="sec__title">Build log</h2></div>
-  <p class="sec__body">
-    I didn't keep a dated commit log on this one. Where it stands as of
-    <b>14&nbsp;Sep&nbsp;2026</b>: the three cameras are calibrated
-    (sub-millimetre reprojection error), the Pi is recording and labelling real
-    throws through the tuning UI, and the scoreboard runs on the simulator feed.
-    The missing piece is the adapter that turns those recorded detections into
-    live scoreboard events.
-  </p>
+<section class="section" id="log">
+  <div class="section__head"><h2>Build log</h2><span class="line"></span></div>
+  <div class="reading">
+    <p>
+      I didn't keep a dated commit log on this one. Where it stands as of
+      <b>14&nbsp;Sep&nbsp;2026</b>: the three cameras are calibrated
+      (sub-millimetre reprojection error), the Pi is recording and labelling real
+      throws through the tuning UI, and the scoreboard runs on the simulator feed.
+      The missing piece is the adapter that turns those recorded detections into
+      live scoreboard events.
+    </p>
+  </div>
 </section>
 
 </main>
 
-<footer class="foot wrap">
-  <div class="row">
-    <span>OCHE project log · Chase Bonfiglio · 2026</span>
-    <a href="../projects.html">← all projects</a>
-    <a href="../index.html#contact">contact</a>
+<footer class="site-footer">
+  <div class="container site-footer__inner">
+    <p class="site-footer__note">OCHE project log · Chase Bonfiglio · 2026</p>
+    <nav class="site-footer__links" aria-label="footer">
+      <a href="../projects.html">← all projects</a>
+      <a href="../index.html#contact">contact</a>
+    </nav>
   </div>
 </footer>
 
-<script>
-// mobile nav
-(function(){
-  var nav=document.getElementById('mininav'),btn=document.getElementById('nav-toggle');
-  if(!nav||!btn)return;
-  btn.addEventListener('click',function(){var o=nav.classList.toggle('open');btn.setAttribute('aria-expanded',o?'true':'false')});
-  nav.querySelectorAll('.mininav__menu a').forEach(function(a){a.addEventListener('click',function(){nav.classList.remove('open');btn.setAttribute('aria-expanded','false')})});
-})();
-
-</script>
 </body>
 </html>
