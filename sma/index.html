@@ -10,7 +10,7 @@
 <meta property="og:description" content="Undergraduate research on parallel Flexinol wire arrays as low-cost linear actuators for biomimetic robotics: the idea, the rig, and what is not claimed yet." />
 <meta property="og:image" content="https://chasebonfiglio.com/assets/imgs/sma-cover.webp" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="description" content="Undergraduate research in Dr. Scott Kennedy's Intelligent Materials for Biomimetic Sensors and Actuators Lab at Virginia Tech's Hume Center: a drive-and-sensing rig for parallel Flexinol wire arrays as low-cost linear actuators, with resistance self-sensing and closed-loop firing. Method and instrumentation; results held for the paper." />
+<meta name="description" content="Undergraduate research in Dr. Scott Kennedy's Intelligent Materials for Biomimetic Sensors and Actuators Lab at Virginia Tech's Hume Center: a drive-and-sensing rig for parallel Flexinol wire arrays as low-cost linear actuators, with resistance self-sensing on one DAQ timebase. One channel proven end to end; the 12-wire array is wired and about to run." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,600,700&display=swap" rel="stylesheet">
@@ -54,17 +54,17 @@
     Since November 2025 I've been an undergraduate researcher in <b>Dr. Scott Kennedy's Intelligent Materials for
     Biomimetic Sensors and Actuators Lab</b> at Virginia Tech's Hume Center. The lab works toward shape-memory-alloy
     (SMA) actuated robotic ankle systems; my piece is the rig that <b>drives and characterizes parallel Flexinol wire
-    arrays</b>: the firing electronics, the resistance self-sensing, and the data path. The characterization
-    results are going in the paper, so this page sticks to the idea and how the rig works.
+    arrays</b>: the firing electronics, the resistance self-sensing, and the data path. One wire has been proven
+    end to end; the full 12-wire array is wired up and about to run for the first time.
   </p>
 
   <div class="status" aria-label="project status">
-    <div class="status__bar"><span>Status · 14 Sep 2026</span><span class="pill">in progress</span></div>
+    <div class="status__bar"><span>Status · 21 Sep 2026</span><span class="pill">in progress</span></div>
     <div class="status__grid">
-      <div class="status__item"><b>Rig &amp; drive</b><span class="pill pill--wip">Single-channel bring-up</span> — firing electronics + instrumentation in place</div>
+      <div class="status__item"><b>Rig &amp; drive</b><span class="pill pill--wip">12-wire array wired</span> — one channel proven end to end; first full-array runs next</div>
       <div class="status__item"><b>Sensing &amp; DAQ</b><span class="pill pill--ok">Working</span> — resistance self-sensing on a multichannel DAQ, live dashboard</div>
-      <div class="status__item"><b>Results</b><span class="pill pill--todo">Held for the paper</span> — characterization runs in progress</div>
-      <div class="status__item"><b>Writing</b><span class="pill pill--wip">Manuscript in preparation</span> — first author</div>
+      <div class="status__item"><b>Results</b><span class="pill pill--todo">None yet</span> — single-channel runs logged; array characterization starts once the array runs</div>
+      <div class="status__item"><b>Writing</b><span class="pill pill--wip">Manuscript in preparation</span> — first author, aiming for IEEE RoboSoft 2027</div>
       <div class="status__item"><b>Presented</b><span class="pill pill--ok">VT Hume Colloquium, May 2026</span> — with Ethan Yueh and Christine Robinson</div>
     </div>
   </div>
@@ -85,56 +85,18 @@
     <p>The approach I'm testing works around the cooling limit:</p>
     <ul>
       <li>Several thin Flexinol wires share the load instead of one thick wire, so each one cools faster.</li>
-      <li>The wire is routed back and forth as one continuous zigzag, which keeps tension equal across every segment, while each electrical post along the route stays independently controllable.</li>
+      <li>The wire is routed back and forth as one continuous zigzag, which keeps the pretension equal across every segment, while each electrical post along the route stays independently controllable.</li>
       <li>Wire sections fire in sequence. Some contract while others are still cooling, so output frequency goes up without any individual wire cycling faster.</li>
       <li>A wire's resistance changes as it recovers thermally, so watching resistance tells the controller which wires are ready to fire again, with no extra sensors on the actuator itself.</li>
     </ul>
   </div>
     <figure class="panel panel--tall">
       <img src="assets/mujoco-v2.webp" width="400" height="590" alt="MuJoCo render of the v2 test rig: a tall rectangular frame, a blue post block near the top, a bundle of wires running straight down from it to a carriage with a row of posts, all on a flat base plate." loading="lazy" />
-      <figcaption><span class="figure__title">The rig, modelled</span><span class="figure__text">The v2 rig in MuJoCo — I modelled it for the initial design and to simulate it before building: the wire array runs from the post block down to the loaded carriage inside the frame. <a href="#model">How the model works ↓</a></span></figcaption>
+      <figcaption><span class="figure__title">The rig, modeled</span><span class="figure__text">The v2 rig in MuJoCo. We built the model to simulate the rig and check the wire routing: the wire array runs from the post block down to the loaded carriage inside the frame. <a href="#model">How the model works ↓</a></span></figcaption>
     </figure>
   </div>
 </section>
 
-<section class="section" id="model">
-  <div class="section__head"><h2>Simulate the rig before building it</h2><span class="line"></span></div>
-  <div class="reading">
-    <p>Before the printed frame existed I built the v2 rig in <b>MuJoCo</b>, from the assembly STLs, to check that the wire routing would produce the ankle motion I wanted and to size the free wire length. The model is generated by a script rather than hand-placed, so a geometry change in CAD re-derives every bolt, turn-point and tendon path.</p>
-    <ul>
-      <li>The foot plate pivots on the ankle pin. M4 bolts stand in the foot's edge holes and in the slidable height-adjust carriage above it; one continuous wire per side zigzags foot bolt → under the saddle arc → carriage bolt → back down. The under-arc wrap on the swappable <b>R&nbsp;=&nbsp;25.4&nbsp;mm saddles</b> is what turns wire tension into ankle torque: the toe side pulls plantarflex, the heel side dorsiflex.</li>
-      <li>Each side's zigzag is modelled as <b>12 independent spatial tendons</b> rather than one, since capstan friction at every bolt wrap stops the wire slipping. That way a MOSFET can heat its own post-pair section and the sim actuates per strand, the same as the drive on the bench. 24 tendons, 24 actuators, one hinge joint with a ±0.8&nbsp;rad stop.</li>
-      <li>The carriage slides to one of four side-pin holes, and that sets the free wire length. <code>gen_variants.py</code> rebuilds the rig at each pin, then sweeps SMA strain kinematically: for each commanded strain it solves the ankle angle where the active side's tendon length equals <code>L₀·(1&nbsp;−&nbsp;s)</code>, and exports the geometry and motion for the viewers below.</li>
-    </ul>
-  </div>
-    <div class="table-wrap table-wrap--hint">
-    <table class="data">
-      <thead><tr><th>Carriage pin</th><th>Free length</th><th>Ankle ROM @ 4&nbsp;% strain</th><th>Ankle ROM @ 6&nbsp;% strain</th></tr></thead>
-      <tbody>
-        <tr><td>7.4″</td><td class="n">178 mm</td><td><span class="n">63.7°</span> — 32.3° plantar / 31.5° dorsi</td><td><span class="n">91.7°</span> — hits the stop both ways</td></tr>
-        <tr><td>8.3″</td><td class="n">201 mm</td><td><span class="n">73.2°</span> — 37.4° / 35.8°</td><td><span class="n">91.7°</span> — stop</td></tr>
-        <tr><td>9.2″</td><td class="n">224 mm</td><td><span class="n">83.3°</span> — 43.1° / 40.3°</td><td><span class="n">91.7°</span> — stop</td></tr>
-        <tr><td>10.1″</td><td class="n">247 mm</td><td><span class="n">90.9°</span> — 45.8° / 45.1°</td><td><span class="n">91.7°</span> — stop</td></tr>
-      </tbody>
-    </table>
-    </div>
-  <div class="reading">
-    <p>Flexinol's datasheet recoverable strain is 4–6&nbsp;%. At 6&nbsp;% every pin setting saturates at the ±45.8° joint stop; at 4&nbsp;% only the longest free length gets there, and the shortest reaches two-thirds of it. That spread is why the carriage is adjustable.</p>
-  </div>
-
-  <figure class="panel">
-    <img src="assets/mujoco-v2-strands.webp" width="1260" height="720" alt="Three MuJoCo views of the v2 rig: a side view showing the wire fanning from the foot bolts up to the carriage; an isometric view of the frame with the blue carriage block and twelve red and orange strands zigzagging down to the foot's bolt posts; and a close-up of the saddle arc with the strands wrapping under it." loading="lazy" />
-    <figcaption><span class="figure__title">v2 rig, strands routed</span><span class="figure__text">Side, isometric and saddle close-up. Toe strands in red, heel strands in orange; the brass posts are the M4 bolts each turn wraps around.</span></figcaption>
-  </figure>
-
-  <div class="spec">
-    <div><b>3D model</b><span><a href="model/v2_rig_3d.html">Orbit the composed rig →</a></span><small>Frame, carriage, foot, saddles and all 24 strands, baked to glTF</small></div>
-    <div><b>Motion</b><span><a href="model/v2_rig_motion.html">Pin height × strain → ROM →</a></span><small>Pick a carriage pin, set the SMA strain, scrub the ankle sweep</small></div>
-    <div><b>Actuation sim</b><span><a href="model/v2_rig_sma.html">Fire a current pulse →</a></span><small>Lumped thermal model: Joule heating → austenite fraction → contraction → ankle, with the traces</small></div>
-    <div><b>Source</b><span><a href="model/v2_rig.xml">v2_rig.xml</a> · <a href="model/build_v2_rig.py">build_v2_rig.py</a> · <a href="model/gen_variants.py">gen_variants.py</a></span><small>MJCF plus the two scripts that generate it and the variants</small></div>
-  </div>
-  <div class="note"><b>These numbers are kinematics, not measurements.</b> The ROM table comes from tendon length vs. ankle angle and the datasheet strain range, and the actuation sim runs on datasheet thermal constants. The measured behaviour of the real wire is going in the paper.</div>
-</section>
 
 <section class="section" id="drive">
   <div class="section__head"><h2>Firing has to fail safe</h2><span class="line"></span></div>
@@ -166,7 +128,7 @@
     <p>The wire's resistance tracks the phase transformation as it heats and cools, so it works as its own sensor. I don't poll the Arduino for state at all. The DAQ watches the wires directly and everything is inferred from voltage:</p>
     <ul>
       <li>A resistor across each MOSFET pushes a few&nbsp;mA of continuous sense current, far too little to heat the wire, so there's a live resistance reading on every wire <em>between</em> firings, not just during them.</li>
-      <li>R = V / I per wire. Normalised against a per-wire calibration it becomes a recovery fraction, <code>ρ = (R_start − R_min) / (R_0 − R_min)</code>, that says how far each wire has cooled. That's the signal the scheduler fires on.</li>
+      <li>R = V / I per wire. Normalized against a per-wire calibration it becomes a recovery fraction, <code>ρ = (R_start − R_min) / (R_0 − R_min)</code>, that says how far each wire has cooled. That's the signal the scheduler will fire on.</li>
       <li>Rather than trust a fixed on-time table, the plan is to fire a hot, short pulse and cut it the moment resistance says the wire has finished contracting, per wire and per pulse. Fixed-duration open-loop firing is the baseline to beat.</li>
       <li>A multichannel differential DAQ samples the wire voltages, a shunt gives true current (so R and energy don't assume a fixed current), and the firing sync line lands on a spare DAQ input. Every fire event sits on the same timebase as the resistance trace it caused, with no clock-stitching.</li>
     </ul>
@@ -177,18 +139,66 @@
       <li>fire <b>hot</b></li>
       <li><b>R-triggered</b> cutoff</li>
     </ol>
+    <p>The first three steps run today. The rotation is still fixed PERIOD/ONTIME, so ρ is logged rather than acted on; the hot pulse with a resistance-triggered cutoff is the next thing to build once the array is running.</p>
     <p>All of it lands in a browser dashboard I built for the lab: live voltage and resistance strip charts, a motor-unit-style <b>firing raster</b> (one bar per detected pulse, from a voltage-hysteresis detector), and a pulse table logging duration, energy, R&nbsp;start/end, ΔR and cycle count. Every run is written to disk so I can go back through it later.</p>
   </div>
-  <div class="note"><b>No results on this page.</b> No recruitment factor, actuation force, bandwidth, or efficiency numbers, and no closed- vs open-loop comparison. Those are the paper's. What's here is the method and the instrumentation.</div>
+  <div class="note"><b>No numbers on this page yet.</b> The 12-wire array was only wired up in September 2026. Recruitment factor, force, bandwidth and efficiency all come from the array runs.</div>
+</section>
+
+<section class="section" id="v1-v2">
+  <div class="section__head"><h2>v1 to v2</h2><span class="line"></span></div>
+  <div class="reading">
+    <p>The first rig, v1, held one wire. It was there to prove the drive and the sensing on a single channel and to try the mechanical ideas cheaply: swappable saddles so the wrap radius could change, and parts that swap out without reprinting the frame. v2 keeps that and expands to 12 wires so the parallel firing can actually be tested. Both rigs set the free wire length with the pins at the top of the frame.</p>
+  </div>
+  <!-- v1 photo goes here when Chase sends it: <figure class="panel panel--tall"><img src="assets/rig-v1.webp" ...><figcaption>...</figcaption></figure> -->
+</section>
+
+<section class="section" id="model">
+  <div class="section__head"><h2>Simulating the rig</h2><span class="line"></span></div>
+  <div class="reading">
+    <p>We built a <b>MuJoCo</b> model of the v2 rig from the assembly STLs to simulate it: to check that the wire routing gives the ankle motion we want and to size the free wire length. The model is generated by a script rather than hand-placed, so a geometry change in CAD re-derives every bolt, turn-point and tendon path.</p>
+    <ul>
+      <li>The foot plate pivots on the ankle pin. M4 bolts stand in the foot's edge holes and in the slidable height-adjust carriage above it; one continuous wire per side zigzags foot bolt → under the saddle arc → carriage bolt → back down. The under-arc wrap on the swappable <b>R&nbsp;=&nbsp;25.4&nbsp;mm saddles</b> is what turns wire tension into ankle torque: the toe side pulls plantarflex, the heel side dorsiflex.</li>
+      <li>Each side's zigzag is modeled as <b>12 separate tendons</b> rather than one, so the sim can heat one post-pair section at a time the way a MOSFET does on the bench. 24 tendons, 24 actuators, one hinge joint with a ±0.8&nbsp;rad stop.</li>
+      <li>The carriage slides to one of four side-pin holes, and that sets the free wire length. <code>gen_variants.py</code> rebuilds the rig at each pin, then sweeps SMA strain kinematically: for each commanded strain it solves the ankle angle where the active side's tendon length equals <code>L₀·(1&nbsp;−&nbsp;s)</code>, and exports the geometry and motion for the viewers below.</li>
+    </ul>
+  </div>
+    <div class="table-wrap table-wrap--hint">
+    <table class="data">
+      <thead><tr><th>Carriage pin</th><th>Free length</th><th>Ankle ROM @ 4&nbsp;% strain</th><th>Ankle ROM @ 6&nbsp;% strain</th></tr></thead>
+      <tbody>
+        <tr><td>7.4″</td><td class="n">178 mm</td><td><span class="n">63.7°</span> — 32.3° plantar / 31.5° dorsi</td><td><span class="n">91.7°</span> — hits the stop both ways</td></tr>
+        <tr><td>8.3″</td><td class="n">201 mm</td><td><span class="n">73.2°</span> — 37.4° / 35.8°</td><td><span class="n">91.7°</span> — stop</td></tr>
+        <tr><td>9.2″</td><td class="n">224 mm</td><td><span class="n">83.3°</span> — 43.1° / 40.3°</td><td><span class="n">91.7°</span> — stop</td></tr>
+        <tr><td>10.1″</td><td class="n">247 mm</td><td><span class="n">90.9°</span> — 45.8° / 45.1°</td><td><span class="n">91.7°</span> — stop</td></tr>
+      </tbody>
+    </table>
+    </div>
+  <div class="reading">
+    <p>Flexinol's datasheet recoverable strain is 4–6&nbsp;%. At 6&nbsp;% every pin setting saturates at the ±45.8° joint stop; at 4&nbsp;% only the longest free length gets there, and the shortest reaches two-thirds of it. That spread is why the carriage is adjustable.</p>
+  </div>
+
+  <figure class="panel">
+    <img src="assets/mujoco-v2-strands.webp" width="1260" height="720" alt="Three MuJoCo views of the v2 rig: a side view showing the wire fanning from the foot bolts up to the carriage; an isometric view of the frame with the blue carriage block and twelve red and orange strands zigzagging down to the foot's bolt posts; and a close-up of the saddle arc with the strands wrapping under it." loading="lazy" />
+    <figcaption><span class="figure__title">v2 rig, strands routed</span><span class="figure__text">Side, isometric and saddle close-up. Toe strands in red, heel strands in orange; the brass posts are the M4 bolts each turn wraps around.</span></figcaption>
+  </figure>
+
+  <div class="spec">
+    <div><b>3D model</b><span><a href="model/v2_rig_3d.html">Orbit the composed rig →</a></span><small>Frame, carriage, foot, saddles and all 24 strands, baked to glTF</small></div>
+    <div><b>Motion</b><span><a href="model/v2_rig_motion.html">Pin height × strain → ROM →</a></span><small>Pick a carriage pin, set the SMA strain, scrub the ankle sweep</small></div>
+    <div><b>Actuation sim</b><span><a href="model/v2_rig_sma.html">Fire a current pulse →</a></span><small>Lumped thermal model: Joule heating → austenite fraction → contraction → ankle, with the traces</small></div>
+    <div><b>Source</b><span><a href="model/v2_rig.xml">v2_rig.xml</a> · <a href="model/build_v2_rig.py">build_v2_rig.py</a> · <a href="model/gen_variants.py">gen_variants.py</a></span><small>MJCF plus the two scripts that generate it and the variants</small></div>
+  </div>
+  <div class="note"><b>These numbers are kinematics, not measurements.</b> The ROM table comes from tendon length vs. ankle angle and the datasheet strain range, and the actuation sim runs on datasheet thermal constants. Measured numbers from the real wire replace them as the array runs.</div>
 </section>
 
 <section class="section" id="timeline">
   <div class="section__head"><h2>Timeline</h2><span class="line"></span></div>
   <ul class="timeline">
     <li><b>Nov 2025</b>Joined the lab as an undergraduate student researcher.</li>
-    <li><b>May 2026</b>Presented the parallel-array work at the Virginia Tech Hume Colloquium alongside two lab-mates (Ethan Yueh, Christine Robinson); MITRE and MIT Lincoln Laboratory roundtables the same day.</li>
-    <li><b>Sep 2026</b>Drive electronics + acquisition dashboard bring-up; first single-channel resistance runs logged end to end.</li>
-    <li><b>Fall 2026 →</b>Scaling from single-channel to the full array; manuscript in preparation.</li>
+    <li><b>May 2026</b>Presented the parallel-array work at the Virginia Tech Hume Colloquium alongside two lab-mates (Ethan Yueh, Christine Robinson).</li>
+    <li><b>Sep 2026</b>Drive electronics + acquisition dashboard bring-up; first single-channel resistance runs logged end to end. Wired up the full 12-wire array.</li>
+    <li><b>Fall 2026 →</b>First parallel-array runs; manuscript in preparation, aiming for IEEE RoboSoft 2027.</li>
   </ul>
 </section>
 
