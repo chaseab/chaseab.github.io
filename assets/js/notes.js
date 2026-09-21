@@ -1,7 +1,8 @@
 /* notes.js — Chase's on-page notes journal.
    A chat-style panel, bottom right, with two streams: notes for this page and notes for the whole site.
-   The launcher is always there; notes are behind a shared key entered once per device (kept in a cookie
-   and localStorage). ?notes opens the panel straight away. Notes live in Netlify Blobs via /api/notes and are cached
+   The launcher is standard on temp sites (*.netlify.app previews, localhost) and hidden on production until
+   the device is unlocked (or ?notes is added). Notes are behind a shared key entered once per device (kept in
+   a cookie and localStorage). Notes live in Netlify Blobs via /api/notes and are cached
    in localStorage so they show instantly and survive being offline. Include with
    <script src="assets/js/notes.js" defer></script> (adjust the path per folder). No dependencies. */
 (() => {
@@ -24,6 +25,9 @@
   };
   let key = ls.get(KEY, null) || cookie.get();
   if (key) { ls.set(KEY, key); cookie.set(key); }
+  // The launcher is standard on temp sites (Netlify previews, local); on production it only shows once unlocked.
+  const isTemp = /\.netlify\.app$/i.test(location.hostname) || /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
+  if (!key && !wantsUnlock && !isTemp) return;
 
   // ---------- styles ----------
   const css = `
