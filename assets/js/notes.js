@@ -167,7 +167,7 @@
     panel.hidden = m === "closed"; launch.hidden = m !== "closed";
     panel.dataset.mode = m === "expanded" ? "expanded" : m === "min" ? "min" : "open";
     bExp.innerHTML = m === "expanded" ? icon.shrink : icon.expand; bExp.title = m === "expanded" ? "Shrink" : "Expand";
-    if (m !== "closed" && m !== "min") { show(); setTimeout(() => ta.focus(), 50); }
+    if (m !== "closed" && m !== "min" && key) { show(); setTimeout(() => ta.focus(), 50); }
   };
   const add = async () => {
     const text = ta.value.trim(); if (!text) return;
