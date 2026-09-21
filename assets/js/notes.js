@@ -1,7 +1,7 @@
 /* notes.js — Chase's on-page notes journal.
    A chat-style panel, bottom right, with two streams: notes for this page and notes for the whole site.
-   Private: the launcher only appears once the shared key is stored on this device (open any page with
-   ?notes or #notes to unlock the first time). Notes live in Netlify Blobs via /api/notes and are cached
+   The launcher is always there; notes are behind a shared key entered once per device (kept in a cookie
+   and localStorage). ?notes opens the panel straight away. Notes live in Netlify Blobs via /api/notes and are cached
    in localStorage so they show instantly and survive being offline. Include with
    <script src="assets/js/notes.js" defer></script> (adjust the path per folder). No dependencies. */
 (() => {
@@ -17,8 +17,13 @@
   };
 
   const wantsUnlock = /[?&#]notes\b/.test(location.search + location.hash);
-  let key = ls.get(KEY, null);
-  if (!key && !wantsUnlock) return; // visitors never see any of this
+  const cookie = {
+    get() { const m = document.cookie.match(/(?:^|; )cb_notes_key=([^;]*)/); return m ? decodeURIComponent(m[1]) : null; },
+    set(v) { document.cookie = `cb_notes_key=${encodeURIComponent(v)}; max-age=31536000; path=/; SameSite=Lax${location.protocol === "https:" ? "; Secure" : ""}`; },
+    del() { document.cookie = "cb_notes_key=; max-age=0; path=/"; },
+  };
+  let key = ls.get(KEY, null) || cookie.get();
+  if (key) { ls.set(KEY, key); cookie.set(key); }
 
   // ---------- styles ----------
   const css = `
@@ -180,14 +185,14 @@
   };
 
   function lock() {
-    key = null; ls.del(KEY);
+    key = null; ls.del(KEY); cookie.del();
     body.innerHTML = ""; tabs.hidden = true; compose.hidden = true; foot.innerHTML = "";
-    const box = el("div", "cbn-lock", `<div>This is Chase's private notes journal. Enter the notes key once on this device.</div>`);
+    const box = el("div", "cbn-lock", `<div>Chase's notes journal. Enter the key once on this device and it stays unlocked.</div>`);
     const inp = el("input"); inp.type = "password"; inp.placeholder = "notes key"; inp.autocomplete = "off";
     const btn = el("button", null, "Unlock"); const msg = el("div");
     btn.onclick = async () => {
       key = inp.value.trim(); if (!key) return;
-      try { await api("GET", "site"); ls.set(KEY, key); tabs.hidden = false; compose.hidden = false; box.remove(); setMode("open"); }
+      try { await api("GET", "site"); ls.set(KEY, key); cookie.set(key); tabs.hidden = false; compose.hidden = false; box.remove(); setMode("open"); }
       catch { key = null; msg.textContent = "That key didn't work."; }
     };
     inp.onkeydown = (e) => { if (e.key === "Enter") btn.click(); };
@@ -209,6 +214,9 @@
   window.addEventListener("online", () => { if (ui.mode !== "closed") show(); });
 
   // ---------- boot ----------
-  if (!key) { panel.hidden = false; launch.hidden = true; lock(); }
-  else { counts(); setMode(wantsUnlock && ui.mode === "closed" ? "open" : ui.mode); if (ui.mode === "closed") load(slug).then(counts).catch(() => {}); }
+  if (!key) {
+    panel.hidden = true; launch.hidden = false;
+    launch.onclick = () => { if (!key) { panel.hidden = false; launch.hidden = true; lock(); } else setMode(ui.mode === "closed" ? "open" : "closed"); };
+    if (wantsUnlock) launch.click();
+  } else { counts(); setMode(wantsUnlock && ui.mode === "closed" ? "open" : ui.mode); if (ui.mode === "closed") load(slug).then(counts).catch(() => {}); }
 })();
