@@ -124,8 +124,13 @@
   const foot = el("div", "cbn-foot");
   const compose = el("div", "cbn-compose");
   const ta = el("textarea", "cbn-ta"); ta.rows = 1; ta.setAttribute("aria-label", "New note");
+  // an unsent draft follows you from page to page (Chase, 22 Sep)
+  const DRAFT = "cbn:draft";
+  try { ta.value = ls.get(DRAFT, "") || ""; } catch {}
+  ta.addEventListener("input", () => { ls.set(DRAFT, ta.value); });
   const send = el("button", "cbn-send", icon.send); send.title = "Save note (Enter)"; send.disabled = true;
   compose.append(ta, send);
+  if (ta.value.trim()) { send.disabled = false; ta.style.height = "auto"; ta.style.height = Math.min(160, ta.scrollHeight) + "px"; }
   panel.append(head, tabs, body, foot, compose);
   document.body.append(launch, panel);
 
@@ -183,7 +188,7 @@
     const text = ta.value.trim(); if (!text) return;
     const sc = scope();
     const note = { id: `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`, ts: Date.now(), page: slug, text, scope: sc };
-    setCache(sc, [...cache(sc), note]); ta.value = ""; ta.style.height = ""; send.disabled = true; render(cache(sc)); counts();
+    setCache(sc, [...cache(sc), note]); ta.value = ""; ls.del("cbn:draft"); ta.style.height = ""; send.disabled = true; render(cache(sc)); counts();
     try { await api("POST", sc, note); }
     catch (e) { if (e.unauthorized) return lock(); ls.set(PENDING, [...ls.get(PENDING, []), note]); setCache(sc, cache(sc).map((x) => x.id === note.id ? { ...x, pending: true } : x)); status = "offline — will sync next time"; render(cache(sc)); }
   };
