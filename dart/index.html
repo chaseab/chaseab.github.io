@@ -104,7 +104,7 @@
       <div><b>Board</b><span>WDF/BDO regulation</span><small>451&nbsp;mm face, 340&nbsp;mm playing surface; radii measured to the centre of the wire</small></div>
       <div><b>Mount</b><span>Printed camera mount, v1 → v4</span><small>SolidWorks, on-board and off-board variants; PLA on a Bambu&nbsp;P1S</small></div>
       <div><b>Scoreboard</b><span>TypeScript · React&nbsp;19 · Vite · Tailwind</span><small>Runs in a browser; no backend needed to keep score</small></div>
-      <div><b>Vision</b><span>Python · OpenCV · PyTorch</span><small>Calibration, detection, fusion and a learned tip detector; <code>pytest</code> across 8 modules</small></div>
+      <div><b>Vision</b><span>Python · OpenCV · PyTorch</span><small>Calibration, detection, fusion and a learned tip detector; 61 <code>pytest</code> cases across 9 modules</small></div>
     </div>
   </div>
 </section>
@@ -117,7 +117,14 @@
       it onto the board plane through its calibration; a dart is found by
       <b>frame differencing</b> inside the board region only — anything past
       ~180&nbsp;mm (rim, background, a reaching hand) is masked out. The three
-      per-camera tips fuse into one (x,&nbsp;y) in millimetres from the bull, and
+      per-camera tips fuse by agreement rather than by averaging: each estimate
+      that sits within 15&nbsp;mm of a candidate joins its cluster, the largest
+      cluster wins and only its members are averaged, so an occluded or
+      mis-detected view is dropped instead of dragging the answer. Where the
+      dart reads as a streak rather than a point, the fallback intersects each
+      camera’s dart axis on the board plane in least squares, and refuses the
+      result when the lines are near-parallel instead of emitting a wild point.
+      That gives one (x,&nbsp;y) in millimetres from the bull, and
       <code>coordToSegment</code> turns that into a score. The hardware and the
       simulator both defer to that one function.
     </p>
@@ -157,15 +164,19 @@
   <table class="data">
     <thead><tr><th>Measured</th><th>Result</th><th>Meaning</th></tr></thead>
     <tbody>
-      <tr><td>Calibration RMS, per camera</td><td class="n">0.46 / 0.71 / 0.56&nbsp;mm</td><td>Over ~1,200 snapped edge points each. Sub-millimetre on all three, so the board-plane mapping is good enough to score off.</td></tr>
-      <tr><td>End-to-end hit error on real throws</td><td class="n">not yet measured</td><td>The number that decides whether it can score a real match. Measured against hand-scored throws once the loop is closed.</td></tr>
+      <tr><td>Calibration RMS, per camera</td><td class="n">0.46 / 0.71 / 0.56&nbsp;mm</td><td>Reprojection residual on the fit’s own ~1,200 snapped edge points, per camera. In-sample — it says the plane fit is consistent with the wires it was fitted to, not what a dart tip costs.</td></tr>
+      <tr><td>Segments called correctly, 17 Sep run</td><td class="n">53 / 71 · 75%</td><td>Every throw scored by the rig, then hand-checked against where the dart actually landed. 45 of the 71 fired on the auto trigger, 26 by hand.</td></tr>
+      <tr><td>… of those, with all three cameras seeing the dart</td><td class="n">50 / 64 · 78%</td><td>When a view drops out the call gets worse fast: 2 of 4 on two cameras, 1 of 3 on one.</td></tr>
+      <tr><td>Same rig, one camera out of focus</td><td class="n">14 / 57 · 25%</td><td>An earlier run the same afternoon with cam0 blurred. The pipeline degrades quietly rather than refusing — the reason focus is now checked before a session.</td></tr>
+      <tr><td>Tip error in millimetres</td><td class="n">not yet measured</td><td>The 71 throws are labelled by segment, not by a hand-measured tip position, so there is no mm error to quote yet.</td></tr>
     </tbody>
   </table>
   </div>
   <div class="reading">
     <p>
-      That’s the current stage: close the loop from camera to scoreboard and
-      measure hit error against hand-scored throws.
+      The loop from camera to called segment is closed and measured; what is left
+      is wiring those calls into the scoreboard’s event feed and measuring the
+      tip error in millimetres rather than by segment.
     </p>
   </div>
 </section>
@@ -193,9 +204,10 @@
     <p>
       <b>Live scoring.</b> Wire the rig’s detections into the scoreboard’s
       event feed, measure hit error against hand-scored throws, then play real
-      matches on it. The learned tip detector goes onto the Pi in the same pass
-      (~50&nbsp;ms per frame at 640×360) for the throws differencing gets wrong —
-      a dart behind another dart, a hand still in frame.
+      matches on it. The learned tip detector goes onto the Pi in the same pass, for the throws
+      differencing gets wrong — a dart behind another dart, a hand still in
+      frame. It has no held-out error number yet, and nothing is claimed for
+      its speed until it is timed on the Pi itself.
     </p>
     <p>
       <b>Practice mode.</b> The board calls a segment at random, you throw at
