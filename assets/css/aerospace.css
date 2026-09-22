@@ -11480,7 +11480,7 @@ nav.page-navbar.affix .navbar-brand .text-dark {
 }
 
 .header {
-  background: #efefef url(https://ik.imagekit.io/k40iapw4w/imgs/header2.png?ik-sdk-version=javascript-1.4.3&updatedAt=1673886671788);
+  background: #efefef url(/assets/imgs/shared/header2.webp);
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
@@ -11556,7 +11556,7 @@ nav.page-navbar.affix .navbar-brand .text-dark {
 }
 
 .header2 {
-  background: #efefef url(https://ik.imagekit.io/k40iapw4w/imgs/header2.png?ik-sdk-version=javascript-1.4.3&updatedAt=1673886671788);
+  background: #efefef url(/assets/imgs/shared/header2.webp);
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
@@ -11653,7 +11653,7 @@ section.p-md {
 }
 
 section.has-bg-img {
-  background-image: url(https://ik.imagekit.io/k40iapw4w/imgs/Plane_Model_dark_room.PNG?updatedAt=1679017304551);
+  background-image: url(/assets/imgs/shared/plane-model-dark.png);
   background-size: cover;
   background-position: center center;
   min-height: 450px;
@@ -11709,7 +11709,7 @@ section.height-auto {
   left: 0;
   width: 100%;
   height: 100%;
-  background: url(https://ik.imagekit.io/k40iapw4w/imgs/header2.png?ik-sdk-version=javascript-1.4.3&updatedAt=1673886671788) no-repeat center center fixed;
+  background: url(/assets/imgs/shared/header2.webp) no-repeat center center fixed;
   background-size: cover;
   z-index: -1;
   opacity: .4;
