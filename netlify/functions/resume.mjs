@@ -10,9 +10,34 @@ const id = () => `${Date.now().toString(36)}-${Math.random().toString(36).slice(
 const safe = (s) => String(s || "").toLowerCase().replace(/[^a-z0-9-]/g, "").slice(0, 60);
 const DOCS = new Set(["robotics", "mech", "scholarship", "cv"]);
 
+// Cards and commands are found through index blobs (index/card, index/cmd: arrays of keys), not
+// store.list(), which has hung or failed outright on this site. A poll is one index read plus N gets.
+const indexKey = (prefix) => `index/${prefix}`;
+const readIndex = async (store, prefix) => (await store.get(indexKey(prefix), { type: "json" })) || [];
+async function addToIndex(store, prefix, keys) {
+  const cur = await readIndex(store, prefix);
+  await store.setJSON(indexKey(prefix), [...new Set([...cur, ...keys])]);
+}
+async function removeFromIndex(store, prefix, key) {
+  const cur = await readIndex(store, prefix);
+  if (cur.includes(key)) await store.setJSON(indexKey(prefix), cur.filter((k) => k !== key));
+}
 async function listJson(store, prefix) {
-  const { blobs } = await store.list({ prefix });
-  return Promise.all(blobs.map(async (b) => ({ key: b.key, ...(await store.get(b.key, { type: "json" })) })));
+  const keys = await readIndex(store, prefix);
+  const got = await Promise.all(keys.map(async (k) => { const v = await store.get(k, { type: "json" }); return v && { key: k, ...v }; }));
+  return got.filter(Boolean);
+}
+// Rebuild an index: from store.list() when it answers within 8 s, else from the keys supplied (each checked with a get).
+async function reindex(store, prefix, supplied = []) {
+  let keys;
+  try {
+    const listed = await Promise.race([store.list({ prefix: `${prefix}/` }), new Promise((_, rej) => setTimeout(() => rej(new Error("list timed out")), 8000))]);
+    keys = listed.blobs.map((b) => b.key);
+  } catch {
+    keys = (await Promise.all(supplied.map(async (k) => ((await store.get(k)) != null ? k : null)))).filter(Boolean);
+  }
+  await store.setJSON(indexKey(prefix), keys);
+  return keys;
 }
 
 export default async (req) => {
@@ -23,17 +48,17 @@ export default async (req) => {
   const store = getStore({ name: "resume", consistency: "strong" });
 
   if (req.method === "GET" && what === "state") {
-    const cards = (await listJson(store, "card/")).sort((a, b) => b.created - a.created);
+    const cards = (await listJson(store, "card")).sort((a, b) => b.created - a.created);
     return json({
       cards,
       status: (await store.get("status", { type: "json" })) || {},
       history: (await store.get("history", { type: "json" })) || [],
-      commands: await listJson(store, "cmd/"),
+      commands: await listJson(store, "cmd"),
     });
   }
   if (req.method === "GET" && what === "cards") {
     const st = url.searchParams.get("status");
-    return json((await listJson(store, "card/")).filter((c) => !st || c.status === st));
+    return json((await listJson(store, "card")).filter((c) => !st || c.status === st));
   }
   if (req.method === "POST" && what === "cards") {           // scan adds cards
     const list = await req.json();
@@ -43,6 +68,7 @@ export default async (req) => {
       if (card.op === "add_entry" && !card.target && card.entry?.id) card.target = card.entry.id;
       await store.setJSON(`card/${card.id}`, card); out.push(card);
     }
+    await addToIndex(store, "card", out.map((c) => `card/${c.id}`));
     return json(out, 201);
   }
   if (req.method === "POST" && what === "card") {            // decide / worker status update
@@ -61,13 +87,21 @@ export default async (req) => {
     if (!["publish", "discard", "restore", "scan", "rebuild"].includes(b.type)) return json({ error: "bad type" }, 400);
     const k = `cmd/${Date.now()}-${id()}`;
     await store.setJSON(k, { type: b.type, arg: b.arg ?? null, ts: Date.now() });
+    await addToIndex(store, "cmd", [k]);
     return json({ key: k }, 201);
   }
-  if (req.method === "GET" && what === "commands") return json(await listJson(store, "cmd/"));
+  if (req.method === "GET" && what === "commands") return json(await listJson(store, "cmd"));
   if (req.method === "DELETE" && what === "command") {
     const k = String(url.searchParams.get("key") || "");
     if (!k.startsWith("cmd/")) return json({ error: "bad key" }, 400);
-    await store.delete(k); return json({ ok: true });
+    await store.delete(k); await removeFromIndex(store, "cmd", k); return json({ ok: true });
+  }
+  if (req.method === "POST" && what === "reindex") {         // one-off repair: {cards?: [ids], cmds?: [keys]}
+    const b = await req.json().catch(() => ({}));
+    return json({
+      card: await reindex(store, "card", (b.cards || []).map((x) => `card/${safe(x)}`)),
+      cmd: await reindex(store, "cmd", (b.cmds || []).filter((k) => String(k).startsWith("cmd/"))),
+    });
   }
   if (req.method === "POST" && what === "status") {          // worker/scan heartbeat, merged shallowly
     const cur = (await store.get("status", { type: "json" })) || {};
@@ -94,7 +128,7 @@ export default async (req) => {
   if (req.method === "DELETE" && what === "card") {
     const k = `card/${safe(url.searchParams.get("id"))}`;
     if (!(await store.get(k, { type: "json" }))) return json({ error: "no card" }, 404);
-    await store.delete(k); return json({ ok: true });
+    await store.delete(k); await removeFromIndex(store, "card", k); return json({ ok: true });
   }
   if (req.method === "DELETE" && what === "history") {
     const tag = safe(url.searchParams.get("tag"));
