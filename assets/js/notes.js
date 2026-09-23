@@ -54,7 +54,18 @@
   .cbn-body{flex:1;overflow-y:auto;padding:14px 14px 6px;display:flex;flex-direction:column;gap:10px;background:#fff}
   .cbn-empty{margin:auto;text-align:center;color:#6c757d;font-size:14px;max-width:26ch}
   .cbn-hist{list-style:none;margin:0;padding:2px 0 0;display:flex;flex-direction:column;gap:0}
-  .cbn-hist li{display:flex;gap:8px;padding:7px 2px;border-bottom:1px solid #eceff2;font-size:14px;line-height:1.45}
+  .cbn-hist li{display:flex;gap:8px;padding:7px 2px 7px 10px;border-bottom:1px solid #eceff2;font-size:14px;line-height:1.45;position:relative;cursor:pointer}
+  .cbn-hist li::before{content:"";position:absolute;left:0;top:9px;width:7px;height:7px;border-radius:50%;background:#c9ced4}
+  .cbn-hist li.done::before{background:#2f9e5f}
+  .cbn-hist li.open::before{background:#e0a91b}
+  .cbn-hist li:hover{background:#fafbfc}
+  .cbn-hist li[aria-expanded="true"]{background:#f7f9fb}
+  .cbn-hist .full{display:block;margin-top:7px;padding:8px 10px;background:#fff;border:1px solid #e3e7eb;border-left:3px solid #c9ced4;color:#495057;font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere}
+  .cbn-hist li.done .full{border-left-color:#2f9e5f}
+  .cbn-hist li.open .full{border-left-color:#e0a91b}
+  .cbn-hist .tag{display:inline-block;margin-left:6px;font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#6c757d}
+  .cbn-hist li.done .tag{color:#2f9e5f}
+  .cbn-hist li.open .tag{color:#b4860f}
   .cbn-hist li:last-child{border-bottom:0}
   .cbn-hist .d{flex:none;color:#8a94a0;font-size:11.5px;font-weight:600;letter-spacing:.02em;padding-top:2px;min-width:44px}
   .cbn-hist .t{flex:1;color:#212529}
@@ -206,23 +217,48 @@
   const linkify = (s) => esc(s).replace(/\bhttps?:\/\/[^\s<]+/g, (u) => `<a href="${u}" target="_blank" rel="noopener">${u}</a>`);
 
   const scope = () => (ui.tab === "site" ? "site" : ui.tab === "history" ? "history" : slug);
+  const HIST = "@@hist@@";
+  const histEntry = (n) => {
+    if (typeof n.text === "string" && n.text.indexOf(HIST) === 0) {
+      try {
+        const v = JSON.parse(n.text.slice(HIST.length));
+        return { bullet: v.b || "", outcome: v.o || "", full: v.f || "", done: !!v.d, ts: n.ts };
+      } catch (e) { /* fall through */ }
+    }
+    const parts = String(n.text || "").split("::");
+    return { bullet: parts[0].trim(), outcome: parts.slice(1).join("::").trim(), full: "", done: true, ts: n.ts };
+  };
+
   const renderHistory = (list) => {
     body.innerHTML = "";
     const summary = list.filter((n) => n.page === "summary").pop();
-    const items = list.filter((n) => n.page !== "summary").sort((a, b) => a.ts - b.ts);
+    const items = list.filter((n) => n.page !== "summary").sort((a, b) => a.ts - b.ts).map(histEntry);
+
     if (!items.length && !summary) {
-      body.append(el("div", "cbn-empty", "Nothing filed yet. Once notes are acted on they get condensed here."));
+      body.append(el("div", "cbn-empty", "Nothing here yet. Every note lands here once it's been read \u2014 yellow until it's handled, green after."));
     } else {
       const ol = el("ul", "cbn-hist");
-      for (const n of items) {
-        // "what you wrote :: what came of it"
-        const parts = n.text.split("::");
-        const said = parts[0].trim();
-        const why = parts.slice(1).join("::").trim();
+      for (const e of items) {
         const li = document.createElement("li");
-        const d = new Date(n.ts);
-        li.innerHTML = `<span class="d">${d.toLocaleDateString([], { month: "short", day: "numeric" })}</span>` +
-          `<span class="t">${linkify(said)}${why ? `<span class="why">${linkify(why)}</span>` : ""}</span>`;
+        li.className = e.done ? "done" : "open";
+        li.setAttribute("aria-expanded", "false");
+        const d = new Date(e.ts);
+        li.innerHTML =
+          `<span class="d">${d.toLocaleDateString([], { month: "short", day: "numeric" })}</span>` +
+          `<span class="t">${linkify(e.bullet)}<span class="tag">${e.done ? "done" : "open"}</span>` +
+          `${e.outcome ? `<span class="why">${linkify(e.outcome)}</span>` : ""}</span>`;
+        if (e.full) {
+          li.title = "Click to see what you wrote";
+          li.addEventListener("click", () => {
+            const on = li.getAttribute("aria-expanded") === "true";
+            li.setAttribute("aria-expanded", String(!on));
+            const had = li.querySelector(".full");
+            if (had) { had.remove(); return; }
+            const box = el("span", "full", "");
+            box.textContent = e.full;
+            li.querySelector(".t").append(box);
+          });
+        }
         ol.append(li);
       }
       body.append(ol);
@@ -233,7 +269,9 @@
       }
     }
     body.scrollTop = 0;
-    foot.innerHTML = `<span class="${status ? "bad" : ""}">${status || "Filed \u00b7 read-only"}</span><span>${items.length} note${items.length === 1 ? "" : "s"} acted on</span>`;
+    const open = items.filter((e) => !e.done).length;
+    foot.innerHTML = `<span class="${status ? "bad" : ""}">${status || "Filed \u00b7 read-only"}</span>` +
+      `<span>${items.length} note${items.length === 1 ? "" : "s"}${open ? ` \u00b7 ${open} open` : ""}</span>`;
   };
 
   const render = (list) => {
@@ -259,9 +297,10 @@
   };
   const counts = () => {
     const p = cache(slug).length, s = cache("site").length;
-    const h = cache("history").filter((n) => n.page !== "summary").length;
+    const h = cache("history").filter((n) => n.page !== "summary" && n.text.indexOf("@@hist@@") === 0 && n.text.indexOf('"d":true') < 0).length;
     tabPage.querySelector(".n").textContent = p ? ` ${p}` : ""; tabSite.querySelector(".n").textContent = s ? ` ${s}` : "";
     tabHist.querySelector(".n").textContent = h ? ` ${h}` : "";
+    tabHist.title = h ? `${h} note${h === 1 ? "" : "s"} still open` : "everything filed is handled";
     badge.hidden = !p; badge.textContent = p;
   };
   const show = async () => {
