@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MachWorks camera tracking — preliminary design · Chase Bonfiglio</title>
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+    <link rel="alternate icon" href="/assets/favicon.ico" sizes="any">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://chasebonfiglio.com/camera-tracking/" />
+<meta property="og:title" content="MachWorks camera tracking — preliminary design" />
+<meta property="og:description" content="Project manager for the preliminary design of a system that keeps a camera pointed at a Mach 0.3+ test jet: Ronin-S gimbal, XBee telemetry, Kalman estimation on ROS 2. A design, not a flown system." />
+<meta property="og:image" content="https://chasebonfiglio.com/assets/imgs/avionics-cover.webp" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="description" content="MachWorks (Virginia Tech) avionics for the ICARUS test jet: leading the preliminary design of a camera-tracking system as project manager, then validating the servo harness against the jet's environment. Design and bench work — honest about what was built." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,600,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/project.css">
+<style>
+  /* Avionics: navy on white, the engineering report. The failure-mode table is the centrepiece. */
+  :root { --accent: #1c2e4a; --accent-soft: #1c2e4a; --accent-tint: rgba(28, 46, 74, .10); }
+  table.table--report { min-width: 680px; }
+  table.table--report th, table.table--report td { border: 1px solid var(--border); }
+  table.table--report th { background: var(--navy); color: var(--white); border-color: var(--navy); }
+  table.table--report th:first-child, table.table--report td:first-child { width: 22%; }
+  table.table--report td:first-child { color: var(--navy); }
+  table.table--report td { line-height: 1.5; padding: 12px 14px; }
+  .table-wrap--report { border-color: var(--navy); border-width: 1px; border-top-width: 3px; }
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#tracking">Skip&nbsp;to&nbsp;the&nbsp;work&nbsp;↓</a>
+
+<nav class="site-nav" aria-label="site navigation">
+  <div class="site-nav__inner">
+    <ul class="site-nav__links site-nav__links--left">
+      <li><a href="../index.html#home">Home</a></li>
+      <li><a href="../index.html#about">About</a></li>
+      <li><a href="../index.html#resume">Resume</a></li>
+    </ul>
+    <a class="site-nav__brand" href="../index.html">Chase Bonfiglio</a>
+    <ul class="site-nav__links site-nav__links--right">
+      <li class="site-nav__phone"><a href="../index.html#home">Home</a></li>
+      <li><a href="../projects.html" class="is-active">Projects</a></li>
+      <li class="site-nav__more"><a href="../index.html#photography">Photography</a></li>
+      <li><a href="../index.html#contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="page-head container" id="top">
+  <nav class="crumb" aria-label="breadcrumb">
+    <a href="../index.html">chasebonfiglio</a>
+    <span>/</span><a href="../projects.html">projects</a>
+    <span>/</span><b>machworks-camera-tracking</b>
+  </nav>
+
+  <p class="eyebrow">MachWorks · Virginia Tech · camera tracking · Sep 2025 → Jan 2026</p>
+  <h1>Keeping a camera pointed at a Mach 0.3 jet</h1>
+  <p class="lead">
+    <b>MachWorks</b> is Virginia Tech's high-performance aircraft team; its <b>ICARUS</b> program builds and flies a
+    Mach&nbsp;0.3+ test jet at the Kentland Experimental Aerial Test Range. A fast aircraft is only useful if you can
+    see it, so the team needs a camera that stays on the aircraft for a whole mission without anyone aiming it. I was
+    <b>project manager</b> for the preliminary design of that system and wrote most of the report. It is a design, not
+    a flown system. In January 2026 I moved onto the avionics subteam &mdash;
+    <a href="../avionics/">that work is on its own page</a>.
+  </p>
+
+  <div class="status" aria-label="project status">
+    <div class="status__bar"><span>Status</span><span>MachWorks &middot; ICARUS</span></div>
+    <div class="status__grid">
+      <div class="status__item"><b>Role</b><span class="pill pill--ok">Project manager</span> &mdash; led the design and wrote the report</div>
+      <div class="status__item"><b>Stage</b><span class="pill pill--wip">Preliminary design (PDR)</span> &mdash; designed, not built to flight</div>
+      <div class="status__item"><b>Pointing target</b><span class="pill pill--ok">&plusmn;1&deg;</span> &mdash; GPS + IMU + magnetometer, Kalman filtered</div>
+      <div class="status__item"><b>Team</b><span class="pill pill--ok">4 people</span> &mdash; Kent&nbsp;Lam, Nick&nbsp;Marrero, Amogh&nbsp;Saunshimath</div>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+
+<section class="section" id="mission">
+  <div class="section__head"><h2>What the tracker is for</h2><span class="line"></span></div>
+  <div class="reading">
+    <p>
+      ICARUS is a fast, small test aircraft, and the team only learns from a flight it can see. The tracker is the
+      ground side of that: it takes a stream of the aircraft's position, works out where the aircraft is and where it
+      will be a moment from now, and slews a gimbal so the camera holds it in frame. It is a pointing-and-estimation
+      problem, and most of the difficulty is in the delay &mdash; by the time a position arrives and is processed, the
+      aircraft has already moved.
+    </p>
+  </div>
+</section>
+
+<section class="section" id="tracking">
+  <div class="section__head"><h2>Designed the tracker — as project manager</h2><span class="line"></span></div>
+  <div class="reading">
+    <p>
+      The camera-tracking system autonomously points a camera at the aircraft throughout a mission: the ground station
+      (or a small module on the aircraft) streams GPS, the system estimates where the aircraft is and will be, and a
+      gimbal slews the camera to keep it in frame. I led the preliminary design as project manager and wrote most of the
+      design report. The architecture:
+    </p>
+    <ul>
+      <li><b>Pointing.</b> A 3-axis <b>DJI Ronin-S</b> gimbal carrying a <b>Fujifilm X-T2</b> — chosen over a star-tracker in a weighted trade study for slew speed, range of motion, and cost.</li>
+      <li><b>Link.</b> A <b>Digi XBee 3 PRO</b> telemetry link (~2&nbsp;km range, &lt;10&nbsp;ms latency), chosen over LoRa in a second trade study for latency and integration.</li>
+      <li><b>Estimation.</b> GPS + IMU + magnetometer fused with a <b>Kalman filter</b>, with trajectory prediction to cover processing and link delay, targeting <b>±1° pointing</b>.</li>
+      <li><b>Compute + software.</b> A <b>Raspberry Pi 4B</b> running a <b>ROS 2</b> node stack: telemetry/sensor interface → target-geometry &amp; control → gimbal command over SBUS → an operator dashboard with rosbag logging.</li>
+      <li><b>External module.</b> A lightweight <b>ESP32</b>-based tracker that can ride on the subject as a second telemetry source.</li>
+    </ul>
+    <p>
+      The report backed those choices with the trade studies, a requirements-and-verification plan (bench slew tests,
+      laser pointing-accuracy test, field GPS test, range test), a risk matrix, and a component + power budget. It is a
+      <b>Preliminary Design Report</b> — a design, not a flown system — and it was a team deliverable: I was PM of four.
+    </p>
+    <p>
+      <a href="assets/camera-tracking-pdr.pdf" target="_blank" rel="noopener">↗ Read the Preliminary Design Report (PDF)</a>.
+      Fair warning: it's the report as it stood when our freshman group was pulled onto MachWorks
+      subteams partway through, so a few sections are unfinished — it's the design work, not a polished
+      final deliverable.
+    </p>
+  </div>
+  <div class="spec">
+    <div><b>Gimbal</b><span>DJI Ronin-S · Fujifilm X-T2</span><small>3-axis, high slew rate; chosen over a star-tracker</small></div>
+    <div><b>Telemetry</b><span>Digi XBee 3 PRO</span><small>~2&nbsp;km, &lt;10&nbsp;ms; chosen over LoRa</small></div>
+    <div><b>Estimation</b><span>GPS + IMU + magnetometer</span><small>Kalman filter + trajectory prediction, ±1° target</small></div>
+    <div><b>Compute</b><span>Raspberry Pi 4B · ROS 2</span><small>Node stack: sensing → control → gimbal (SBUS) → logging</small></div>
+    <div><b>External module</b><span>ESP32 tracker</span><small>Lightweight second telemetry source on the subject</small></div>
+    <div><b>Role</b><span>Project Manager</span><small>Led the design + wrote the report; team of 4</small></div>
+  </div>
+</section>
+
+<section class="section" id="timeline">
+  <div class="section__head"><h2>Timeline</h2><span class="line"></span></div>
+  <ul class="timeline">
+    <li><b>Sep 2025</b>Joined MachWorks on the camera-tracking project.</li>
+    <li><b>Nov 2025</b>Delivered the Camera-Tracking Preliminary Design Report as project manager (gimbal + telemetry + ROS 2 estimation, with trade studies, V&amp;V plan, risk and budget).</li>
+    <li><b>Jan 2026</b>Our freshman group was pulled onto MachWorks subteams; I moved to <a href="../avionics/">avionics and the servo harness</a>.</li>
+  </ul>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container site-footer__inner">
+    <p class="site-footer__note">MachWorks camera tracking · Chase Bonfiglio · 2026</p>
+    <nav class="site-footer__links" aria-label="footer">
+      <a href="../projects.html">← all projects</a>
+      <a href="../index.html#contact">contact</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="../assets/js/notes.js" defer></script>
+</body>
+</html>
