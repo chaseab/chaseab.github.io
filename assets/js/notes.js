@@ -39,7 +39,9 @@
   .cbn[data-mode="expanded"]{width:min(680px,calc(100vw - 24px));height:min(84vh,calc(100vh - 36px))}
   .cbn[data-mode="min"]{height:auto}
   .cbn[data-mode="min"] .cbn-body,.cbn[data-mode="min"] .cbn-compose,.cbn[data-mode="min"] .cbn-tabs{display:none}
-  .cbn-head{display:flex;align-items:center;gap:8px;padding:10px 10px 10px 14px;background:#1c2e4a;color:#fff}
+  .cbn-head{display:flex;align-items:center;gap:8px;padding:10px 10px 10px 14px;background:#1c2e4a;color:#fff;cursor:grab;touch-action:none;user-select:none}
+  .cbn-head.cbn-dragging{cursor:grabbing}
+  .cbn-head button,.cbn-head a{cursor:pointer}
   .cbn-head b{font-size:15px;font-weight:600;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .cbn-head small{font-weight:400;opacity:.7;margin-left:6px}
   .cbn-ib{width:28px;height:28px;border:0;background:transparent;color:#fff;cursor:pointer;opacity:.8;display:flex;align-items:center;justify-content:center}
@@ -133,6 +135,52 @@
   if (ta.value.trim()) { send.disabled = false; ta.style.height = "auto"; ta.style.height = Math.min(160, ta.scrollHeight) + "px"; }
   panel.append(head, tabs, body, foot, compose);
   document.body.append(launch, panel);
+
+  /* drag the panel by its header (Chase, 23 Sep) */
+  (function dragging() {
+    const POS = "cbn:pos";
+    const place = (x, y) => {
+      const w = panel.offsetWidth || 380, h = panel.offsetHeight || 560;
+      x = Math.max(6, Math.min(x, window.innerWidth - w - 6));
+      y = Math.max(6, Math.min(y, window.innerHeight - h - 6));
+      panel.style.left = x + "px";
+      panel.style.top = y + "px";
+      panel.style.right = "auto";
+      panel.style.bottom = "auto";
+      return { x, y };
+    };
+
+    const saved = ls.get(POS, null);
+    if (saved && typeof saved.x === "number") requestAnimationFrame(() => place(saved.x, saved.y));
+    window.addEventListener("resize", () => {
+      const at = ls.get(POS, null);
+      if (at && typeof at.x === "number") place(at.x, at.y);
+    });
+
+    let from = null;
+    head.addEventListener("pointerdown", (e) => {
+      if (e.target.closest("button, a, input, textarea")) return;
+      const r = panel.getBoundingClientRect();
+      from = { dx: e.clientX - r.left, dy: e.clientY - r.top };
+      head.classList.add("cbn-dragging");
+      head.setPointerCapture(e.pointerId);
+    });
+    head.addEventListener("pointermove", (e) => {
+      if (!from) return;
+      e.preventDefault();
+      place(e.clientX - from.dx, e.clientY - from.dy);
+    });
+    const drop = (e) => {
+      if (!from) return;
+      from = null;
+      head.classList.remove("cbn-dragging");
+      try { head.releasePointerCapture(e.pointerId); } catch {}
+      const r = panel.getBoundingClientRect();
+      ls.set(POS, { x: r.left, y: r.top });
+    };
+    head.addEventListener("pointerup", drop);
+    head.addEventListener("pointercancel", drop);
+  })();
 
   const fmt = (ts) => {
     const d = new Date(ts), now = new Date();
