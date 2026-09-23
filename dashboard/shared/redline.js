@@ -113,6 +113,18 @@ export function docMarks(content, doc, cards) {
 // ---------- HTML ----------
 const tag = (t) => (t ? ` <span class="rl-tag">${esc(t)}</span>` : "");
 
+// Ids in a longest common subsequence of two id lists (short lists; plain DP).
+function lcs(a, b) {
+  const t = Array.from({ length: a.length + 1 }, () => new Array(b.length + 1).fill(0));
+  for (let i = a.length - 1; i >= 0; i--) for (let j = b.length - 1; j >= 0; j--)
+    t[i][j] = a[i] === b[j] ? t[i + 1][j + 1] + 1 : Math.max(t[i + 1][j], t[i][j + 1]);
+  const out = new Set();
+  for (let i = 0, j = 0; i < a.length && j < b.length;) {
+    if (a[i] === b[j]) { out.add(a[i]); i++; j++; } else if (t[i + 1][j] >= t[i][j + 1]) i++; else j++;
+  }
+  return out;
+}
+
 // content: what to draw; marks: from docMarks (null = clean); live: published content, for the
 // green "accepted since last publish" borders (null = none).
 export function renderDoc({ content, doc, marks = null, live = null }) {
@@ -153,6 +165,8 @@ export function renderDoc({ content, doc, marks = null, live = null }) {
     const lis = [];
     const slot = isNew ? null : marks?.bullets.get(e.id);
     const le = liveEntries.get(e.id);
+    // Bullets that kept their order relative to live; anything outside this was moved since publish.
+    const inOrder = le ? lcs(selectBullets(doc, le).kept.map((b) => b.id), sel.kept.map((b) => b.id)) : new Set();
     const ins = (x) => `<li class="rl-mark rl-ins" data-card="${esc(x.card.id)}"><ins>${richHtml(x.text)}</ins>${tag(x.label)}</li>`;
     slot?.ins.filter((x) => x.anchor === null).forEach((x) => lis.push(ins(x)));
     for (const b of sel.kept) {
@@ -164,7 +178,7 @@ export function renderDoc({ content, doc, marks = null, live = null }) {
           edits.map((x) => `<ins data-card="${esc(x.card.id)}">${richHtml(x.text)}</ins>`).join("")}${dels.map((d) => tag(d.label)).join("")}</li>`);
       } else {
         const lb = le?.bullets?.find((x) => x.id === b.id);
-        const accepted = live && le && (!lb || bulletText(lb, doc) !== bulletText(b, doc));
+        const accepted = live && le && (!lb || bulletText(lb, doc) !== bulletText(b, doc) || !inOrder.has(b.id));
         lis.push(`<li${accepted ? ' class="rl-acc"' : ""}>${text}</li>`);
       }
       slot?.ins.filter((x) => x.anchor === b.id).forEach((x) => lis.push(ins(x)));
