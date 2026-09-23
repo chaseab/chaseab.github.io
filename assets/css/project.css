@@ -26,9 +26,9 @@
   --font-head: Dosis, "Open Sans", sans-serif;   /* the homepage's heading + nav stack */
   --card-border: rgba(0, 0, 0, .125);            /* the homepage's .card border */
   --mono: SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
-  --container: 920px;    /* prose and rules share one right edge */
+  --container: 1140px;   /* matches the homepage */
   --wide: 1140px;       /* tables, figures and grids break out to this */
-  --reading: 100%;
+  --reading: 780px;    /* text column, centred inside the container */
   --gutter: 16px;
   --nav-h: 77px;   /* measured off the homepage bar so the two match */
 }
@@ -73,17 +73,15 @@ code {
 .reading--wide { max-width: none; }
 
 
-/* ---------- breakouts: wider than the text column, centred on it ---------- */
-.table-wrap, .spec, .status, .machine, figure.panel, .figrow, .blk--video, .blk--figure {
-  width: min(var(--wide), calc(100vw - 2 * var(--gutter)));
-  margin-left: 50%;
-  transform: translateX(-50%);
+
+/* Text sits in one centred column; only media and data use the full width, so
+   every paragraph, heading and rule shares the same two edges. */
+.section__head, .reading, .lead, .note, ul.timeline, ol.plain, .plain {
+  max-width: var(--reading);
+  margin-left: auto;
+  margin-right: auto;
 }
-@media (max-width: 960px) {
-  .table-wrap, .spec, .status, .machine, figure.panel, .figrow, .blk--video, .blk--figure {
-    width: auto; margin-left: 0; transform: none;
-  }
-}
+.reading--wide { max-width: none; }
 
 /* ---------- headings ---------- */
 h1, h2, h3, h4 { font-family: var(--font-head); color: var(--ink); line-height: 1.15; margin: 0; }
