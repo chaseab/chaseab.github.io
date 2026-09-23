@@ -79,7 +79,7 @@
 
     const problems = [];
     if (workerBad) problems.push("The desktop worker has been silent for over 10 minutes. Approvals and publishes wait until it's back.");
-    if (scanOld) problems.push("No scan in over 9 days.");
+    if (scanOld) problems.push(scan.ts ? "No scan in over 9 days." : "No scan has run yet.");
     if (scan.ok === false) problems.push(`Last scan failed: ${scan.summary || "see scan log on the desktop"}`);
     if (draft.publishError) problems.push(`Publish blocked: ${draft.publishError}`);
     $("banner").hidden = !problems.length;
