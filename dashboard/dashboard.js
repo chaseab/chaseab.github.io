@@ -100,7 +100,7 @@ function renderTop() {
   $("banner").hidden = !problems.length;
   $("banner").innerHTML = problems.map(esc).join("<br>");
 
-  $("scan-summary").hidden = !scan.summary || scan.ok === false;
+  $("scan-summary-wrap").hidden = !scan.summary || scan.ok === false;
   $("scan-summary").textContent = scan.summary || "";
 
   const q = (state.commands || []).sort((a, b) => a.ts - b.ts);
