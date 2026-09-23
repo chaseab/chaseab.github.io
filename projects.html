@@ -18,8 +18,9 @@
   /* Projects index: a clean light index, navy only. */
   :root { --accent: #1c2e4a; --accent-soft: #1c2e4a; --accent-tint: rgba(28, 46, 74, .10); }
 
-  .stats { display: flex; flex-wrap: wrap; gap: 8px 56px; margin: 36px 0 0; padding: 28px 0 26px; font-size: 13px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: rgba(255, 255, 255, .6);
+  .stats { display: flex; flex-wrap: wrap; justify-content: center; gap: 18px 96px; margin: 36px 0 0; padding: 30px 0 28px; font-size: 13px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: rgba(255, 255, 255, .6);
            background: var(--band); box-shadow: 0 0 0 100vmax var(--band); clip-path: inset(0 -100vmax); }
+  .stats > div { text-align: center; min-width: 120px; }
   .stats b { display: block; font-family: var(--font-head); font-size: 34px; font-weight: 400; color: var(--white); margin: 0 0 2px; line-height: 1; letter-spacing: 0; }
   .toolbar { margin-top: 36px; }
 
@@ -86,11 +87,11 @@
 <header class="page-head container" id="top">
   <p class="eyebrow">Mechanical Engineering · Virginia Tech</p>
   <h1>Engineering <span class="r">Projects</span></h1>
-  <p class="lead">Everything I've built, newest first. Research rigs and robot arms at the top, high-school competition projects at the bottom. Each write-up says what worked and what didn't.</p>
+  <p class="lead">Fourteen projects, newest first. Each page lists what was built, what was measured, and where it stands.</p>
   <div class="stats">
     <div><b id="stat-total">—</b>projects</div>
-    <div><b id="stat-cats">—</b>disciplines</div>
-    <div><b>2022–26</b>span</div>
+    <div><b id="stat-live">—</b>in progress</div>
+    <div><b>2022–26</b>first to latest</div>
   </div>
 </header>
 
@@ -167,24 +168,24 @@ const PROJECTS = [
     tags:['ROS 2','Kalman filter','gimbal','telemetry','project management'],
     status:'live', statusLabel:'Preliminary design',
     date:'2025-11', year:'2025', theme:'avionics',
-    img:'assets/imgs/avionics-cover.webp', href:'camera-tracking/index.html', meta:'PM, Sep 2025 - Jan 2026',
-    blurb:'Project manager for the preliminary design of a system that keeps a camera on a Mach 0.3+ test jet: Ronin-S gimbal, XBee telemetry, GPS/IMU/magnetometer fused through a Kalman filter on ROS 2.'
+    img:'assets/imgs/camera-tracking-cover.webp', href:'camera-tracking/index.html', meta:'PM, Sep 2025 - Jan 2026',
+    blurb:'Preliminary design of a system that keeps a camera pointed at a Mach 0.3+ test jet: Ronin-S gimbal, XBee telemetry, GPS, IMU and magnetometer fused through a Kalman filter on ROS 2. Project manager, team of four. Designed, not flown.'
   },
   {
     id:'avionics', groups:['robotics','extracurricular'], title:'MachWorks Avionics - Servo Harness', cat:'Robotics',
     tags:['FMEA','EMI','bench testing','servos','avionics'],
     status:'live', statusLabel:'Bench stage',
     date:'2026-01', year:'2026', theme:'avionics',
-    img:'assets/imgs/avionics-cover.webp', href:'avionics/index.html', meta:'Avionics subteam, since Jan 2026',
+    img:'assets/imgs/avionics-servo-cover.webp', href:'avionics/index.html', meta:'Avionics subteam, since Jan 2026',
     blurb:'Validating the harness that moves a test jet\'s control surfaces a foot from a running engine. One bench test per failure mode: brownout, engine EMI, vibration, heat, and a destructive limit.'
   },
   {
-    id:'ai-workflow', groups:['personal'], title:'How I Work With AI', cat:'AI',
+    id:'ai-workflow', groups:['personal'], title:'Personal AI Systems', cat:'AI',
     tags:['agents','tooling','automation','transparency'],
     status:'live', statusLabel:'Working notes',
     date:'2026-09', year:'2026', theme:'arc',
-    img:'assets/imgs/arc-agi-3-cover.jpg', href:'ai-workflow/index.html', meta:'updated as it changes',
-    blurb:'What is AI-assisted in my work and what is not, and the tooling around it: two machines running agents over a private network, a power guard that refuses to start a training run on battery, submission gates that refuse rather than guess, and a feedback loop wired into this site.'
+    img:'assets/imgs/ai-workflow-cover.webp', href:'ai-workflow/index.html', meta:'updated as it changes',
+    blurb:'What is AI-assisted in this work and what is not, and the tooling around it: two machines running agents over a private network, a power guard that refuses to start a training run on battery, submission gates that stop rather than guess, and a feedback loop wired into this site.'
   },
   {
     id:'lfc', groups:['personal'], title:'Logic Frame Co.', cat:'Hardware',
@@ -233,7 +234,7 @@ const PROJECTS = [
     status:'done', statusLabel:'Complete',
     date:'2022-11', year:'2022', theme:'aero',
     img:'assets/imgs/Plane_Flying.webp', href:'aerospace.html', meta:'',
-    blurb:'A contest glider tuned for hang time — CNC-cut foam wings for a clean lift-to-drag ratio and repeatable assembly. Won the class contest and took every regional qualifying slot at our local TSA competition.'
+    blurb:'CNC-cut foam wings built for hang time. Won the class contest and took every regional qualifying slot at the local TSA competition.'
   },
   {
     id:'mass', groups:[], title:'Mass Production Nameplate', cat:'Manufacturing',
@@ -272,7 +273,7 @@ chipsEl.addEventListener('click',e=>{
 
 /* header stats */
 document.getElementById('stat-total').textContent=PROJECTS.length;
-document.getElementById('stat-cats').textContent=new Set(PROJECTS.flatMap(p=>p.groups||[])).size;
+document.getElementById('stat-live').textContent=PROJECTS.filter(p=>p.status!=='done').length;
 document.getElementById('yr').textContent=new Date().getFullYear();
 
 searchEl.addEventListener('input',render);

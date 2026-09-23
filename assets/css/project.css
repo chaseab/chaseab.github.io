@@ -26,8 +26,9 @@
   --font-head: Dosis, "Open Sans", sans-serif;   /* the homepage's heading + nav stack */
   --card-border: rgba(0, 0, 0, .125);            /* the homepage's .card border */
   --mono: SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
-  --container: 1140px;
-  --reading: 760px;
+  --container: 920px;    /* prose and rules share one right edge */
+  --wide: 1140px;       /* tables, figures and grids break out to this */
+  --reading: 100%;
   --gutter: 16px;
   --nav-h: 77px;   /* measured off the homepage bar so the two match */
 }
@@ -70,6 +71,19 @@ code {
 .skip-link:focus { left: 16px; }
 .reading { max-width: var(--reading); }
 .reading--wide { max-width: none; }
+
+
+/* ---------- breakouts: wider than the text column, centred on it ---------- */
+.table-wrap, .spec, .status, .machine, figure.panel, .figrow, .blk--video, .blk--figure {
+  width: min(var(--wide), calc(100vw - 2 * var(--gutter)));
+  margin-left: 50%;
+  transform: translateX(-50%);
+}
+@media (max-width: 960px) {
+  .table-wrap, .spec, .status, .machine, figure.panel, .figrow, .blk--video, .blk--figure {
+    width: auto; margin-left: 0; transform: none;
+  }
+}
 
 /* ---------- headings ---------- */
 h1, h2, h3, h4 { font-family: var(--font-head); color: var(--ink); line-height: 1.15; margin: 0; }
