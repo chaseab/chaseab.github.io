@@ -40,6 +40,7 @@ export default async (req) => {
     const out = [];
     for (const c of Array.isArray(list) ? list : [list]) {
       const card = { ...c, id: safe(c.id) || `s-${id()}`, created: Date.now(), status: c.status || "pending" };
+      if (card.op === "add_entry" && !card.target && card.entry?.id) card.target = card.entry.id;
       await store.setJSON(`card/${card.id}`, card); out.push(card);
     }
     return json(out, 201);
@@ -75,6 +76,33 @@ export default async (req) => {
   if (req.method === "POST" && what === "history") {
     const h = (await store.get("history", { type: "json" })) || [];
     h.unshift(await req.json()); await store.setJSON("history", h.slice(0, 200)); return json({ ok: true });
+  }
+  // Content snapshots the dashboard's redline renders from: "current" (draft, uploaded on every
+  // rebuild) and "live" (uploaded on publish). GET returns both.
+  if (what === "content") {
+    if (req.method === "GET") return json({
+      current: await store.get("content/current", { type: "json" }),
+      live: await store.get("content/live", { type: "json" }),
+    });
+    const stage = url.searchParams.get("stage");
+    if (req.method === "PUT" && ["current", "live"].includes(stage)) {
+      await store.setJSON(`content/${stage}`, await req.json()); return json({ ok: true });
+    }
+  }
+  // Clean-up from the dashboard: one card, or one history row plus its archived PDFs.
+  // (The git tag stays in ~/career, so a deleted row can't be restored from the dashboard.)
+  if (req.method === "DELETE" && what === "card") {
+    const k = `card/${safe(url.searchParams.get("id"))}`;
+    if (!(await store.get(k, { type: "json" }))) return json({ error: "no card" }, 404);
+    await store.delete(k); return json({ ok: true });
+  }
+  if (req.method === "DELETE" && what === "history") {
+    const tag = safe(url.searchParams.get("tag"));
+    const h = (await store.get("history", { type: "json" })) || [];
+    if (!tag || !h.some((r) => r.tag === tag)) return json({ error: "no such tag" }, 404);
+    await store.setJSON("history", h.filter((r) => r.tag !== tag));
+    for (const d of DOCS) await store.delete(`pdf/archive/${tag}/${d}`);
+    return json({ ok: true });
   }
   if (what === "pdf") {
     const doc = safe(url.searchParams.get("doc"));

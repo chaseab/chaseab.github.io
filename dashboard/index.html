@@ -7,11 +7,14 @@
   <title>Resume Dashboard</title>
   <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,700&display=swap" rel="stylesheet">
+  <!-- Computer Modern (the TeX default family, near-identical to Latin Modern) for the redline page -->
+  <link href="https://cdn.jsdelivr.net/gh/aaaakshat/cm-web-fonts@latest/font/Serif/cmun-serif.css" rel="stylesheet">
   <link rel="stylesheet" href="/dashboard/dashboard.css">
 </head>
 <body>
-  <!-- Resume dashboard: approve scan suggestions card by card, publish once per session.
-       Talks to /api/resume (netlify/functions/resume.mjs); the desktop worker in ~/career does the builds. -->
+  <!-- Resume dashboard: approve scan suggestions on a redline of the resume, publish once per session.
+       Talks to /api/resume (netlify/functions/resume.mjs); the desktop worker in ~/career does the builds.
+       dashboard/shared/*.js are copies of ~/career/lib (npm run sync-dashboard there); don't edit them here. -->
   <div id="login" class="login" hidden>
     <form id="login-form">
       <h1>Resume dashboard</h1>
@@ -42,13 +45,32 @@
     </header>
 
     <nav class="tabs" role="tablist">
-      <button role="tab" data-tab="suggestions" aria-selected="true">Suggestions <span id="pending-count" class="count"></span></button>
-      <button role="tab" data-tab="documents" aria-selected="false">Documents</button>
+      <button role="tab" data-tab="redline" aria-selected="true">Redline <span id="pending-count" class="count"></span></button>
+      <button role="tab" data-tab="suggestions" aria-selected="false">Cards</button>
+      <button role="tab" data-tab="documents" aria-selected="false">PDFs</button>
       <button role="tab" data-tab="history" aria-selected="false">History</button>
     </nav>
 
     <main>
-      <section id="tab-suggestions" class="tab">
+      <section id="tab-redline" class="tab">
+        <div class="rl-toolbar">
+          <div id="rl-docs" class="subtabs" role="group" aria-label="Document"></div>
+          <div id="rl-modes" class="seg" role="group" aria-label="View">
+            <button data-mode="redline" aria-pressed="true" title="Current draft with pending suggestions marked">Redline</button>
+            <button data-mode="accepted" aria-pressed="false" title="What the draft will be once approved changes apply">Accepted only</button>
+            <button data-mode="live" aria-pressed="false" title="The published version">Live</button>
+          </div>
+        </div>
+        <p id="rl-legend" class="rl-legend">
+          <span class="lg-del">removed</span> <span class="lg-ins">added</span> <span class="lg-acc">accepted, not yet published</span>
+          · Click a mark to approve, reject, or edit it.
+        </p>
+        <div id="rl-failed" class="rl-failed" hidden></div>
+        <div class="rl-desk"><div id="rl-page"></div></div>
+        <div id="rl-other-wrap" class="rl-other-wrap" hidden><h3>Changes not drawn on the page</h3><div id="rl-other"></div></div>
+      </section>
+
+      <section id="tab-suggestions" class="tab" hidden>
         <div id="cards"></div>
         <details id="recent" class="recent">
           <summary>Recent (applied, rejected, stale)</summary>
@@ -73,9 +95,10 @@
         <p id="history-empty" class="muted" hidden>Nothing published yet.</p>
       </section>
     </main>
+    <div id="rl-pop" class="rl-pop" role="dialog" hidden></div>
     <footer class="foot"><button id="btn-forget" class="link">Forget key on this device</button></footer>
   </div>
 
-  <script src="/dashboard/dashboard.js"></script>
+  <script type="module" src="/dashboard/dashboard.js"></script>
 </body>
 </html>
