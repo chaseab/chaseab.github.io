@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>How I work with AI · Chase Bonfiglio</title>
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+    <link rel="alternate icon" href="/assets/favicon.ico" sizes="any">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://chasebonfiglio.com/ai-workflow/" />
+<meta property="og:title" content="How I work with AI" />
+<meta property="og:description" content="What is AI-assisted in my projects and what isn't, and the tooling I have built around it: two machines running agents over a private network, a power guard that refuses to start a training run on battery, submission gates, and a feedback loop wired into this site." />
+<meta property="og:image" content="https://chasebonfiglio.com/assets/imgs/avionics-cover.webp" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="description" content="What is AI-assisted in my projects and what isn't, and the tooling I have built around it: two machines running agents over a private network, a power guard that refuses to start a training run on battery, submission gates, and a feedback loop wired into this site." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,600,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/project.css">
+<style>
+  :root { --accent: #1c2e4a; --accent-soft: #1c2e4a; --accent-tint: rgba(28, 46, 74, .10); }
+  .rule { border-top: 1px solid var(--border); margin: 0; padding-top: 14px; }
+  .machine { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; margin-top: 8px; }
+  .machine div { border-top: 2px solid var(--navy); padding-top: 12px; }
+  .machine b { display: block; font-size: 15px; color: var(--navy); margin-bottom: 5px; }
+  .machine span { font-size: 14px; color: var(--muted); line-height: 1.55; }
+  .plain { list-style: none; margin: 10px 0 0; padding: 0; }
+  .plain li { position: relative; padding-left: 18px; margin-bottom: 9px; font-size: 15.5px; line-height: 1.6; }
+  .plain li::before { content: ""; position: absolute; left: 0; top: 10px; width: 8px; height: 1px; background: var(--navy); }
+  .honest { border-left: 3px solid var(--navy); padding: 4px 0 4px 16px; margin-top: 8px; }
+  .honest p { margin: 0 0 10px; }
+  .honest p:last-child { margin-bottom: 0; }
+  .site-foot { border-top: 1px solid var(--border); margin-top: 64px; padding: 34px 0 10px; background: var(--white); }
+  .site-foot__inner { display: grid; grid-template-columns: 1.6fr 1fr 1fr; gap: 28px; }
+  .site-foot__head { font-size: 13px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--navy); margin: 0 0 10px; }
+  .site-foot__head a { color: inherit; text-decoration: none; }
+  .site-foot ul { list-style: none; margin: 0; padding: 0; }
+  .site-foot li { font-size: 14.5px; line-height: 1.85; }
+  .site-foot a { color: var(--muted); text-decoration: none; }
+  .site-foot a:hover { color: var(--navy); text-decoration: underline; }
+  .tree { position: relative; margin-left: 9px; border-left: 1px solid var(--border); padding-left: 0; }
+  .tree li { position: relative; padding-left: 20px; }
+  .tree li::before { content: ""; position: absolute; left: 0; top: 14px; width: 13px; height: 1px; background: var(--border); }
+  .tree li:last-child::after { content: ""; position: absolute; left: -1px; top: 15px; bottom: 0; width: 1px; background: var(--white); }
+  .tree__all a { color: var(--navy); font-weight: 600; }
+  .site-foot__rule { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+                     border-top: 1px solid var(--border); margin-top: 26px; padding-top: 12px;
+                     font-size: 13px; color: var(--muted); }
+  @media (max-width: 720px) { .site-foot__inner { grid-template-columns: 1fr; gap: 22px; } }
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#tracking">Skip&nbsp;to&nbsp;the&nbsp;work&nbsp;↓</a>
+
+<nav class="site-nav" aria-label="site navigation">
+  <div class="site-nav__inner">
+    <ul class="site-nav__links site-nav__links--left">
+      <li><a href="../index.html#home">Home</a></li>
+      <li><a href="../index.html#about">About</a></li>
+      <li><a href="../index.html#resume">Resume</a></li>
+    </ul>
+    <a class="site-nav__brand" href="../index.html">Chase Bonfiglio</a>
+    <ul class="site-nav__links site-nav__links--right">
+      <li class="site-nav__phone"><a href="../index.html#home">Home</a></li>
+      <li><a href="../projects.html" class="is-active">Projects</a></li>
+      <li class="site-nav__more"><a href="../photography/index.html">Photography</a></li>
+      <li><a href="../contact/index.html">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="page-head container" id="top">
+  <nav class="crumb" aria-label="breadcrumb">
+    <a href="../index.html">chasebonfiglio</a>
+    <span>/</span><a href="../projects.html">projects</a>
+    <span>/</span><b>how-i-work-with-ai</b>
+  </nav>
+
+  <p class="eyebrow">Working notes &middot; updated as it changes</p>
+  <h1>How I work with AI</h1>
+  <p class="lead">
+    Most of what is on this site was built with an AI assistant in the loop, and I would rather say that plainly than
+    have someone wonder. What follows is which parts that applies to, and the tooling I ended up building around it.
+    The tooling is the part I am actually proud of: the model is the cheap bit, and everything interesting is in what
+    you put around it so it runs unattended without lying to you or breaking something.
+  </p>
+</header>
+
+<main class="container">
+
+<section class="section" id="honest">
+  <div class="section__head"><h2>What is AI-assisted here, and what isn't</h2><span class="line"></span></div>
+  <div class="reading honest">
+    <p>
+      <b>Assisted:</b> most of the code on this site, a lot of the glue code in my projects, the first draft of write-ups,
+      and the harnesses and scripts described below.
+    </p>
+    <p>
+      <b>Not assisted:</b> the hardware. The wiring, the crimps, the printed parts, the bench tests, the calibration
+      runs, and every number quoted on any project page. Those came off equipment I set up and measured myself.
+    </p>
+    <p>
+      <b>The rule I hold to:</b> I do not publish a number I cannot reproduce, and I do not publish a claim I cannot
+      defend in conversation. When a page here says something is unmeasured, that is because it is unmeasured.
+    </p>
+  </div>
+</section>
+
+<section class="section" id="mesh">
+  <div class="section__head"><h2>Two machines, one work queue</h2><span class="line"></span></div>
+  <div class="reading">
+    <p>
+      I work across a laptop and a desktop, and the desktop has the GPU. They sit on a private network, so either
+      machine can start an agent on the other, hand it a task and get told when it finishes. Work lands in an inbox
+      directory rather than a shared drive, because the two machines do not share a filesystem and pretending
+      otherwise causes exactly the bugs you would expect.
+    </p>
+    <p>
+      The practical effect is that a long job runs on the machine that should run it, not the machine I happen to be
+      sitting at. One command spawns the session on the far box in the matching directory for whatever repository I am
+      in, and I talk to it from here.
+    </p>
+  </div>
+  <div class="machine">
+    <div><b>Private network</b><span>Both machines on one tailnet. SSH is firewalled to that network only, so nothing is exposed to the internet.</span></div>
+    <div><b>Spawn and task</b><span>An agent starts on the far machine and receives its work as a message, which avoids mangling long prompts through shell quoting.</span></div>
+    <div><b>Handoff by inbox</b><span>Files move to a known directory and the task says where they are. No shared mount, no sync conflicts.</span></div>
+    <div><b>Repository map</b><span>Each project knows its counterpart directory on the other machine, so the same command works from anywhere.</span></div>
+  </div>
+</section>
+
+<section class="section" id="power">
+  <div class="section__head"><h2>A power guard, after losing a drive to one</h2><span class="line"></span></div>
+  <div class="reading">
+    <p>
+      Twice I started a CUDA training run while the laptop was on battery. A 4070 laptop GPU under load draws more
+      than the pack can source; the rail sags and the machine dies instantly. The signature in the event log is the
+      one that tells you it was not software: a kernel power event with no bugcheck code, no memory dump, no hardware
+      error logged. The first time it corrupted a write in progress and the SSD was replaced.
+    </p>
+    <p>So now nothing heavy starts without checking, and nothing long runs without assuming it will be interrupted:</p>
+    <ul class="plain">
+      <li>Any GPU job, long compile or sustained multi-core run checks for mains power first and refuses to start on battery.</li>
+      <li>Every long job checkpoints per step and supports resuming, on the assumption that losing more than one step is a bug.</li>
+      <li>Battery state is polled during a run, because I can unplug it mid-job; on losing mains it checkpoints immediately and throttles.</li>
+      <li>The check is a direct system call, not a shell query in a loop, so it costs nothing to run often.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="section" id="gates">
+  <div class="section__head"><h2>Gates, so an unattended agent cannot ship something broken</h2><span class="line"></span></div>
+  <div class="reading">
+    <p>
+      For competition work the failure mode is not a crash, it is a submission that looks fine and is not. So shipping
+      goes through a gate that refuses rather than an agent that tries its best:
+    </p>
+    <ul class="plain">
+      <li>A pre-flight reads the run's own logs and checks the invariants &mdash; the right GPU actually attached, the expected library versions, the inputs mounted, the agent actually fired. A silent fallback to the wrong hardware is a real failure mode and it does not announce itself.</li>
+      <li>It refuses outright if a previous submission is still pending or the daily quota is spent, because both burn the slot.</li>
+      <li>Every attempt appends to a ledger, so the record of what was tried and what it scored is written by the process rather than remembered afterwards.</li>
+      <li>A separate watcher polls for the states that need a human: stuck pending, completed with a blank score, errored, quota nearly gone.</li>
+    </ul>
+    <p>
+      The scheduling is the same shape of problem. The evaluation queue is load-dependent, so runs get built and queued
+      ahead of time and fired into the quiet window rather than whenever they happen to be ready.
+    </p>
+  </div>
+</section>
+
+<section class="section" id="site">
+  <div class="section__head"><h2>This site has the loop wired into it</h2><span class="line"></span></div>
+  <div class="reading">
+    <p>
+      The most useful thing I built is the least impressive-looking. Every page here has a notes panel: I leave feedback
+      on the page I am looking at, and it saves to a store behind a key. A watcher polls it, waits until I have stopped
+      writing for five minutes, and only then hands the whole batch over &mdash; so a burst of six notes is one
+      interruption instead of six.
+    </p>
+    <p>
+      Notes stay in that panel until they are actually dealt with, at which point they move to a history view: green
+      for handled, yellow for not, and the original text kept verbatim so nothing gets quietly reworded. A separate
+      audit diffs everything I have written against everything filed, which is how I found twenty-one notes that had
+      been read and never acted on.
+    </p>
+    <p>
+      The other half is this: adding content to a page must not mean rewriting the page. Every project page renders a
+      list of blocks &mdash; a video, a figure, a measured result, a dated note &mdash; from its own file. Adding one
+      appends an object to that file and touches no prose, so I never have to re-read a page to check that the voice or
+      the facts survived an edit.
+    </p>
+  </div>
+</section>
+
+<section class="section" id="added">
+  <div data-blocks="ai-workflow" hidden></div>
+</section>
+
+<section class="section" id="taste">
+  <div class="section__head"><h2>What I have learned to insist on</h2><span class="line"></span></div>
+  <div class="reading">
+    <ul class="plain">
+      <li>Refuse rather than guess. A gate that stops is worth more than an agent that improvises.</li>
+      <li>Verify against the artefact, not the summary &mdash; read the log, check the file, fetch the live page.</li>
+      <li>State is on disk. Anything that matters gets written down where the next session can find it.</li>
+      <li>Keep the expensive context out. Screenshots and long outputs go to a sub-process that returns a paragraph.</li>
+      <li>Say what is unmeasured. The moment a page starts rounding up, none of it is worth reading.</li>
+    </ul>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-foot">
+  <div class="container site-foot__inner">
+    <div class="site-foot__tree">
+      <p class="site-foot__head"><a href="../projects.html">Projects</a></p>
+      <ul class="tree">
+        <li><a href="../sma/index.html">SMA wire arrays &middot; Kennedy Lab</a></li>
+        <li><a href="../so101/index.html">SO-101 arm &middot; imitation learning</a></li>
+        <li><a href="../arc-agi-3/index.html">ARC-AGI-3 reasoning loop</a></li>
+        <li><a href="../dart/index.html">A-Dartment scoring rig</a></li>
+        <li><a href="../camera-tracking/index.html">MachWorks camera tracking</a></li>
+        <li><a href="../avionics/index.html">MachWorks avionics</a></li>
+        <li><a href="../logic-frame-co/index.html">Logic Frame Co.</a></li>
+        <li class="tree__all"><a href="../projects.html">every project &rarr;</a></li>
+      </ul>
+    </div>
+
+    <div class="site-foot__col">
+      <p class="site-foot__head">Site</p>
+      <ul>
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../index.html#about">About</a></li>
+        <li><a href="../resume/index.html">Resume</a></li>
+        <li><a href="../photography/index.html">Photography</a></li>
+        <li><a href="../fitness.html">Training log</a></li>
+        <li><a href="../contact/index.html">Contact</a></li>
+      </ul>
+    </div>
+
+    <div class="site-foot__col">
+      <p class="site-foot__head">Elsewhere</p>
+      <ul>
+        <li><a href="https://www.linkedin.com/in/chase-bonfiglio" target="_blank" rel="noopener">LinkedIn</a></li>
+        <li><a href="https://github.com/chaseab" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="https://www.instagram.com/chaseabon/" target="_blank" rel="noopener">Instagram</a></li>
+        <li><a href="mailto:bonfigliochase@gmail.com">bonfigliochase@gmail.com</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="container site-foot__rule">
+    <span>Chase Bonfiglio &middot; Blacksburg, VA</span>
+    <span>Mechanical engineering @ Virginia Tech, class of 2028</span>
+  </div>
+</footer>
+
