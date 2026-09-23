@@ -19,17 +19,53 @@
 <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,600,700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/css/project.css">
 <style>
-  :root { --accent: #1c2e4a; --accent-soft: #1c2e4a; --accent-tint: rgba(28, 46, 74, .10); }
-  .shots { columns: 3 260px; column-gap: 14px; margin-top: 8px; }
-  .shots figure { break-inside: avoid; margin: 0 0 14px; }
-  .shots img { width: 100%; display: block; border: 1px solid var(--border); background: var(--white); }
-  .shots figcaption { font-size: 12.5px; color: var(--muted); margin-top: 5px; }
+  .site-foot { border-top: 1px solid var(--border); margin-top: 64px; padding: 34px 0 10px; background: var(--white); }
+  .site-foot__inner { display: grid; grid-template-columns: 1.6fr 1fr 1fr; gap: 28px; }
+  .site-foot__head { font-size: 13px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--navy); margin: 0 0 10px; }
+  .site-foot__head a { color: inherit; text-decoration: none; }
+  .site-foot ul { list-style: none; margin: 0; padding: 0; }
+  .site-foot li { font-size: 14.5px; line-height: 1.85; }
+  .site-foot a { color: var(--muted); text-decoration: none; }
+  .site-foot a:hover { color: var(--navy); text-decoration: underline; }
+  .tree { position: relative; margin-left: 9px; border-left: 1px solid var(--border); padding-left: 0; }
+  .tree li { position: relative; padding-left: 20px; }
+  .tree li::before { content: ""; position: absolute; left: 0; top: 14px; width: 13px; height: 1px; background: var(--border); }
+  .tree li:last-child::after { content: ""; position: absolute; left: -1px; top: 15px; bottom: 0; width: 1px; background: var(--white); }
+  .tree__all a { color: var(--navy); font-weight: 600; }
+  .site-foot__rule { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+                     border-top: 1px solid var(--border); margin-top: 26px; padding-top: 12px;
+                     font-size: 13px; color: var(--muted); }
+  @media (max-width: 720px) { .site-foot__inner { grid-template-columns: 1fr; gap: 22px; } }
+  :root { --accent: #1c2e4a; --accent-soft: #1c2e4a; --accent-tint: rgba(28, 46, 74, .10); --row: 300px; }
+
+  /* justified rows: every frame keeps its own shape, each row fills the width */
+  .rows { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+  .rows figure {
+    margin: 0; height: var(--row); flex-grow: calc(var(--ar) * 100); flex-basis: calc(var(--ar) * var(--row));
+    position: relative; overflow: hidden; background: var(--white); border: 1px solid var(--border);
+  }
+  .rows figure img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .rows::after { content: ""; flex-grow: 1e4; }
+  .rows figure[hidden] { display: none; }
+
+  /* a thin navy rule appears under a frame on hover - the house accent, nothing more */
+  .rows figure::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 3px;
+    background: var(--navy); transform: scaleX(0); transform-origin: left; transition: transform .25s ease;
+  }
+  .rows figure:hover::after { transform: scaleX(1); }
+
+  @media (max-width: 860px) { :root { --row: 220px; } }
+  @media (max-width: 520px) { :root { --row: 170px; } .rows figure { flex-basis: calc(var(--ar) * var(--row)); } }
+  @media (prefers-reduced-motion: reduce) { .rows figure::after { transition: none; } }
+
   .filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 22px; }
   .filters button {
     font: inherit; font-size: 14px; font-weight: 600; color: var(--navy); background: var(--white);
     border: 1px solid var(--border); border-radius: 2px; padding: 6px 14px; cursor: pointer;
   }
   .filters button[aria-pressed="true"] { background: var(--navy); border-color: var(--navy); color: var(--white); }
+  .shotcount { font-size: 13.5px; color: var(--muted); margin: 0 0 14px; }
 </style>
 </head>
 <body>
@@ -48,7 +84,7 @@
       <li class="site-nav__phone"><a href="../index.html#home">Home</a></li>
       <li><a href="../projects.html" class="is-active">Projects</a></li>
       <li class="site-nav__more"><a href="../index.html#photography">Photography</a></li>
-      <li><a href="../index.html#contact">Contact</a></li>
+      <li><a href="../contact/index.html">Contact</a></li>
     </ul>
   </div>
 </nav>
@@ -62,8 +98,8 @@
   <p class="eyebrow">Photography &middot; 67 frames</p>
   <h1>Photography</h1>
   <p class="lead">
-    Travel, nature, friends, and my family's slightly absurd number of cats and dogs. Mostly from trips over the past
-    five years; lately I've been shooting 35&nbsp;mm film and developing it myself.
+    Travel, nature, friends, and my family's slightly absurd number of cats and dogs. Getting into film with a
+    Pentax&nbsp;K1000; most everything else is on a Rebel&nbsp;ti6.
   </p>
 </header>
 
@@ -76,101 +112,144 @@
     <button data-cat="pets" aria-pressed="false">Pets</button>
     <button data-cat="travel" aria-pressed="false">Travel</button>
   </div>
+  <p class="shotcount" id="count"></p>
 
-  <div class="shots" id="shots">
-  <figure data-cat="travel"><img src="/assets/imgs/travel/show/sunnyroad.webp" alt="A sunlit road" loading="lazy"><figcaption>A sunlit road</figcaption></figure>
-  <figure data-cat="travel"><img src="/assets/imgs/travel/show/rowerdude.webp" alt="A rower on the water" loading="lazy"><figcaption>A rower on the water</figcaption></figure>
-  <figure data-cat="travel"><img src="/assets/imgs/travel/show/fatherinthesnow.webp" alt="My father in the snow" loading="lazy"><figcaption>My father in the snow</figcaption></figure>
-  <figure data-cat="travel"><img src="/assets/imgs/travel/show/reflectionsailboat.webp" alt="A sailboat reflected in still water" loading="lazy"><figcaption>A sailboat reflected in still water</figcaption></figure>
-  <figure data-cat="travel"><img src="/assets/imgs/travel/show/darkapartments.webp" alt="Apartment blocks at night" loading="lazy"><figcaption>Apartment blocks at night</figcaption></figure>
-  <figure data-cat="travel"><img src="/assets/imgs/travel/show/newyorkskyline.webp" alt="The New York skyline" loading="lazy"><figcaption>The New York skyline</figcaption></figure>
-  <figure data-cat="travel"><img src="/assets/imgs/travel/show/guysonaboatbutsmaller.webp" alt="Friends on a boat" loading="lazy"><figcaption>Friends on a boat</figcaption></figure>
-  <figure data-cat="travel"><img src="/assets/imgs/travel/show/sanfransicoskyline.webp" alt="The San Francisco skyline" loading="lazy"><figcaption>The San Francisco skyline</figcaption></figure>
-  <figure data-cat="travel"><img src="/assets/imgs/travel/show/rubbercement.webp" alt="A travel photograph" loading="lazy"><figcaption>A travel photograph</figcaption></figure>
-  <figure data-cat="travel"><img src="/assets/imgs/travel/show/guysonboat.webp" alt="Friends on a boat" loading="lazy"><figcaption>Friends on a boat</figcaption></figure>
-  <figure data-cat="travel"><img src="/assets/imgs/travel/show/halfaplane.webp" alt="Half a plane on the tarmac" loading="lazy"><figcaption>Half a plane on the tarmac</figcaption></figure>
-  <figure data-cat="travel"><img src="/assets/imgs/travel/show/happyfamily.webp" alt="My family together" loading="lazy"><figcaption>My family together</figcaption></figure>
-  <figure data-cat="travel"><img src="/assets/imgs/travel/show/redboatinwater.webp" alt="A red boat on the water" loading="lazy"><figcaption>A red boat on the water</figcaption></figure>
-  <figure data-cat="travel"><img src="/assets/imgs/travel/show/carunderlight.webp" alt="A car under a street light" loading="lazy"><figcaption>A car under a street light</figcaption></figure>
-  <figure data-cat="travel"><img src="/assets/imgs/travel/show/greentruckincanopy.webp" alt="A green truck under a tree canopy" loading="lazy"><figcaption>A green truck under a tree canopy</figcaption></figure>
-  <figure data-cat="travel"><img src="/assets/imgs/travel/show/flowersandhouse.webp" alt="Flowers in front of a house" loading="lazy"><figcaption>Flowers in front of a house</figcaption></figure>
-  <figure data-cat="travel"><img src="/assets/imgs/travel/show/blueandwhitehouse.webp" alt="A blue and white house" loading="lazy"><figcaption>A blue and white house</figcaption></figure>
-  <figure data-cat="travel"><img src="/assets/imgs/travel/show/fancywhitehouse.webp" alt="An ornate white house" loading="lazy"><figcaption>An ornate white house</figcaption></figure>
-  <figure data-cat="travel"><img src="/assets/imgs/travel/show/fatherandadog.webp" alt="My father with a dog" loading="lazy"><figcaption>My father with a dog</figcaption></figure>
-  <figure data-cat="travel"><img src="/assets/imgs/travel/show/boatonthewater.webp" alt="A boat on the water" loading="lazy"><figcaption>A boat on the water</figcaption></figure>
-  <figure data-cat="nature"><img src="/assets/imgs/nature/samaflower.webp" alt="A flower in close-up" loading="lazy"><figcaption>A flower in close-up</figcaption></figure>
-  <figure data-cat="nature"><img src="/assets/imgs/nature/yosemiteriverbrown.webp" alt="A river in Yosemite" loading="lazy"><figcaption>A river in Yosemite</figcaption></figure>
-  <figure data-cat="nature"><img src="/assets/imgs/nature/beachhousesunset.webp" alt="A beach house at sunset" loading="lazy"><figcaption>A beach house at sunset</figcaption></figure>
-  <figure data-cat="nature"><img src="/assets/imgs/nature/resortview.webp" alt="A view from a resort" loading="lazy"><figcaption>A view from a resort</figcaption></figure>
-  <figure data-cat="nature"><img src="/assets/imgs/nature/kayaksunset.webp" alt="A kayak at sunset" loading="lazy"><figcaption>A kayak at sunset</figcaption></figure>
-  <figure data-cat="nature"><img src="/assets/imgs/nature/flowerunderside.webp" alt="The underside of a flower" loading="lazy"><figcaption>The underside of a flower</figcaption></figure>
-  <figure data-cat="nature"><img src="/assets/imgs/nature/closeupstream.webp" alt="A close-up of a stream" loading="lazy"><figcaption>A close-up of a stream</figcaption></figure>
-  <figure data-cat="nature"><img src="/assets/imgs/nature/monkey.webp" alt="A monkey" loading="lazy"><figcaption>A monkey</figcaption></figure>
-  <figure data-cat="nature"><img src="/assets/imgs/nature/stormsky.webp" alt="A storm sky" loading="lazy"><figcaption>A storm sky</figcaption></figure>
-  <figure data-cat="nature"><img src="/assets/imgs/nature/houseflowers.webp" alt="Flowers beside a house" loading="lazy"><figcaption>Flowers beside a house</figcaption></figure>
-  <figure data-cat="friends"><img src="/assets/imgs/friends/domonkayak.webp" alt="Dom on a kayak" loading="lazy"><figcaption>Dom on a kayak</figcaption></figure>
-  <figure data-cat="friends"><img src="/assets/imgs/friends/firefriends.webp" alt="Friends around a fire" loading="lazy"><figcaption>Friends around a fire</figcaption></figure>
-  <figure data-cat="friends"><img src="/assets/imgs/friends/cinamaticchess.webp" alt="A game of chess" loading="lazy"><figcaption>A game of chess</figcaption></figure>
-  <figure data-cat="friends"><img src="/assets/imgs/friends/paintingkayak.webp" alt="Painting a kayak" loading="lazy"><figcaption>Painting a kayak</figcaption></figure>
-  <figure data-cat="friends"><img src="/assets/imgs/friends/alexunderlegs.webp" alt="Alex playing basketball" loading="lazy"><figcaption>Alex playing basketball</figcaption></figure>
-  <figure data-cat="friends"><img src="/assets/imgs/friends/friendsonroof.webp" alt="Friends on a roof" loading="lazy"><figcaption>Friends on a roof</figcaption></figure>
-  <figure data-cat="friends"><img src="/assets/imgs/friends/basketballdefense.webp" alt="Playing basketball defense" loading="lazy"><figcaption>Playing basketball defense</figcaption></figure>
-  <figure data-cat="friends"><img src="/assets/imgs/friends/reflectionspikeball.webp" alt="A game of spikeball, reflected" loading="lazy"><figcaption>A game of spikeball, reflected</figcaption></figure>
-  <figure data-cat="friends"><img src="/assets/imgs/friends/bluehourwater.webp" alt="Water at blue hour" loading="lazy"><figcaption>Water at blue hour</figcaption></figure>
-  <figure data-cat="friends"><img src="/assets/imgs/friends/winningchess.webp" alt="Winning a game of chess" loading="lazy"><figcaption>Winning a game of chess</figcaption></figure>
-  <figure data-cat="friends"><img src="/assets/imgs/friends/fitzonshoulders.webp" alt="Fitz on someone&#x27;s shoulders" loading="lazy"><figcaption>Fitz on someone&#x27;s shoulders</figcaption></figure>
-  <figure data-cat="friends"><img src="/assets/imgs/friends/sittingdownghost.JPG" alt="A long-exposure figure sitting down" loading="lazy"><figcaption>A long-exposure figure sitting down</figcaption></figure>
-  <figure data-cat="friends"><img src="/assets/imgs/friends/mirrorphotographer.webp" alt="A mirror self-portrait" loading="lazy"><figcaption>A mirror self-portrait</figcaption></figure>
-  <figure data-cat="friends"><img src="/assets/imgs/friends/verticalkayakingdom.webp" alt="Dom kayaking" loading="lazy"><figcaption>Dom kayaking</figcaption></figure>
-  <figure data-cat="friends"><img src="/assets/imgs/friends/youngmirrorphotographer.webp" alt="A mirror self-portrait, taken younger" loading="lazy"><figcaption>A mirror self-portrait, taken younger</figcaption></figure>
-  <figure data-cat="friends"><img src="/assets/imgs/friends/adenspiking.webp" alt="Aden spiking a ball" loading="lazy"><figcaption>Aden spiking a ball</figcaption></figure>
-  <figure data-cat="friends"><img src="/assets/imgs/friends/midairfootball.webp" alt="A football catch in midair" loading="lazy"><figcaption>A football catch in midair</figcaption></figure>
-  <figure data-cat="pets"><img src="/assets/imgs/pets/handsomecosmo.webp" alt="Cosmo" loading="lazy"><figcaption>Cosmo</figcaption></figure>
-  <figure data-cat="pets"><img src="/assets/imgs/pets/karlosbywindow.webp" alt="Karlos by a window" loading="lazy"><figcaption>Karlos by a window</figcaption></figure>
-  <figure data-cat="pets"><img src="/assets/imgs/pets/crazykitty.webp" alt="An excited cat" loading="lazy"><figcaption>An excited cat</figcaption></figure>
-  <figure data-cat="pets"><img src="/assets/imgs/pets/circlebodie.webp" alt="Bodie curled up" loading="lazy"><figcaption>Bodie curled up</figcaption></figure>
-  <figure data-cat="pets"><img src="/assets/imgs/pets/cosmoinfront.webp" alt="Cosmo in the foreground" loading="lazy"><figcaption>Cosmo in the foreground</figcaption></figure>
-  <figure data-cat="pets"><img src="/assets/imgs/pets/karlosandleo.webp" alt="Karlos and Leo" loading="lazy"><figcaption>Karlos and Leo</figcaption></figure>
-  <figure data-cat="pets"><img src="/assets/imgs/pets/wide3cat.webp" alt="Three cats" loading="lazy"><figcaption>Three cats</figcaption></figure>
-  <figure data-cat="pets"><img src="/assets/imgs/pets/tiredkitty.webp" alt="A sleepy cat" loading="lazy"><figcaption>A sleepy cat</figcaption></figure>
-  <figure data-cat="pets"><img src="/assets/imgs/pets/karlosinbed.webp" alt="Karlos in bed" loading="lazy"><figcaption>Karlos in bed</figcaption></figure>
-  <figure data-cat="pets"><img src="/assets/imgs/pets/kittyinbed.webp" alt="A cat in bed" loading="lazy"><figcaption>A cat in bed</figcaption></figure>
-  <figure data-cat="pets"><img src="/assets/imgs/pets/lyingdogs.webp" alt="Dogs lying down" loading="lazy"><figcaption>Dogs lying down</figcaption></figure>
-  <figure data-cat="pets"><img src="/assets/imgs/pets/maverickwithtoy.webp" alt="Maverick with a toy" loading="lazy"><figcaption>Maverick with a toy</figcaption></figure>
-  <figure data-cat="pets"><img src="/assets/imgs/pets/3cat.webp" alt="Three cats" loading="lazy"><figcaption>Three cats</figcaption></figure>
-  <figure data-cat="pets"><img src="/assets/imgs/pets/karlosinfront.webp" alt="Karlos in the foreground" loading="lazy"><figcaption>Karlos in the foreground</figcaption></figure>
-  <figure data-cat="pets"><img src="/assets/imgs/pets/cutefosters.webp" alt="Foster kittens" loading="lazy"><figcaption>Foster kittens</figcaption></figure>
-  <figure data-cat="pets"><img src="/assets/imgs/pets/babycosmo.webp" alt="Cosmo as a kitten" loading="lazy"><figcaption>Cosmo as a kitten</figcaption></figure>
-  <figure data-cat="pets"><img src="/assets/imgs/pets/3cats.webp" alt="Three cats" loading="lazy"><figcaption>Three cats</figcaption></figure>
-  <figure data-cat="pets"><img src="/assets/imgs/pets/cutefoster.webp" alt="A foster kitten" loading="lazy"><figcaption>A foster kitten</figcaption></figure>
-  <figure data-cat="pets"><img src="/assets/imgs/pets/xmasdogs.webp" alt="Dogs at Christmas" loading="lazy"><figcaption>Dogs at Christmas</figcaption></figure>
-  <figure data-cat="pets"><img src="/assets/imgs/pets/leoinbed.webp" alt="Leo in bed" loading="lazy"><figcaption>Leo in bed</figcaption></figure>
+  <div class="rows" id="shots">
+    <figure data-cat="travel" style="--ar:1.7778"><img src="/assets/imgs/travel/show/sunnyroad.webp" alt="A sunlit road" loading="lazy"></figure>
+    <figure data-cat="travel" style="--ar:0.6475"><img src="/assets/imgs/travel/show/rowerdude.webp" alt="A rower on the water" loading="lazy"></figure>
+    <figure data-cat="travel" style="--ar:1.5009"><img src="/assets/imgs/travel/show/fatherinthesnow.webp" alt="My father in the snow" loading="lazy"></figure>
+    <figure data-cat="travel" style="--ar:0.6663"><img src="/assets/imgs/travel/show/reflectionsailboat.webp" alt="A sailboat reflected in still water" loading="lazy"></figure>
+    <figure data-cat="travel" style="--ar:0.6663"><img src="/assets/imgs/travel/show/darkapartments.webp" alt="Apartment blocks at night" loading="lazy"></figure>
+    <figure data-cat="travel" style="--ar:1.3333"><img src="/assets/imgs/travel/show/newyorkskyline.webp" alt="The New York skyline" loading="lazy"></figure>
+    <figure data-cat="travel" style="--ar:0.6663"><img src="/assets/imgs/travel/show/guysonaboatbutsmaller.webp" alt="Friends on a boat" loading="lazy"></figure>
+    <figure data-cat="travel" style="--ar:1.6461"><img src="/assets/imgs/travel/show/sanfransicoskyline.webp" alt="The San Francisco skyline" loading="lazy"></figure>
+    <figure data-cat="travel" style="--ar:0.6663"><img src="/assets/imgs/travel/show/rubbercement.webp" alt="A travel photograph" loading="lazy"></figure>
+    <figure data-cat="travel" style="--ar:0.6663"><img src="/assets/imgs/travel/show/guysonboat.webp" alt="Friends on a boat" loading="lazy"></figure>
+    <figure data-cat="travel" style="--ar:0.6663"><img src="/assets/imgs/travel/show/halfaplane.webp" alt="Half a plane on the tarmac" loading="lazy"></figure>
+    <figure data-cat="travel" style="--ar:0.65"><img src="/assets/imgs/travel/show/happyfamily.webp" alt="My family together" loading="lazy"></figure>
+    <figure data-cat="travel" style="--ar:1.5009"><img src="/assets/imgs/travel/show/redboatinwater.webp" alt="A red boat on the water" loading="lazy"></figure>
+    <figure data-cat="travel" style="--ar:0.6663"><img src="/assets/imgs/travel/show/carunderlight.webp" alt="A car under a street light" loading="lazy"></figure>
+    <figure data-cat="travel" style="--ar:1.5009"><img src="/assets/imgs/travel/show/greentruckincanopy.webp" alt="A green truck under a tree canopy" loading="lazy"></figure>
+    <figure data-cat="travel" style="--ar:0.6663"><img src="/assets/imgs/travel/show/flowersandhouse.webp" alt="Flowers in front of a house" loading="lazy"></figure>
+    <figure data-cat="travel" style="--ar:1.5009"><img src="/assets/imgs/travel/show/blueandwhitehouse.webp" alt="A blue and white house" loading="lazy"></figure>
+    <figure data-cat="travel" style="--ar:0.6663"><img src="/assets/imgs/travel/show/fancywhitehouse.webp" alt="An ornate white house" loading="lazy"></figure>
+    <figure data-cat="travel" style="--ar:0.6663"><img src="/assets/imgs/travel/show/fatherandadog.webp" alt="My father with a dog" loading="lazy"></figure>
+    <figure data-cat="travel" style="--ar:1.5009"><img src="/assets/imgs/travel/show/boatonthewater.webp" alt="A boat on the water" loading="lazy"></figure>
+    <figure data-cat="nature" style="--ar:1.5009"><img src="/assets/imgs/nature/samaflower.webp" alt="A flower in close-up" loading="lazy"></figure>
+    <figure data-cat="nature" style="--ar:0.75"><img src="/assets/imgs/nature/yosemiteriverbrown.webp" alt="A river in Yosemite" loading="lazy"></figure>
+    <figure data-cat="nature" style="--ar:1.5009"><img src="/assets/imgs/nature/beachhousesunset.webp" alt="A beach house at sunset" loading="lazy"></figure>
+    <figure data-cat="nature" style="--ar:0.6663"><img src="/assets/imgs/nature/resortview.webp" alt="A view from a resort" loading="lazy"></figure>
+    <figure data-cat="nature" style="--ar:1.5009"><img src="/assets/imgs/nature/kayaksunset.webp" alt="A kayak at sunset" loading="lazy"></figure>
+    <figure data-cat="nature" style="--ar:1.5326"><img src="/assets/imgs/nature/flowerunderside.webp" alt="The underside of a flower" loading="lazy"></figure>
+    <figure data-cat="nature" style="--ar:0.75"><img src="/assets/imgs/nature/closeupstream.webp" alt="A close-up of a stream" loading="lazy"></figure>
+    <figure data-cat="nature" style="--ar:0.6663"><img src="/assets/imgs/nature/monkey.webp" alt="A monkey" loading="lazy"></figure>
+    <figure data-cat="nature" style="--ar:0.75"><img src="/assets/imgs/nature/stormsky.webp" alt="A storm sky" loading="lazy"></figure>
+    <figure data-cat="nature" style="--ar:1.5009"><img src="/assets/imgs/nature/houseflowers.webp" alt="Flowers beside a house" loading="lazy"></figure>
+    <figure data-cat="friends" style="--ar:1.7778"><img src="/assets/imgs/friends/domonkayak.webp" alt="Dom on a kayak" loading="lazy"></figure>
+    <figure data-cat="friends" style="--ar:1.5009"><img src="/assets/imgs/friends/firefriends.webp" alt="Friends around a fire" loading="lazy"></figure>
+    <figure data-cat="friends" style="--ar:0.6663"><img src="/assets/imgs/friends/cinamaticchess.webp" alt="A game of chess" loading="lazy"></figure>
+    <figure data-cat="friends" style="--ar:1.5009"><img src="/assets/imgs/friends/paintingkayak.webp" alt="Painting a kayak" loading="lazy"></figure>
+    <figure data-cat="friends" style="--ar:1.5009"><img src="/assets/imgs/friends/alexunderlegs.webp" alt="Alex playing basketball" loading="lazy"></figure>
+    <figure data-cat="friends" style="--ar:0.6663"><img src="/assets/imgs/friends/friendsonroof.webp" alt="Friends on a roof" loading="lazy"></figure>
+    <figure data-cat="friends" style="--ar:0.6663"><img src="/assets/imgs/friends/basketballdefense.webp" alt="Playing basketball defense" loading="lazy"></figure>
+    <figure data-cat="friends" style="--ar:1.5009"><img src="/assets/imgs/friends/reflectionspikeball.webp" alt="A game of spikeball, reflected" loading="lazy"></figure>
+    <figure data-cat="friends" style="--ar:1.5009"><img src="/assets/imgs/friends/bluehourwater.webp" alt="Water at blue hour" loading="lazy"></figure>
+    <figure data-cat="friends" style="--ar:0.6663"><img src="/assets/imgs/friends/winningchess.webp" alt="Winning a game of chess" loading="lazy"></figure>
+    <figure data-cat="friends" style="--ar:1.5009"><img src="/assets/imgs/friends/fitzonshoulders.webp" alt="Fitz on someone&amp;#x27;s shoulders" loading="lazy"></figure>
+    <figure data-cat="friends" style="--ar:0.8"><img src="/assets/imgs/friends/sittingdownghost.JPG" alt="A long-exposure figure sitting down" loading="lazy"></figure>
+    <figure data-cat="friends" style="--ar:0.8"><img src="/assets/imgs/friends/mirrorphotographer.webp" alt="A mirror self-portrait" loading="lazy"></figure>
+    <figure data-cat="friends" style="--ar:0.6663"><img src="/assets/imgs/friends/verticalkayakingdom.webp" alt="Dom kayaking" loading="lazy"></figure>
+    <figure data-cat="friends" style="--ar:1.5009"><img src="/assets/imgs/friends/youngmirrorphotographer.webp" alt="A mirror self-portrait, taken younger" loading="lazy"></figure>
+    <figure data-cat="friends" style="--ar:1.5009"><img src="/assets/imgs/friends/adenspiking.webp" alt="Aden spiking a ball" loading="lazy"></figure>
+    <figure data-cat="friends" style="--ar:1.5009"><img src="/assets/imgs/friends/midairfootball.webp" alt="A football catch in midair" loading="lazy"></figure>
+    <figure data-cat="pets" style="--ar:1.5009"><img src="/assets/imgs/pets/handsomecosmo.webp" alt="Cosmo" loading="lazy"></figure>
+    <figure data-cat="pets" style="--ar:0.6663"><img src="/assets/imgs/pets/karlosbywindow.webp" alt="Karlos by a window" loading="lazy"></figure>
+    <figure data-cat="pets" style="--ar:0.6663"><img src="/assets/imgs/pets/crazykitty.webp" alt="An excited cat" loading="lazy"></figure>
+    <figure data-cat="pets" style="--ar:1.0"><img src="/assets/imgs/pets/circlebodie.webp" alt="Bodie curled up" loading="lazy"></figure>
+    <figure data-cat="pets" style="--ar:1.5009"><img src="/assets/imgs/pets/cosmoinfront.webp" alt="Cosmo in the foreground" loading="lazy"></figure>
+    <figure data-cat="pets" style="--ar:0.6663"><img src="/assets/imgs/pets/karlosandleo.webp" alt="Karlos and Leo" loading="lazy"></figure>
+    <figure data-cat="pets" style="--ar:1.5009"><img src="/assets/imgs/pets/wide3cat.webp" alt="Three cats" loading="lazy"></figure>
+    <figure data-cat="pets" style="--ar:1.5009"><img src="/assets/imgs/pets/tiredkitty.webp" alt="A sleepy cat" loading="lazy"></figure>
+    <figure data-cat="pets" style="--ar:0.6663"><img src="/assets/imgs/pets/karlosinbed.webp" alt="Karlos in bed" loading="lazy"></figure>
+    <figure data-cat="pets" style="--ar:1.5009"><img src="/assets/imgs/pets/kittyinbed.webp" alt="A cat in bed" loading="lazy"></figure>
+    <figure data-cat="pets" style="--ar:1.5009"><img src="/assets/imgs/pets/lyingdogs.webp" alt="Dogs lying down" loading="lazy"></figure>
+    <figure data-cat="pets" style="--ar:0.7675"><img src="/assets/imgs/pets/maverickwithtoy.webp" alt="Maverick with a toy" loading="lazy"></figure>
+    <figure data-cat="pets" style="--ar:1.5009"><img src="/assets/imgs/pets/3cat.webp" alt="Three cats" loading="lazy"></figure>
+    <figure data-cat="pets" style="--ar:0.6663"><img src="/assets/imgs/pets/karlosinfront.webp" alt="Karlos in the foreground" loading="lazy"></figure>
+    <figure data-cat="pets" style="--ar:0.6663"><img src="/assets/imgs/pets/cutefosters.webp" alt="Foster kittens" loading="lazy"></figure>
+    <figure data-cat="pets" style="--ar:0.74"><img src="/assets/imgs/pets/babycosmo.webp" alt="Cosmo as a kitten" loading="lazy"></figure>
+    <figure data-cat="pets" style="--ar:1.5009"><img src="/assets/imgs/pets/3cats.webp" alt="Three cats" loading="lazy"></figure>
+    <figure data-cat="pets" style="--ar:1.5009"><img src="/assets/imgs/pets/cutefoster.webp" alt="A foster kitten" loading="lazy"></figure>
+    <figure data-cat="pets" style="--ar:1.5009"><img src="/assets/imgs/pets/xmasdogs.webp" alt="Dogs at Christmas" loading="lazy"></figure>
+    <figure data-cat="pets" style="--ar:1.7857"><img src="/assets/imgs/pets/leoinbed.webp" alt="Leo in bed" loading="lazy"></figure>
   </div>
 
 <script>
   (function () {
     var wrap = document.getElementById("filters");
+    var count = document.getElementById("count");
     var figs = [].slice.call(document.querySelectorAll("#shots figure"));
+    var tally = function () {
+      var n = figs.filter(function (f) { return !f.hidden; }).length;
+      count.textContent = n + (n === 1 ? " frame" : " frames");
+    };
     wrap.addEventListener("click", function (e) {
       var b = e.target.closest("button"); if (!b) return;
       var cat = b.dataset.cat;
       [].forEach.call(wrap.children, function (c) { c.setAttribute("aria-pressed", String(c === b)); });
       figs.forEach(function (f) { f.hidden = !(cat === "all" || f.dataset.cat === cat); });
+      tally();
     });
+    tally();
   })();
 </script>
 
 </main>
 
-<footer class="site-footer">
-  <div class="container site-footer__inner">
-    <p class="site-footer__note">Photography · Chase Bonfiglio · 2026</p>
-    <nav class="site-footer__links" aria-label="footer">
-      <a href="../projects.html">← all projects</a>
-      <a href="../index.html#contact">contact</a>
-    </nav>
+<footer class="site-foot">
+  <div class="container site-foot__inner">
+    <div class="site-foot__tree">
+      <p class="site-foot__head"><a href="../projects.html">Projects</a></p>
+      <ul class="tree">
+        <li><a href="../sma/index.html">SMA wire arrays &middot; Kennedy Lab</a></li>
+        <li><a href="../so101/index.html">SO-101 arm &middot; imitation learning</a></li>
+        <li><a href="../arc-agi-3/index.html">ARC-AGI-3 reasoning loop</a></li>
+        <li><a href="../dart/index.html">A-Dartment scoring rig</a></li>
+        <li><a href="../camera-tracking/index.html">MachWorks camera tracking</a></li>
+        <li><a href="../avionics/index.html">MachWorks avionics</a></li>
+        <li><a href="../logic-frame-co/index.html">Logic Frame Co.</a></li>
+        <li class="tree__all"><a href="../projects.html">every project &rarr;</a></li>
+      </ul>
+    </div>
+
+    <div class="site-foot__col">
+      <p class="site-foot__head">Site</p>
+      <ul>
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../index.html#about">About</a></li>
+        <li><a href="../resume/index.html">Resume</a></li>
+        <li><a href="../photography/index.html">Photography</a></li>
+        <li><a href="../fitness.html">Training log</a></li>
+        <li><a href="../contact/index.html">Contact</a></li>
+      </ul>
+    </div>
+
+    <div class="site-foot__col">
+      <p class="site-foot__head">Elsewhere</p>
+      <ul>
+        <li><a href="https://www.linkedin.com/in/chase-bonfiglio" target="_blank" rel="noopener">LinkedIn</a></li>
+        <li><a href="https://github.com/chaseab" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="https://www.instagram.com/chaseabon/" target="_blank" rel="noopener">Instagram</a></li>
+        <li><a href="mailto:bonfigliochase@gmail.com">bonfigliochase@gmail.com</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="container site-foot__rule">
+    <span>Chase Bonfiglio &middot; Blacksburg, VA</span>
+    <span>Mechanical engineering @ Virginia Tech, class of 2028</span>
   </div>
 </footer>
+
 
 <script src="../assets/js/notes.js" defer></script>
 </body>

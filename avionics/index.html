@@ -19,6 +19,23 @@
 <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,600,700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/css/project.css">
 <style>
+  .site-foot { border-top: 1px solid var(--border); margin-top: 64px; padding: 34px 0 10px; background: var(--white); }
+  .site-foot__inner { display: grid; grid-template-columns: 1.6fr 1fr 1fr; gap: 28px; }
+  .site-foot__head { font-size: 13px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--navy); margin: 0 0 10px; }
+  .site-foot__head a { color: inherit; text-decoration: none; }
+  .site-foot ul { list-style: none; margin: 0; padding: 0; }
+  .site-foot li { font-size: 14.5px; line-height: 1.85; }
+  .site-foot a { color: var(--muted); text-decoration: none; }
+  .site-foot a:hover { color: var(--navy); text-decoration: underline; }
+  .tree { position: relative; margin-left: 9px; border-left: 1px solid var(--border); padding-left: 0; }
+  .tree li { position: relative; padding-left: 20px; }
+  .tree li::before { content: ""; position: absolute; left: 0; top: 14px; width: 13px; height: 1px; background: var(--border); }
+  .tree li:last-child::after { content: ""; position: absolute; left: -1px; top: 15px; bottom: 0; width: 1px; background: var(--white); }
+  .tree__all a { color: var(--navy); font-weight: 600; }
+  .site-foot__rule { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+                     border-top: 1px solid var(--border); margin-top: 26px; padding-top: 12px;
+                     font-size: 13px; color: var(--muted); }
+  @media (max-width: 720px) { .site-foot__inner { grid-template-columns: 1fr; gap: 22px; } }
   /* Avionics: navy on white, the engineering report. The failure-mode table is the centrepiece. */
   :root { --accent: #1c2e4a; --accent-soft: #1c2e4a; --accent-tint: rgba(28, 46, 74, .10); }
   table.table--report { min-width: 680px; }
@@ -46,7 +63,7 @@
       <li class="site-nav__phone"><a href="../index.html#home">Home</a></li>
       <li><a href="../projects.html" class="is-active">Projects</a></li>
       <li class="site-nav__more"><a href="../photography/index.html">Photography</a></li>
-      <li><a href="../index.html#contact">Contact</a></li>
+      <li><a href="../contact/index.html">Contact</a></li>
     </ul>
   </div>
 </nav>
@@ -130,15 +147,50 @@
 
 </main>
 
-<footer class="site-footer">
-  <div class="container site-footer__inner">
-    <p class="site-footer__note">MachWorks avionics · Chase Bonfiglio · 2026</p>
-    <nav class="site-footer__links" aria-label="footer">
-      <a href="../projects.html">← all projects</a>
-      <a href="../index.html#contact">contact</a>
-    </nav>
+<footer class="site-foot">
+  <div class="container site-foot__inner">
+    <div class="site-foot__tree">
+      <p class="site-foot__head"><a href="../projects.html">Projects</a></p>
+      <ul class="tree">
+        <li><a href="../sma/index.html">SMA wire arrays &middot; Kennedy Lab</a></li>
+        <li><a href="../so101/index.html">SO-101 arm &middot; imitation learning</a></li>
+        <li><a href="../arc-agi-3/index.html">ARC-AGI-3 reasoning loop</a></li>
+        <li><a href="../dart/index.html">A-Dartment scoring rig</a></li>
+        <li><a href="../camera-tracking/index.html">MachWorks camera tracking</a></li>
+        <li><a href="../avionics/index.html">MachWorks avionics</a></li>
+        <li><a href="../logic-frame-co/index.html">Logic Frame Co.</a></li>
+        <li class="tree__all"><a href="../projects.html">every project &rarr;</a></li>
+      </ul>
+    </div>
+
+    <div class="site-foot__col">
+      <p class="site-foot__head">Site</p>
+      <ul>
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../index.html#about">About</a></li>
+        <li><a href="../resume/index.html">Resume</a></li>
+        <li><a href="../photography/index.html">Photography</a></li>
+        <li><a href="../fitness.html">Training log</a></li>
+        <li><a href="../contact/index.html">Contact</a></li>
+      </ul>
+    </div>
+
+    <div class="site-foot__col">
+      <p class="site-foot__head">Elsewhere</p>
+      <ul>
+        <li><a href="https://www.linkedin.com/in/chase-bonfiglio" target="_blank" rel="noopener">LinkedIn</a></li>
+        <li><a href="https://github.com/chaseab" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="https://www.instagram.com/chaseabon/" target="_blank" rel="noopener">Instagram</a></li>
+        <li><a href="mailto:bonfigliochase@gmail.com">bonfigliochase@gmail.com</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="container site-foot__rule">
+    <span>Chase Bonfiglio &middot; Blacksburg, VA</span>
+    <span>Mechanical engineering @ Virginia Tech, class of 2028</span>
   </div>
 </footer>
+
 
 <script src="../assets/js/notes.js" defer></script>
 </body>
