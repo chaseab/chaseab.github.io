@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Resume Dashboard</title>
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/dashboard/dashboard.css">
+</head>
+<body>
+  <!-- Resume dashboard: approve scan suggestions card by card, publish once per session.
+       Talks to /api/resume (netlify/functions/resume.mjs); the desktop worker in ~/career does the builds. -->
+  <div id="login" class="login" hidden>
+    <form id="login-form">
+      <h1>Resume dashboard</h1>
+      <label for="key">Key</label>
+      <input id="key" type="password" autocomplete="current-password" required>
+      <button type="submit" class="primary">Open</button>
+      <p id="login-error" class="error" hidden></p>
+    </form>
+  </div>
+
+  <div id="app" hidden>
+    <header class="topbar">
+      <div class="title">Resume dashboard</div>
+      <div class="stats">
+        <span id="scan-stat" class="stat"></span>
+        <span id="worker-stat" class="stat"></span>
+        <span id="draft-stat" class="stat"></span>
+      </div>
+      <div class="actions">
+        <button id="btn-publish" class="primary">Publish session</button>
+        <button id="btn-discard">Discard draft</button>
+        <button id="btn-scan">Scan now</button>
+        <button id="btn-rebuild">Rebuild</button>
+      </div>
+      <div id="queued" class="queued"></div>
+      <div id="banner" class="banner" hidden></div>
+      <pre id="scan-summary" class="summary" hidden></pre>
+    </header>
+
+    <nav class="tabs" role="tablist">
+      <button role="tab" data-tab="suggestions" aria-selected="true">Suggestions <span id="pending-count" class="count"></span></button>
+      <button role="tab" data-tab="documents" aria-selected="false">Documents</button>
+      <button role="tab" data-tab="history" aria-selected="false">History</button>
+    </nav>
+
+    <main>
+      <section id="tab-suggestions" class="tab">
+        <div id="cards"></div>
+        <details id="recent" class="recent">
+          <summary>Recent (applied, rejected, stale)</summary>
+          <div id="recent-list"></div>
+        </details>
+      </section>
+
+      <section id="tab-documents" class="tab" hidden>
+        <div id="doc-tabs" class="subtabs"></div>
+        <div id="doc-meta" class="doc-meta"></div>
+        <div class="pdfs">
+          <figure><figcaption>Preview (draft)</figcaption><iframe id="pdf-preview" title="Preview PDF"></iframe></figure>
+          <figure><figcaption>Live (published)</figcaption><iframe id="pdf-live" title="Live PDF"></iframe></figure>
+        </div>
+      </section>
+
+      <section id="tab-history" class="tab" hidden>
+        <table class="history">
+          <thead><tr><th>Tag</th><th>Published</th><th>Changes</th><th>PDFs</th><th></th></tr></thead>
+          <tbody id="history-rows"></tbody>
+        </table>
+        <p id="history-empty" class="muted" hidden>Nothing published yet.</p>
+      </section>
+    </main>
+    <footer class="foot"><button id="btn-forget" class="link">Forget key on this device</button></footer>
+  </div>
+
+  <script src="/dashboard/dashboard.js"></script>
+</body>
+</html>
