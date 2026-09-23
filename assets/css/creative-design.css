@@ -11840,3 +11840,17 @@ section.height-auto {
 .testmonial-wrapper .title {
   margin-top: -40px;
 }
+
+
+/* accent: navy, never pink (Chase, 23 Sep) */
+.text-danger { color: #1c2e4a !important; }
+.bg-danger { background-color: #1c2e4a !important; }
+.border-danger { border-color: #1c2e4a !important; }
+.btn-danger { background-color: #1c2e4a; border-color: #1c2e4a; }
+.btn-danger:hover, .btn-danger:focus, .btn-danger:active { background-color: #16253c; border-color: #16253c; }
+.btn-outline-danger { color: #1c2e4a; border-color: #1c2e4a; }
+.btn-outline-danger:hover, .btn-outline-danger:focus, .btn-outline-danger:active { background-color: #1c2e4a; border-color: #1c2e4a; color: #fff; }
+.alert-danger { background-color: #eef1f6; border-color: #c9d2e0; color: #1c2e4a; }
+.badge-danger { background-color: #1c2e4a; }
+.progress-bar.bg-danger { background-color: #1c2e4a !important; }
+a.text-danger:hover, a.text-danger:focus { color: #16253c !important; }

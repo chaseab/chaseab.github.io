@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Photography &middot; Chase Bonfiglio</title>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="alternate icon" href="/assets/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Photography &mdash; Chase Bonfiglio" />
+<meta property="og:description" content="Four series &mdash; travel, nature, friends and pets. Shot over the past five years, mostly on family trips." />
+<meta property="og:image" content="https://chasebonfiglio.com/assets/imgs/travel/show/sunnyroad.webp" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="description" content="Four series &mdash; travel, nature, friends and pets. Shot over the past five years, mostly on family trips." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,600,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/project.css">
+<style>
+  :root {
+    --ink: #10151c;
+    --quiet: #7b828b;
+    --rule: #e4e6e9;
+    --plate: 720px;                          /* tallest any row may render */
+    --gut: clamp(12px, 1.4vw, 22px);         /* one gutter, everywhere */
+    --pad: clamp(16px, 4vw, 48px);
+    --serif: Georgia, "Iowan Old Style", "Times New Roman", serif;
+  }
+  body { background: #fff; }
+
+  .wrap { max-width: 1280px; margin: 0 auto; padding: 0 var(--pad); }
+
+  /* ---------- masthead ---------- */
+  .mast { padding-bottom: 8px; }
+  .mast h1 {
+    font-family: var(--serif); font-weight: 400; letter-spacing: -.015em;
+    font-size: clamp(38px, 7vw, 74px); line-height: 1.02; margin: 0 0 18px;
+  }
+  .mast .lead { max-width: 46ch; }
+
+  /* ---------- the index ---------- */
+  .index { margin: clamp(44px, 7vw, 86px) 0 clamp(56px, 9vw, 110px); }
+  .index__head {
+    font-size: 12px; letter-spacing: .2em; text-transform: uppercase;
+    color: var(--quiet); font-weight: 600; margin: 0 0 6px;
+    padding-bottom: 12px; border-bottom: 1px solid var(--ink);
+  }
+  .toc { list-style: none; margin: 0; padding: 0; }
+  .toc__row + .toc__row { border-top: 1px solid var(--rule); }
+  .toc__link {
+    display: grid; grid-template-columns: 116px 3.2rem 1fr auto;
+    align-items: center; gap: 0 clamp(14px, 2.4vw, 32px);
+    padding: clamp(14px, 2vw, 22px) 0; text-decoration: none; color: var(--ink);
+  }
+  .toc__plate { display: block; overflow: hidden; background: #eceef0; aspect-ratio: 3 / 2; }
+  .toc__plate img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .toc__num {
+    font-size: 13px; letter-spacing: .14em; color: var(--ink); opacity: .55;
+    font-variant-numeric: tabular-nums;
+  }
+  .toc__name {
+    font-family: var(--serif); font-size: clamp(26px, 4.4vw, 50px);
+    line-height: 1.05; letter-spacing: -.01em;
+  }
+  .toc__count { font-size: 13px; color: var(--quiet); white-space: nowrap; }
+  .toc__link:hover .toc__name,
+  .toc__link:focus-visible .toc__name { color: var(--navy); }
+
+  /* ---------- sticky series rail ---------- */
+  .rail {
+    position: sticky; top: var(--nav-h, 72px); z-index: 90;
+    background: #fff; border-bottom: 1px solid var(--rule);
+  }
+  .rail ul {
+    list-style: none; margin: 0 auto; padding: 0 var(--pad); max-width: 1280px;
+    display: flex; gap: clamp(14px, 3vw, 40px); align-items: center; min-height: 46px;
+  }
+  .rail a {
+    display: flex; align-items: baseline; gap: 8px; text-decoration: none;
+    font-size: 14px; color: var(--quiet); padding: 6px 0;
+    border-bottom: 2px solid transparent;
+  }
+  .rail a:hover { color: var(--ink); }
+  .rail a[aria-current="true"] { color: var(--navy); border-bottom-color: var(--navy); }
+  .rail__num { font-size: 10px; letter-spacing: .14em; opacity: .75; }
+
+  /* ---------- a series ---------- */
+  .series { margin-top: clamp(64px, 11vw, 132px); scroll-margin-top: calc(var(--nav-h, 72px) + 48px); }
+  .series:first-of-type { margin-top: 0; }
+
+  .opener { margin: 0; position: relative; background: #eceef0; }
+  .opener__hit { display: block; width: 100%; }
+  .opener img {
+    display: block; width: 100%;
+    height: min(78vh, calc(100vw / var(--ar))); object-fit: cover;
+  }
+  .opener__type {
+    position: absolute; left: var(--pad); right: var(--pad); bottom: clamp(18px, 3vw, 40px);
+    pointer-events: none; color: #fff; text-shadow: 0 1px 24px rgba(0, 0, 0, .5);
+  }
+  .opener::after {
+    content: ""; position: absolute; inset: auto 0 0 0; height: 46%;
+    background: linear-gradient(to top, rgba(8, 11, 16, .62), rgba(8, 11, 16, 0));
+    pointer-events: none;
+  }
+  .opener__type { z-index: 2; }
+  .opener__num {
+    display: block; font-size: 11px; letter-spacing: .22em; text-transform: uppercase;
+    opacity: .85; margin-bottom: 6px;
+  }
+  .opener__name {
+    font-family: var(--serif); font-weight: 400; color: #fff;
+    font-size: clamp(34px, 8vw, 92px); line-height: .98; letter-spacing: -.02em; margin: 0;
+  }
+  .opener__text { position: static; }
+
+  .series__meta {
+    display: flex; justify-content: flex-end; margin: 14px 0 clamp(22px, 3.5vw, 40px);
+    font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--quiet);
+  }
+
+  /* ---------- justified rows ---------- */
+  .rows { display: flex; flex-direction: column; gap: var(--gut); }
+  .row {
+    display: flex; gap: var(--gut); width: 100%; margin: 0 auto;
+    max-width: calc(var(--plate) * var(--sum) + var(--gut) * (var(--n) - 1));
+  }
+  .frame { flex: var(--ar) 1 0%; margin: 0; min-width: 0; }
+  .frame__hit {
+    display: block; width: 100%; padding: 0; border: 0; background: #eceef0;
+    cursor: zoom-in; line-height: 0;
+  }
+  .frame__hit img { display: block; width: 100%; height: auto; }
+  /* Captions live in the full-frame view. The figcaption stays in the markup as
+     the source of that text; flip this one rule to `block` to print captions
+     under the frames as well. Frames without text emit no figcaption at all,
+     so nothing collapses or leaves a gap. */
+  .frame__text { display: none; }
+  .frame__text {
+    font-size: 13px; line-height: 1.65; color: var(--quiet);
+    max-width: 58ch; margin-top: 12px;
+  }
+  .opener__text { padding: 14px var(--pad) 0; }
+  .frame__text p { margin: 0 0 .6em; }
+  .frame__text p:last-child { margin-bottom: 0; }
+
+  .tail {
+    display: flex; justify-content: flex-end; gap: 26px;
+    margin: clamp(26px, 4vw, 48px) 0 0; padding-top: 16px; border-top: 1px solid var(--rule);
+  }
+  .tail__link { font-size: 13px; color: var(--quiet); text-decoration: none; }
+  .tail__link:hover { color: var(--navy); }
+
+  /* ---------- full-frame view ---------- */
+  .lb {
+    position: fixed; inset: 0; z-index: 9500; background: #0a0d12;
+    display: grid; grid-template-rows: auto 1fr auto; padding: 14px;
+  }
+  .lb[hidden] { display: none; }
+  .lb__bar {
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    color: #cdd2d8; font-size: 12px; letter-spacing: .16em; text-transform: uppercase;
+  }
+  .lb__stage { display: grid; place-items: center; min-height: 0; padding: 12px 0; }
+  .lb__stage img { max-width: 100%; max-height: 100%; display: block; object-fit: contain; }
+  .lb__foot { min-height: 26px; display: flex; justify-content: center; }
+  .lb__cap {
+    color: #b9bfc7; font-size: 13px; line-height: 1.65; max-width: 58ch;
+    text-align: left; margin: 6px 0 4px;
+  }
+  .lb__cap p { margin: 0 0 .6em; }
+  .lb__cap p:last-child { margin-bottom: 0; }
+  .lb__cap:empty { display: none; }
+  .lb button {
+    background: none; border: 0; color: #fff; font: inherit; cursor: pointer;
+    opacity: .72; padding: 8px 12px;
+  }
+  .lb button:hover { opacity: 1; }
+  .lb__x { font-size: 22px; line-height: 1; }
+  .lb__step {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    font-size: 30px; line-height: 1; padding: 20px 16px;
+  }
+  .lb__prev { left: 2px; }
+  .lb__next { right: 2px; }
+
+  /* ---------- focus ---------- */
+  a:focus-visible, button:focus-visible {
+    outline: 2px solid var(--navy); outline-offset: 3px;
+  }
+  .lb a:focus-visible, .lb button:focus-visible { outline-color: #fff; }
+
+  /* ---------- narrow ---------- */
+  @media (max-width: 900px) {
+    .row { flex-direction: column; max-width: none; }
+    .frame { flex: none; }
+    .toc__link { grid-template-columns: 84px 2.4rem 1fr auto; }
+    .opener img { height: min(62vh, calc(100vw / var(--ar))); }
+    .rail ul { overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .rail ul::-webkit-scrollbar { display: none; }
+    .rail a { white-space: nowrap; }
+  }
+  @media (max-width: 560px) {
+    .toc__link { grid-template-columns: 64px 1fr auto; }
+    .toc__num { display: none; }
+    .lb__step { padding: 20px 8px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    * { transition: none !important; animation: none !important; }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    html { scroll-behavior: smooth; }
+  }
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#index">Skip&nbsp;to&nbsp;the&nbsp;series&nbsp;&darr;</a>
+
+<nav class="site-nav" aria-label="site navigation">
+  <div class="site-nav__inner">
+    <ul class="site-nav__links site-nav__links--left">
+      <li><a href="../index.html#home">Home</a></li>
+      <li><a href="../index.html#about">About</a></li>
+      <li><a href="../index.html#resume">Resume</a></li>
+    </ul>
+    <a class="site-nav__brand" href="../index.html">Chase Bonfiglio</a>
+    <ul class="site-nav__links site-nav__links--right">
+      <li class="site-nav__phone"><a href="../index.html#home">Home</a></li>
+      <li><a href="../projects.html">Projects</a></li>
+      <li class="site-nav__more"><a href="../index.html#photography" class="is-active">Photography</a></li>
+      <li><a href="../contact/index.html">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="page-head wrap" id="top">
+  <nav class="crumb" aria-label="breadcrumb">
+    <a href="../index.html">chasebonfiglio</a>
+    <span>/</span><b>photography</b>
+  </nav>
+
+  <div class="mast">
+    <p class="eyebrow">Four series &middot; 67 frames &middot; 2021&ndash;2026</p>
+    <h1>Photography</h1>
+    <p class="lead">
+      Travel, nature, friends, and my family's slightly absurd number of cats and dogs. I shoot film on a
+      Pentax&nbsp;K1000 now; most of what is here was taken on a Rebel&nbsp;ti6.
+    </p>
+  </div>
+
+  <nav class="index" id="index" aria-label="series index">
+    <p class="index__head">Series</p>
+    <ul class="toc">
+      <li class="toc__row">
+        <a class="toc__link" href="#travel">
+          <span class="toc__plate"><img src="/assets/imgs/travel/show/sunnyroad.webp" alt="" width="800" height="450" loading="lazy" decoding="async"></span>
+          <span class="toc__num">I</span>
+          <span class="toc__name">Travel</span>
+          <span class="toc__count">20 frames</span>
+        </a>
+      </li>
+      <li class="toc__row">
+        <a class="toc__link" href="#nature">
+          <span class="toc__plate"><img src="/assets/imgs/nature/flowerunderside.webp" alt="" width="800" height="522" loading="lazy" decoding="async"></span>
+          <span class="toc__num">II</span>
+          <span class="toc__name">Nature</span>
+          <span class="toc__count">10 frames</span>
+        </a>
+      </li>
+      <li class="toc__row">
+        <a class="toc__link" href="#friends">
+          <span class="toc__plate"><img src="/assets/imgs/friends/domonkayak.webp" alt="" width="800" height="450" loading="lazy" decoding="async"></span>
+          <span class="toc__num">III</span>
+          <span class="toc__name">Friends</span>
+          <span class="toc__count">17 frames</span>
+        </a>
+      </li>
+      <li class="toc__row">
+        <a class="toc__link" href="#pets">
+          <span class="toc__plate"><img src="/assets/imgs/pets/handsomecosmo.webp" alt="" width="800" height="533" loading="lazy" decoding="async"></span>
+          <span class="toc__num">IV</span>
+          <span class="toc__name">Pets</span>
+          <span class="toc__count">20 frames</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</header>
+
+<nav class="rail" id="rail" aria-label="jump to a series">
+  <ul>
+      <li><a href="#travel" data-rail="travel"><span class="rail__num">I</span>Travel</a></li>
+      <li><a href="#nature" data-rail="nature"><span class="rail__num">II</span>Nature</a></li>
+      <li><a href="#friends" data-rail="friends"><span class="rail__num">III</span>Friends</a></li>
+      <li><a href="#pets" data-rail="pets"><span class="rail__num">IV</span>Pets</a></li>
+  </ul>
+</nav>
+
+<main id="work">
+
+  <section class="series" id="travel" data-series="travel" aria-labelledby="travel-h">
+    <figure class="opener">
+      <button type="button" class="frame__hit opener__hit" data-series="travel" data-no="1" aria-label="Open A sunlit road at full size">
+        <img src="/assets/imgs/travel/show/sunnyroad.webp" alt="A sunlit road" width="800" height="450" style="--ar:1.7778">
+      </button>
+      <div class="opener__type">
+        <span class="opener__num">Series I</span>
+        <h2 class="opener__name" id="travel-h">Travel</h2>
+      </div>
+    </figure>
+    <div class="wrap">
+      <p class="series__meta"><span>20 frames</span></p>
+      <div class="rows">
+        <div class="row" style="--sum:2.1484;--n:2">
+          <figure class="frame" style="--ar:0.6475">
+            <button type="button" class="frame__hit" data-series="travel" data-no="2" aria-label="Open A rower on the water at full size">
+              <img src="/assets/imgs/travel/show/rowerdude.webp" alt="A rower on the water" width="518" height="800" loading="lazy" decoding="async">
+            </button>
+          </figure>
+          <figure class="frame" style="--ar:1.5009">
+            <button type="button" class="frame__hit" data-series="travel" data-no="3" aria-label="Open My father in the snow at full size">
+              <img src="/assets/imgs/travel/show/fatherinthesnow.webp" alt="My father in the snow" width="800" height="533" loading="lazy" decoding="async">
+            </button>
+          </figure>
+        </div>
+        <div class="row" style="--sum:2.6659;--n:3">
+          <figure class="frame" style="--ar:0.6663">
+            <button type="button" class="frame__hit" data-series="travel" data-no="4" aria-label="Open A sailboat reflected in still water at full size">
+              <img src="/assets/imgs/travel/show/reflectionsailboat.webp" alt="A sailboat reflected in still water" width="533" height="800" loading="lazy" decoding="async">
+            </button>
+          </figure>
+          <figure class="frame" style="--ar:0.6663">
+            <button type="button" class="frame__hit" data-series="travel" data-no="5" aria-label="Open Apartment blocks at night at full size">
+              <img src="/assets/imgs/travel/show/darkapartments.webp" alt="Apartment blocks at night" width="533" height="800" loading="lazy" decoding="async">
+            </button>
+          </figure>
+          <figure class="frame" style="--ar:1.3333">
+            <button type="button" class="frame__hit" data-series="travel" data-no="6" aria-label="Open The New York skyline at full size">
+              <img src="/assets/imgs/travel/show/newyorkskyline.webp" alt="The New York skyline" width="800" height="600" loading="lazy" decoding="async">
+            </button>
+          </figure>
+        </div>
+        <div class="row" style="--sum:2.3124;--n:2">
+          <figure class="frame" style="--ar:0.6663">
+            <button type="button" class="frame__hit" data-series="travel" data-no="7" aria-label="Open Friends on a boat at full size">
+              <img src="/assets/imgs/travel/show/guysonaboatbutsmaller.webp" alt="Friends on a boat" width="533" height="800" loading="lazy" decoding="async">
+            </button>
+          </figure>
+          <figure class="frame" style="--ar:1.6461">
+            <button type="button" class="frame__hit" data-series="travel" data-no="8" aria-label="Open The San Francisco skyline at full size">
+              <img src="/assets/imgs/travel/show/sanfransicoskyline.webp" alt="The San Francisco skyline" width="800" height="486" loading="lazy" decoding="async">
+            </button>
+          </figure>
+        </div>
+        <div class="row" style="--sum:1.3326;--n:2">
+          <figure class="frame" style="--ar:0.6663">
+            <button type="button" class="frame__hit" data-series="travel" data-no="9" aria-label="Open A travel photograph at full size">
+              <img src="/assets/imgs/travel/show/rubbercement.webp" alt="A travel photograph" width="533" height="800" loading="lazy" decoding="async">
+            </button>
+          </figure>
+          <figure class="frame" style="--ar:0.6663">
+            <button type="button" class="frame__hit" data-series="travel" data-no="10" aria-label="Open Friends on a boat at full size">
+              <img src="/assets/imgs/travel/show/guysonboat.webp" alt="Friends on a boat" width="533" height="800" loading="lazy" decoding="async">
+            </button>
+          </figure>
+        </div>
+        <div class="row" style="--sum:2.8172;--n:3">
+          <figure class="frame" style="--ar:0.6663">
+            <button type="button" class="frame__hit" data-series="travel" data-no="11" aria-label="Open Half a plane on the tarmac at full size">
+              <img src="/assets/imgs/travel/show/halfaplane.webp" alt="Half a plane on the tarmac" width="533" height="800" loading="lazy" decoding="async">
+            </button>
+          </figure>
+          <figure class="frame" style="--ar:0.65">
+            <button type="button" class="frame__hit" data-series="travel" data-no="12" aria-label="Open My family together at full size">
+              <img src="/assets/imgs/travel/show/happyfamily.webp" alt="My family together" width="520" height="800" loading="lazy" decoding="async">
+            </button>
+          </figure>
+          <figure class="frame" style="--ar:1.5009">
+            <button type="button" class="frame__hit" data-series="travel" data-no="13" aria-label="Open A red boat on the water at full size">
+              <img src="/assets/imgs/travel/show/redboatinwater.webp" alt="A red boat on the water" width="800" height="533" loading="lazy" decoding="async">
+            </button>
+          </figure>
+        </div>
+        <div class="row" style="--sum:2.8335;--n:3">
+          <figure class="frame" style="--ar:0.6663">
+            <button type="button" class="frame__hit" data-series="travel" data-no="14" aria-label="Open A car under a street light at full size">
+              <img src="/assets/imgs/travel/show/carunderlight.webp" alt="A car under a street light" width="533" height="800" loading="lazy" decoding="async">
+            </button>
+          </figure>
+          <figure class="frame" style="--ar:1.5009">
+            <button type="button" class="frame__hit" data-series="travel" data-no="15" aria-label="Open A green truck under a tree canopy at full size">
+              <img src="/assets/imgs/travel/show/greentruckincanopy.webp" alt="A green truck under a tree canopy" width="800" height="533" loading="lazy" decoding="async">
+            </button>
+          </figure>
+          <figure class="frame" style="--ar:0.6663">
+            <button type="button" class="frame__hit" data-series="travel" data-no="16" aria-label="Open Flowers in front of a house at full size">
+              <img src="/assets/imgs/travel/show/flowersandhouse.webp" alt="Flowers in front of a house" width="533" height="800" loading="lazy" decoding="async">
+            </button>
+          </figure>
+        </div>
+        <div class="row" style="--sum:1.5009;--n:1">
+          <figure class="frame" style="--ar:1.5009">
+            <button type="button" class="frame__hit" data-series="travel" data-no="17" aria-label="Open A blue and white house at full size">
+              <img src="/assets/imgs/travel/show/blueandwhitehouse.webp" alt="A blue and white house" width="800" height="533" loading="lazy" decoding="async">
+            </button>
+          </figure>
+        </div>
+        <div class="row" style="--sum:2.8335;--n:3">
+          <figure class="frame" style="--ar:0.6663">
+            <button type="button" class="frame__hit" data-series="travel" data-no="18" aria-label="Open An ornate white house at full size">
+              <img src="/assets/imgs/travel/show/fancywhitehouse.webp" alt="An ornate white house" width="533" height="800" loading="lazy" decoding="async">
+            </button>
+          </figure>
+          <figure class="frame" style="--ar:0.6663">
+            <button type="button" class="frame__hit" data-series="travel" data-no="19" aria-label="Open My father with a dog at full size">
+              <img src="/assets/imgs/travel/show/fatherandadog.webp" alt="My father with a dog" width="533" height="800" loading="lazy" decoding="async">
+            </button>
+          </figure>
+          <figure class="frame" style="--ar:1.5009">
+            <button type="button" class="frame__hit" data-series="travel" data-no="20" aria-label="Open A boat on the water at full size">
+              <img src="/assets/imgs/travel/show/boatonthewater.webp" alt="A boat on the water" width="800" height="533" loading="lazy" decoding="async">
+            </button>
+          </figure>
+        </div>
+      </div>
+      <p class="tail"><a class="tail__link" href="#index">Index &uarr;</a> <a class="tail__link" href="#nature">Next &middot; Nature &darr;</a></p>
+    </div>
+  </section>
+
+  <section class="series" id="nature" data-series="nature" aria-labelledby="nature-h">
+    <figure class="opener">
+      <button type="button" class="frame__hit opener__hit" data-series="nature" data-no="1" aria-label="Open The underside of a flower at full size">
+        <img src="/assets/imgs/nature/flowerunderside.webp" alt="The underside of a flower" width="800" height="522" style="--ar:1.5326" loading="lazy" decoding="async">
+      </button>
+      <div class="opener__type">
+        <span class="opener__num">Series II</span>
+        <h2 class="opener__name" id="nature-h">Nature</h2>
+      </div>
+    </figure>
+    <div class="wrap">
+      <p class="series__meta"><span>10 frames</span></p>
+      <div class="rows">
+        <div class="row" style="--sum:1.5009;--n:1">
+          <figure class="frame" style="--ar:1.5009">
+            <button type="button" class="frame__hit" data-series="nature" data-no="2" aria-label="Open A flower in close-up at full size">
+              <img src="/assets/imgs/nature/samaflower.webp" alt="A flower in close-up" width="800" height="533" loading="lazy" decoding="async">
+            </button>
+          </figure>
+        </div>
+        <div class="row" style="--sum:2.9172;--n:3">
+          <figure class="frame" style="--ar:0.75">
+            <button type="button" class="frame__hit" data-series="nature" data-no="3" aria-label="Open A river in Yosemite at full size">
+              <img src="/assets/imgs/nature/yosemiteriverbrown.webp" alt="A river in Yosemite" width="600" height="800" loading="lazy" decoding="async">
+            </button>
+          </figure>
+          <figure class="frame" style="--ar:1.5009">
+            <button type="button" class="frame__hit" data-series="nature" data-no="4" aria-label="Open A beach house at sunset at full size">
+              <img src="/assets/imgs/nature/beachhousesunset.webp" alt="A beach house at sunset" width="800" height="533" loading="lazy" decoding="async">
+            </button>
+          </figure>
+          <figure class="frame" style="--ar:0.6663">
+            <button type="button" class="frame__hit" data-series="nature" data-no="5" aria-label="Open A view from a resort at full size">
+              <img src="/assets/imgs/nature/resortview.webp" alt="A view from a resort" width="533" height="800" loading="lazy" decoding="async">
+            </button>
+          </figure>
+        </div>
+        <div class="row" style="--sum:2.9172;--n:3">
+          <figure class="frame" style="--ar:1.5009">
+            <button type="button" class="frame__hit" data-series="nature" data-no="6" aria-label="Open A kayak at sunset at full size">
+              <img src="/assets/imgs/nature/kayaksunset.webp" alt="A kayak at sunset" width="800" height="533" loading="lazy" decoding="async">
+            </button>
+          </figure>
+          <figure class="frame" style="--ar:0.75">
+            <button type="button" class="frame__hit" data-series="nature" data-no="7" aria-label="Open A close-up of a stream at full size">
+              <img src="/assets/imgs/nature/closeupstream.webp" alt="A close-up of a stream" width="600" height="800" loading="lazy" decoding="async">
+            </button>
+          </figure>
+          <figure class="frame" style="--ar:0.6663">
+            <button type="button" class="frame__hit" data-series="nature" data-no="8" aria-label="Open A monkey at full size">
+              <img src="/assets/imgs/nature/monkey.webp" alt="A monkey" width="533" height="800" loading="lazy" decoding="async">
+            </button>
+          </figure>
+        </div>
+        <div class="row" style="--sum:0.75;--n:1">
+          <figure class="frame" style="--ar:0.75">
+            <button type="button" class="frame__hit" data-series="nature" data-no="9" aria-label="Open A storm sky at full size">
+              <img src="/assets/imgs/nature/stormsky.webp" alt="A storm sky" width="600" height="800" loading="lazy" decoding="async">
+            </button>
+          </figure>
+        </div>
+        <div class="row" style="--sum:1.5009;--n:1">
+          <figure class="frame" style="--ar:1.5009">
+            <button type="button" class="frame__hit" data-series="nature" data-no="10" aria-label="Open Flowers beside a house at full size">
+              <img src="/assets/imgs/nature/houseflowers.webp" alt="Flowers beside a house" width="800" height="533" loading="lazy" decoding="async">
+            </button>
+          </figure>
+        </div>
+      </div>
+      <p class="tail"><a class="tail__link" href="#index">Index &uarr;</a> <a class="tail__link" href="#friends">Next &middot; Friends &darr;</a></p>
+    </div>
+  </section>
+
+  <section class="series" id="friends" data-series="friends" aria-labelledby="friends-h">
+    <figure class="opener">
+      <button type="button" class="frame__hit opener__hit" data-series="friends" data-no="1" aria-label="Open Dom on a kayak at full size">
+        <img src="/assets/imgs/friends/domonkayak.webp" alt="Dom on a kayak" width="800" height="450" style="--ar:1.7778" loading="lazy" decoding="async">
+      </button>
+      <div class="opener__type">
+        <span class="opener__num">Series III</span>
+        <h2 class="opener__name" id="friends-h">Friends</h2>
+      </div>
+    </figure>
+    <div class="wrap">
+      <p class="series__meta"><span>17 frames</span></p>
+      <div class="rows">
+        <div class="row" style="--sum:1.5009;--n:1">
+          <figure class="frame" style="--ar:1.5009">
+            <button type="button" class="frame__hit" data-series="friends" data-no="2" aria-label="Open Friends around a fire at full size">
+              <img src="/assets/imgs/friends/firefriends.webp" alt="Friends around a fire" width="800" height="533" loading="lazy" decoding="async">
+            </button>
+          </figure>
+        </div>
+        <div class="row" style="--sum:3.6681;--n:3">
+          <figure class="frame" style="--ar:0.6663">
+            <button type="button" class="frame__hit" data-series="friends" data-no="3" aria-label="Open A game of chess at full size">
+              <img src="/assets/imgs/friends/cinamaticchess.webp" alt="A game of chess" width="533" height="800" loading="lazy" decoding="async">
+            </button>
+          </figure>
+          <figure class="frame" style="--ar:1.5009">
+            <button type="button" class="frame__hit" data-series="friends" data-no="4" aria-label="Open Painting a kayak at full size">
+              <img src="/assets/imgs/friends/paintingkayak.webp" alt="Painting a kayak" width="800" height="533" loading="lazy" decoding="async">
+            </button>
+          </figure>
+          <figure class="frame" style="--ar:1.5009">
+            <button type="button" class="frame__hit" data-series="friends" data-no="5" aria-label="Open Alex playing basketball at full size">
+              <img src="/assets/imgs/friends/alexunderlegs.webp" alt="Alex playing basketball" width="800" height="533" loading="lazy" decoding="async">
+            </button>
+          </figure>
+        </div>
+        <div class="row" style="--sum:2.8335;--n:3">
+          <figure class="frame" style="--ar:0.6663">
+            <button type="button" class="frame__hit" data-series="friends" data-no="6" aria-label="Open Friends on a roof at full size">
+              <img src="/assets/imgs/friends/friendsonroof.webp" alt="Friends on a roof" width="533" height="800" loading="lazy" decoding="async">
+            </button>
+          </figure>
+          <figure class="frame" style="--ar:0.6663">
+            <button type="button" class="frame__hit" data-series="friends" data-no="7" aria-label="Open Playing basketball defense at full size">
+              <img src="/assets/imgs/friends/basketballdefense.webp" alt="Playing basketball defense" width="533" height="800" loading="lazy" decoding="async">
+            </button>
+          </figure>
+          <figure class="frame" style="--ar:1.5009">
+            <button type="button" class="frame__hit" data-series="friends" data-no="8" aria-label="Open A game of spikeball, reflected at full size">
+              <img src="/assets/imgs/friends/reflectionspikeball.webp" alt="A game of spikeball, reflected" width="800" height="533" loading="lazy" decoding="async">
+            </button>
+          </figure>
+        </div>
+        <div class="row" style="--sum:1.5009;--n:1">
+          <figure class="frame" style="--ar:1.5009">
+            <button type="button" class="frame__hit" data-series="friends" data-no="9" aria-label="Open Water at blue hour at full size">
+              <img src="/assets/imgs/friends/bluehourwater.webp" alt="Water at blue hour" width="800" height="533" loading="lazy" decoding="async">
+            </button>
+          </figure>
+        </div>
+        <div class="row" style="--sum:2.9672;--n:3">
+          <figure class="frame" style="--ar:0.6663">
+            <button type="button" class="frame__hit" data-series="friends" data-no="10" aria-label="Open Winning a game of chess at full size">
+              <img src="/assets/imgs/friends/winningchess.webp" alt="Winning a game of chess" width="533" height="800" loading="lazy" decoding="async">
+            </button>
+          </figure>
+          <figure class="frame" style="--ar:1.5009">
+            <button type="button" class="frame__hit" data-series="friends" data-no="11" aria-label="Open Fitz on someone&#x27;s shoulders at full size">
+              <img src="/assets/imgs/friends/fitzonshoulders.webp" alt="Fitz on someone&#x27;s shoulders" width="800" height="533" loading="lazy" decoding="async">
+            </button>
+          </figure>
+          <figure class="frame" style="--ar:0.8">
+            <button type="button" class="frame__hit" data-series="friends" data-no="12" aria-label="Open A long-exposure figure sitting down at full size">
+              <img src="/assets/imgs/friends/sittingdownghost.JPG" alt="A long-exposure figure sitting down" width="1440" height="1800" loading="lazy" decoding="async">
+            </button>
+          </figure>
+        </div>
+        <div class="row" style="--sum:2.9672;--n:3">
+          <figure class="frame" style="--ar:0.8">
+            <button type="button" class="frame__hit" data-series="friends" data-no="13" aria-label="Open A mirror self-portrait at full size">
+              <img src="/assets/imgs/friends/mirrorphotographer.webp" alt="A mirror self-portrait" width="640" height="800" loading="lazy" decoding="async">
+            </button>
+          </figure>
+          <figure class="frame" style="--ar:0.6663">
+            <button type="button" class="frame__hit" data-series="friends" data-no="14" aria-label="Open Dom kayaking at full size">
+              <img src="/assets/imgs/friends/verticalkayakingdom.webp" alt="Dom kayaking" width="533" height="800" loading="lazy" decoding="async">
+            </button>
+          </figure>
+          <figure class="frame" style="--ar:1.5009">
+            <button type="button" class="frame__hit" data-series="friends" data-no="15" aria-label="Open A mirror self-portrait, taken younger at full size">
+              <img src="/assets/imgs/friends/youngmirrorphotographer.webp" alt="A mirror self-portrait, taken younger" width="800" height="533" loading="lazy" decoding="async">
+            </button>
+          </figure>
+        </div>
+        <div class="row" style="--sum:1.5009;--n:1">
+          <figure class="frame" style="--ar:1.5009">
+            <button type="button" class="frame__hit" data-series="friends" data-no="16" aria-label="Open Aden spiking a ball at full size">
+              <img src="/assets/imgs/friends/adenspiking.webp" alt="Aden spiking a ball" width="800" height="533" loading="lazy" decoding="async">
+            </button>
+          </figure>
+        </div>
+        <div class="row" style="--sum:1.5009;--n:1">
+          <figure class="frame" style="--ar:1.5009">
+            <button type="button" class="frame__hit" data-series="friends" data-no="17" aria-label="Open A football catch in midair at full size">
+              <img src="/assets/imgs/friends/midairfootball.webp" alt="A football catch in midair" width="800" height="533" loading="lazy" decoding="async">
+            </button>
+          </figure>
+        </div>
+      </div>
+      <p class="tail"><a class="tail__link" href="#index">Index &uarr;</a> <a class="tail__link" href="#pets">Next &middot; Pets &darr;</a></p>
+    </div>
+  </section>
+
+  <section class="series" id="pets" data-series="pets" aria-labelledby="pets-h">
+    <figure class="opener">
+      <button type="button" class="frame__hit opener__hit" data-series="pets" data-no="1" aria-label="Open Cosmo at full size">
+        <img src="/assets/imgs/pets/handsomecosmo.webp" alt="Cosmo" width="800" height="533" style="--ar:1.5009" loading="lazy" decoding="async">
+      </button>
+      <div class="opener__type">
+        <span class="opener__num">Series IV</span>
+        <h2 class="opener__name" id="pets-h">Pets</h2>
+      </div>
+    </figure>
+    <div class="wrap">
+      <p class="series__meta"><span>20 frames</span></p>
+      <div class="rows">
+        <div class="row" style="--sum:1.3326;--n:2">
+          <figure class="frame" style="--ar:0.6663">
+            <button type="button" class="frame__hit" data-series="pets" data-no="2" aria-label="Open Karlos by a window at full size">
+              <img src="/assets/imgs/pets/karlosbywindow.webp" alt="Karlos by a window" width="533" height="800" loading="lazy" decoding="async">
+            </button>
+          </figure>
+          <figure class="frame" style="--ar:0.6663">
+            <button type="button" class="frame__hit" data-series="pets" data-no="3" aria-label="Open An excited cat at full size">
+              <img src="/assets/imgs/pets/crazykitty.webp" alt="An excited cat" width="533" height="800" loading="lazy" decoding="async">
+            </button>
+          </figure>
+        </div>
+        <div class="row" style="--sum:3.1672;--n:3">
+          <figure class="frame" style="--ar:1.0">
+            <button type="button" class="frame__hit" data-series="pets" data-no="4" aria-label="Open Bodie curled up at full size">
+              <img src="/assets/imgs/pets/circlebodie.webp" alt="Bodie curled up" width="800" height="800" loading="lazy" decoding="async">
+            </button>
+          </figure>
+          <figure class="frame" style="--ar:1.5009">
+            <button type="button" class="frame__hit" data-series="pets" data-no="5" aria-label="Open Cosmo in the foreground at full size">
+              <img src="/assets/imgs/pets/cosmoinfront.webp" alt="Cosmo in the foreground" width="800" height="533" loading="lazy" decoding="async">
+            </button>
+          </figure>
+          <figure class="frame" style="--ar:0.6663">
+            <button type="button" class="frame__hit" data-series="pets" data-no="6" aria-label="Open Karlos and Leo at full size">
+              <img src="/assets/imgs/pets/karlosandleo.webp" alt="Karlos and Leo" width="533" height="800" loading="lazy" decoding="async">
+            </button>
+          </figure>
+        </div>
+        <div class="row" style="--sum:3.0018;--n:2">
+          <figure class="frame" style="--ar:1.5009">
+            <button type="button" class="frame__hit" data-series="pets" data-no="7" aria-label="Open Three cats at full size">
+              <img src="/assets/imgs/pets/wide3cat.webp" alt="Three cats" width="800" height="533" loading="lazy" decoding="async">
+            </button>
+          </figure>
+          <figure class="frame" style="--ar:1.5009">
+            <button type="button" class="frame__hit" data-series="pets" data-no="8" aria-label="Open A sleepy cat at full size">
+              <img src="/assets/imgs/pets/tiredkitty.webp" alt="A sleepy cat" width="800" height="533" loading="lazy" decoding="async">
+            </button>
+          </figure>
+        </div>
+        <div class="row" style="--sum:2.1672;--n:2">
+          <figure class="frame" style="--ar:0.6663">
+            <button type="button" class="frame__hit" data-series="pets" data-no="9" aria-label="Open Karlos in bed at full size">
+              <img src="/assets/imgs/pets/karlosinbed.webp" alt="Karlos in bed" width="533" height="800" loading="lazy" decoding="async">
+            </button>
+          </figure>
+          <figure class="frame" style="--ar:1.5009">
+            <button type="button" class="frame__hit" data-series="pets" data-no="10" aria-label="Open A cat in bed at full size">
+              <img src="/assets/imgs/pets/kittyinbed.webp" alt="A cat in bed" width="800" height="533" loading="lazy" decoding="async">
+            </button>
+          </figure>
+        </div>
+        <div class="row" style="--sum:2.2684;--n:2">
+          <figure class="frame" style="--ar:1.5009">
+            <button type="button" class="frame__hit" data-series="pets" data-no="11" aria-label="Open Dogs lying down at full size">
+              <img src="/assets/imgs/pets/lyingdogs.webp" alt="Dogs lying down" width="800" height="533" loading="lazy" decoding="async">
+            </button>
+          </figure>
+          <figure class="frame" style="--ar:0.7675">
+            <button type="button" class="frame__hit" data-series="pets" data-no="12" aria-label="Open Maverick with a toy at full size">
+              <img src="/assets/imgs/pets/maverickwithtoy.webp" alt="Maverick with a toy" width="614" height="800" loading="lazy" decoding="async">
+            </button>
+          </figure>
+        </div>
+        <div class="row" style="--sum:2.8335;--n:3">
+          <figure class="frame" style="--ar:1.5009">
+            <button type="button" class="frame__hit" data-series="pets" data-no="13" aria-label="Open Three cats at full size">
+              <img src="/assets/imgs/pets/3cat.webp" alt="Three cats" width="800" height="533" loading="lazy" decoding="async">
+            </button>
+          </figure>
+          <figure class="frame" style="--ar:0.6663">
+            <button type="button" class="frame__hit" data-series="pets" data-no="14" aria-label="Open Karlos in the foreground at full size">
+              <img src="/assets/imgs/pets/karlosinfront.webp" alt="Karlos in the foreground" width="533" height="800" loading="lazy" decoding="async">
+            </button>
+          </figure>
+          <figure class="frame" style="--ar:0.6663">
+            <button type="button" class="frame__hit" data-series="pets" data-no="15" aria-label="Open Foster kittens at full size">
+              <img src="/assets/imgs/pets/cutefosters.webp" alt="Foster kittens" width="533" height="800" loading="lazy" decoding="async">
+            </button>
+          </figure>
+        </div>
+        <div class="row" style="--sum:0.74;--n:1">
+          <figure class="frame" style="--ar:0.74">
+            <button type="button" class="frame__hit" data-series="pets" data-no="16" aria-label="Open Cosmo as a kitten at full size">
+              <img src="/assets/imgs/pets/babycosmo.webp" alt="Cosmo as a kitten" width="592" height="800" loading="lazy" decoding="async">
+            </button>
+          </figure>
+        </div>
+        <div class="row" style="--sum:3.0018;--n:2">
+          <figure class="frame" style="--ar:1.5009">
+            <button type="button" class="frame__hit" data-series="pets" data-no="17" aria-label="Open Three cats at full size">
+              <img src="/assets/imgs/pets/3cats.webp" alt="Three cats" width="800" height="533" loading="lazy" decoding="async">
+            </button>
+          </figure>
+          <figure class="frame" style="--ar:1.5009">
+            <button type="button" class="frame__hit" data-series="pets" data-no="18" aria-label="Open A foster kitten at full size">
+              <img src="/assets/imgs/pets/cutefoster.webp" alt="A foster kitten" width="800" height="533" loading="lazy" decoding="async">
+            </button>
+          </figure>
+        </div>
+        <div class="row" style="--sum:3.2866;--n:2">
+          <figure class="frame" style="--ar:1.5009">
+            <button type="button" class="frame__hit" data-series="pets" data-no="19" aria-label="Open Dogs at Christmas at full size">
+              <img src="/assets/imgs/pets/xmasdogs.webp" alt="Dogs at Christmas" width="800" height="533" loading="lazy" decoding="async">
+            </button>
+          </figure>
+          <figure class="frame" style="--ar:1.7857">
+            <button type="button" class="frame__hit" data-series="pets" data-no="20" aria-label="Open Leo in bed at full size">
+              <img src="/assets/imgs/pets/leoinbed.webp" alt="Leo in bed" width="800" height="448" loading="lazy" decoding="async">
+            </button>
+          </figure>
+        </div>
+      </div>
+      <p class="tail"><a class="tail__link" href="#index">Index &uarr;</a></p>
+    </div>
+  </section>
+
+</main>
+
+<div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Full-size photograph">
+  <div class="lb__bar">
+    <span id="lbWhere"></span>
+    <button type="button" class="lb__x" id="lbClose" aria-label="Close">&times;</button>
+  </div>
+  <div class="lb__stage">
+    <img id="lbImg" src="" alt="">
+  </div>
+  <div class="lb__foot"><div class="lb__cap" id="lbCap"></div></div>
+  <button type="button" class="lb__step lb__prev" id="lbPrev" aria-label="Previous frame in this series">&#8249;</button>
+  <button type="button" class="lb__step lb__next" id="lbNext" aria-label="Next frame in this series">&#8250;</button>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ---- one list per series: arrows stay inside the body of work ---- */
+  var sets = {};
+  [].forEach.call(document.querySelectorAll(".series"), function (sec) {
+    sets[sec.dataset.series] = {
+      name: sec.querySelector(".opener__name").textContent.trim(),
+      hits: [].slice.call(sec.querySelectorAll(".frame__hit"))
+    };
+  });
+
+  var lb = document.getElementById("lb");
+  var lbImg = document.getElementById("lbImg");
+  var lbCap = document.getElementById("lbCap");
+  var lbWhere = document.getElementById("lbWhere");
+  var opener = null, set = null, at = 0;
+
+  function pad(n) { return (n < 10 ? "0" : "") + n; }
+
+  function render(i) {
+    at = (i + set.hits.length) % set.hits.length;
+    var hit = set.hits[at];
+    var img = hit.querySelector("img");
+    var fig = hit.closest("figure");
+    var text = fig ? fig.querySelector(".frame__text") : null;
+    lbImg.src = img.currentSrc || img.src;
+    lbImg.alt = img.alt;
+    lbCap.innerHTML = text ? text.innerHTML : "";
+    lbWhere.textContent = set.name + " \u2014 " + pad(at + 1) + " / " + pad(set.hits.length);
+  }
+
+  function open(hit) {
+    set = sets[hit.dataset.series];
+    if (!set) return;
+    opener = hit;
+    render(set.hits.indexOf(hit));
+    lb.hidden = false;
+    document.body.style.overflow = "hidden";
+    document.getElementById("lbClose").focus();
+  }
+
+  function close() {
+    lb.hidden = true;
+    lbImg.src = "";
+    document.body.style.overflow = "";
+    if (opener) { opener.focus(); opener = null; }
+  }
+
+  document.addEventListener("click", function (e) {
+    var hit = e.target.closest ? e.target.closest(".frame__hit") : null;
+    if (hit) { e.preventDefault(); open(hit); }
+  });
+
+  document.getElementById("lbClose").addEventListener("click", close);
+  document.getElementById("lbPrev").addEventListener("click", function () { render(at - 1); });
+  document.getElementById("lbNext").addEventListener("click", function () { render(at + 1); });
+  lb.addEventListener("click", function (e) {
+    if (e.target === lb || e.target.className === "lb__stage") close();
+  });
+
+  document.addEventListener("keydown", function (e) {
+    if (lb.hidden) return;
+    if (e.key === "Escape") { close(); }
+    else if (e.key === "ArrowLeft") { render(at - 1); }
+    else if (e.key === "ArrowRight") { render(at + 1); }
+    else if (e.key === "Tab") {
+      /* keep focus inside the dialog */
+      var f = lb.querySelectorAll("button");
+      var first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  });
+
+  /* ---- the rail follows the series you are in, and the URL with it ---- */
+  var links = {};
+  [].forEach.call(document.querySelectorAll("[data-rail]"), function (a) {
+    links[a.dataset.rail] = a;
+  });
+
+  /* The URL only starts following the rail once the reader has actually
+     scrolled. Writing a fragment before load finishes makes the browser jump
+     to that series and skip the index. */
+  var live = false;
+  window.addEventListener("scroll", function () { live = true; }, { once: true, passive: true });
+
+  if ("IntersectionObserver" in window) {
+    var current = null;
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        var slug = en.target.dataset.series;
+        if (slug === current) return;
+        current = slug;
+        for (var k in links) { links[k].setAttribute("aria-current", String(k === slug)); }
+        if (live && history.replaceState) { history.replaceState(null, "", "#" + slug); }
+      });
+    }, { rootMargin: "-45% 0px -50% 0px", threshold: 0 });
+    [].forEach.call(document.querySelectorAll(".series"), function (s) { io.observe(s); });
+  }
+}());
+</script>
+
+<footer class="site-foot">
+  <div class="container site-foot__inner">
+    <div class="site-foot__tree">
+      <p class="site-foot__head"><a href="../projects.html">Projects</a></p>
+      <ul class="tree">
+        <li><a href="../sma/index.html">SMA wire arrays &middot; Kennedy Lab</a></li>
+        <li><a href="../so101/index.html">SO-101 arm &middot; imitation learning</a></li>
+        <li><a href="../arc-agi-3/index.html">ARC-AGI-3 reasoning loop</a></li>
+        <li><a href="../dart/index.html">A-Dartment scoring rig</a></li>
+        <li><a href="../camera-tracking/index.html">MachWorks camera tracking</a></li>
+        <li><a href="../avionics/index.html">MachWorks avionics</a></li>
+        <li><a href="../logic-frame-co/index.html">Logic Frame Co.</a></li>
+        <li class="tree__all"><a href="../projects.html">every project &rarr;</a></li>
+      </ul>
+    </div>
+
+    <div class="site-foot__col">
+      <p class="site-foot__head">Site</p>
+      <ul>
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../index.html#about">About</a></li>
+        <li><a href="../resume/index.html">Resume</a></li>
+        <li><a href="../photography/index.html">Photography</a></li>
+        <li><a href="../fitness.html">Training log</a></li>
+        <li><a href="../contact/index.html">Contact</a></li>
+      </ul>
+    </div>
+
+    <div class="site-foot__col">
+      <p class="site-foot__head">Elsewhere</p>
+      <ul>
+        <li><a href="https://www.linkedin.com/in/chase-bonfiglio" target="_blank" rel="noopener">LinkedIn</a></li>
+        <li><a href="https://github.com/chaseab" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="https://www.instagram.com/chaseabon/" target="_blank" rel="noopener">Instagram</a></li>
+        <li><a href="mailto:bonfigliochase@gmail.com">bonfigliochase@gmail.com</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="container site-foot__rule">
+    <span>Chase Bonfiglio &middot; Blacksburg, VA</span>
+    <span>Mechanical engineering @ Virginia Tech, class of 2028</span>
+  </div>
+</footer>
+
+<script src="../assets/js/notes.js" defer></script>
+</body>
+</html>

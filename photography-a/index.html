@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Photography &middot; Chase Bonfiglio</title>
+<meta name="robots" content="noindex" />
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="alternate icon" href="/assets/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://chasebonfiglio.com/photography-a/" />
+<meta property="og:title" content="Photography &mdash; Chase Bonfiglio" />
+<meta property="og:description" content="Travel, nature, friends and a slightly absurd number of cats and dogs. Shot over the past five years, mostly on family trips." />
+<meta property="og:image" content="https://chasebonfiglio.com/assets/imgs/travel/show/sunnyroad.webp" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="description" content="Travel, nature, friends and a slightly absurd number of cats and dogs. Shot over the past five years, mostly on family trips." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,600,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/project.css">
+<style>
+  /* ----------------------------------------------------------------
+     A photo essay, not a grid. One measure, one caption column, and a
+     sequence of plate sizes that repeats on a six-beat rhythm.
+     Display type is Source Serif 4 - the same Adobe family as the
+     site's Source Sans Pro - so the essay reads as a magazine inside
+     this site rather than as a different website.
+     ---------------------------------------------------------------- */
+  :root {
+    --ground: #fff;
+    --ink: #10151c;
+    --ink-2: #39414a;
+    --quiet: #8d949c;
+    --rule: #e6e8ea;
+    --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+
+    --edge: clamp(20px, 5vw, 76px);
+    --measure: 1320px;
+    --colgap: clamp(12px, 1.5vw, 26px);
+    --band: clamp(66px, 8.5vw, 140px);
+    --run-h: 41px;
+  }
+
+  body { background: var(--ground); color: var(--ink); }
+
+  /* ---- running head: the only persistent chrome over the pictures ---- */
+  .runhead {
+    position: sticky; top: var(--nav-h); z-index: 90;
+    background: var(--ground); border-bottom: 1px solid var(--rule);
+  }
+  .runhead__in {
+    max-width: var(--measure); margin: 0 auto;
+    padding: 0 var(--edge); min-height: var(--run-h);
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  }
+  .runhead__mark, .runhead a {
+    font-size: 11px; font-weight: 600; letter-spacing: .17em; text-transform: uppercase;
+  }
+  .runhead__mark { color: var(--quiet); white-space: nowrap; }
+  .runhead nav { display: flex; gap: clamp(12px, 2.6vw, 30px); }
+  .runhead a {
+    color: var(--quiet); text-decoration: none; padding: 12px 0 11px;
+    border-bottom: 2px solid transparent; white-space: nowrap;
+  }
+  .runhead a:hover { color: var(--ink); }
+  .runhead a[aria-current="true"] { color: var(--navy); border-bottom-color: var(--navy); }
+
+  /* ---- the essay grid: a centred measure that plates can break out of ---- */
+  .essay, .chapter {
+    display: grid;
+    grid-template-columns:
+      [full-start] minmax(var(--edge), 1fr)
+      [main-start] min(calc(100% - (2 * var(--edge))), var(--measure)) [main-end]
+      minmax(var(--edge), 1fr) [full-end];
+  }
+  .essay > *, .chapter > * { grid-column: main; }
+  .essay > .chapter { grid-column: full; }
+  .essay > .bleed, .chapter > .bleed { grid-column: full; }
+
+  .row {
+    display: grid; grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--colgap); row-gap: 20px; align-items: start;
+    margin-bottom: var(--band);
+  }
+  .bleed { margin: 0 0 18px; }
+  .row--afterbleed { margin-bottom: calc(var(--band) * 1.25); }
+  /* the quiet beat: a small frame with real room on both sides of it */
+  .row--solo { margin-top: calc(var(--band) * 0.45); margin-bottom: calc(var(--band) * 1.3); }
+
+  .f { margin: 0; }
+  .f-wide   { grid-column: 1 / 10; }
+  .f-plate  { grid-column: 1 / 8; }
+  .f-half   { grid-column: 1 / 7; }
+  .f-pairA  { grid-column: 1 / 6; }
+  .f-pairB  { grid-column: 6 / 11; }
+  .f-solo   { grid-column: 2 / 6; }
+  .f-soloR  { grid-column: 7 / 11; }
+  .f-soloW  { grid-column: 2 / 7; }
+  .f-soloWR { grid-column: 6 / 11; }
+
+  /* one fixed rule for text: it always lives in the same two columns */
+  .note { grid-column: 11 / 13; }
+  .note__item + .note__item { margin-top: 22px; }
+  .folio {
+    margin: 0; font-size: 11px; font-weight: 600; letter-spacing: .17em;
+    font-variant-numeric: tabular-nums; color: var(--quiet);
+  }
+  .cap {
+    margin: 9px 0 0; font-family: var(--serif); font-size: 14.5px; line-height: 1.7;
+    color: var(--ink-2); max-width: 30ch;
+  }
+  .cap--story { margin-top: 12px; }
+
+  /* ---- the frames themselves. No hover trick, no border, no shadow. ---- */
+  .frame {
+    display: block; width: 100%; padding: 0; margin: 0; border: 0;
+    background: #f2f3f4; cursor: zoom-in; font: inherit; color: inherit;
+  }
+  .frame:focus-visible { outline: 2px solid var(--navy); outline-offset: 4px; }
+  .shot { display: block; width: 100%; height: auto; }
+  .shot--bleed { width: 100%; }
+
+  /* ---- masthead ---- */
+  .masthead { margin-top: clamp(30px, 5vw, 62px); margin-bottom: calc(var(--band) * 0.8); }
+  .masthead__title { grid-column: 1 / 9; }
+  .eyebrow-a {
+    margin: 0 0 18px; font-size: 11px; font-weight: 600; letter-spacing: .2em;
+    text-transform: uppercase; color: var(--quiet);
+  }
+  .masthead h1 {
+    font-family: var(--serif); font-weight: 300; font-size: clamp(50px, 9.5vw, 116px);
+    line-height: .95; letter-spacing: -.025em; margin: 0; color: var(--ink);
+  }
+  .masthead h1::after { content: none; }
+  .masthead__lede {
+    font-family: var(--serif); font-weight: 400; font-size: clamp(17px, 1.5vw, 21px);
+    line-height: 1.6; color: var(--ink-2); max-width: 44ch; margin: 26px 0 0;
+  }
+  .toc { grid-column: 10 / 13; margin: 8px 0 0; padding: 0; list-style: none; }
+  .toc li { margin: 0; border-top: 1px solid var(--rule); }
+  .toc li:last-child { border-bottom: 1px solid var(--rule); }
+  .toc a {
+    display: flex; align-items: baseline; gap: 8px; padding: 9px 0;
+    text-decoration: none; color: var(--ink-2);
+    font-size: 12px; font-weight: 600; letter-spacing: .13em; text-transform: uppercase;
+  }
+  .toc a:hover { color: var(--navy); }
+  .toc__dots { flex: 1; border-bottom: 1px dotted var(--rule); transform: translateY(-3px); }
+  .toc__n { color: var(--quiet); font-variant-numeric: tabular-nums; }
+
+  /* ---- chapter openers ---- */
+  .chapter { scroll-margin-top: calc(var(--nav-h) + var(--run-h) + 8px); }
+  .chapter__head { margin-bottom: clamp(26px, 3.5vw, 46px); }
+  .chapter__title { grid-column: 1 / 9; }
+  .chapter__no {
+    margin: 0 0 14px; padding-top: 14px; border-top: 1px solid var(--ink);
+    font-size: 11px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase;
+    color: var(--ink);
+  }
+  .chapter__head h2 {
+    font-family: var(--serif); font-weight: 300; font-size: clamp(38px, 6vw, 78px);
+    line-height: 1; letter-spacing: -.02em; margin: 0; color: var(--ink);
+  }
+  .chapter__head h2::after { content: none; }
+  .chapter__lede {
+    font-family: var(--serif); font-size: clamp(16px, 1.3vw, 19px); line-height: 1.65;
+    color: var(--ink-2); max-width: 42ch; margin: 18px 0 0;
+  }
+  .chapter__count {
+    margin: 0; padding-top: 14px; border-top: 1px solid var(--rule);
+    font-size: 11px; font-weight: 600; letter-spacing: .17em; text-transform: uppercase;
+    color: var(--quiet); font-variant-numeric: tabular-nums;
+  }
+
+  /* ---- colophon ---- */
+  .colophon { margin: calc(var(--band) * 0.4) 0 clamp(70px, 9vw, 130px); }
+  .colophon__body { grid-column: 1 / 7; border-top: 1px solid var(--ink); padding-top: 16px; }
+  .colophon p {
+    font-family: var(--serif); font-size: 15px; line-height: 1.7; color: var(--ink-2); margin: 0;
+  }
+  .colophon .end { display: inline-block; width: 8px; height: 8px; background: var(--ink); margin-left: 6px; }
+  .colophon__up { grid-column: 11 / 13; padding-top: 16px; border-top: 1px solid var(--rule); }
+  .colophon__up a {
+    font-size: 11px; font-weight: 600; letter-spacing: .17em; text-transform: uppercase;
+    color: var(--quiet); text-decoration: none;
+  }
+  .colophon__up a:hover { color: var(--navy); }
+
+  /* ---- full-frame view ---- */
+  .lb {
+    position: fixed; inset: 0; z-index: 9500; background: #0e1013;
+    display: grid; grid-template-rows: 1fr auto; padding: clamp(14px, 3vw, 34px);
+    opacity: 0; transition: opacity .18s ease;
+  }
+  .lb.is-open { opacity: 1; }
+  .lb[hidden] { display: none; }
+  .lb__fig { margin: 0; display: grid; place-items: center; min-height: 0; }
+  .lb__fig img { max-width: 100%; max-height: 100%; width: auto; height: auto; display: block; }
+  .lb__meta {
+    display: flex; align-items: baseline; gap: 18px; flex-wrap: wrap;
+    padding-top: 16px; color: #aab1b9;
+  }
+  .lb__folio {
+    margin: 0; font-size: 11px; font-weight: 600; letter-spacing: .17em;
+    text-transform: uppercase; font-variant-numeric: tabular-nums; white-space: nowrap;
+  }
+  .lb__cap {
+    margin: 0; font-family: var(--serif); font-size: 15px; line-height: 1.65;
+    color: #d3d8dd; max-width: 62ch;
+  }
+  .lb__count { margin-left: auto; font-size: 11px; letter-spacing: .17em; font-variant-numeric: tabular-nums; }
+  .lb button {
+    position: absolute; background: none; border: 0; color: #fff; opacity: .6;
+    cursor: pointer; font: inherit; padding: 14px 18px;
+  }
+  .lb button:hover { opacity: 1; }
+  .lb button:focus-visible { outline: 2px solid #fff; outline-offset: -4px; opacity: 1; }
+  .lb__x {
+    top: 4px; right: 6px; font-size: 11px; font-weight: 600;
+    letter-spacing: .17em; text-transform: uppercase;
+  }
+  .lb__nav { top: 50%; transform: translateY(-50%); font-size: 26px; line-height: 1; }
+  .lb__prev { left: 0; }
+  .lb__next { right: 0; }
+
+  /* ---- narrow ---- */
+  @media (max-width: 860px) {
+    .row { grid-template-columns: 1fr; row-gap: 16px; }
+    .f-wide, .f-plate, .f-half, .f-solo, .f-soloR, .f-soloW, .f-soloWR,
+    .note, .masthead__title, .toc, .chapter__title, .chapter__count,
+    .colophon__body, .colophon__up { grid-column: 1 / -1; }
+    .row--pair { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+    .f-pairA { grid-column: 1 / 7; }
+    .f-pairB { grid-column: 7 / 13; }
+    .row--pair .note { grid-column: 1 / -1; }
+    .f-solo, .f-soloW { width: 74%; }
+    .f-soloR, .f-soloWR { width: 74%; margin-left: auto; }
+    .toc { margin-top: 30px; max-width: 360px; }
+    .masthead__lede { max-width: none; }
+    .chapter__count { padding-top: 0; border-top: 0; }
+    .colophon__up { padding-top: 0; border-top: 0; margin-top: 18px; }
+    .lb__nav { font-size: 22px; }
+  }
+  @media (max-width: 700px) {
+    .row--pair { grid-template-columns: 1fr; }
+    .f-pairA, .f-pairB { grid-column: 1 / -1; }
+    .runhead__mark { display: none; }
+    .runhead__in { justify-content: flex-start; }
+    .runhead nav { gap: 0; justify-content: space-between; width: 100%; }
+  }
+  @media (max-width: 420px) {
+    .runhead a { font-size: 10px; letter-spacing: .1em; }
+    .f-solo, .f-soloW, .f-soloR, .f-soloWR { width: 82%; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lb { transition: none; }
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+
+<script>
+/* Every frame offers its ~2000px original as the large srcset candidate. If a
+   deploy ever ships only the web-sized copies, drop back to those rather than
+   leaving a hole in the page. */
+document.addEventListener("error", function (e) {
+  var t = e.target;
+  if (t && t.tagName === "IMG" && t.hasAttribute("srcset")) {
+    t.removeAttribute("srcset");
+    t.removeAttribute("sizes");
+  }
+}, true);
+</script>
+
+<a class="skip-link" href="#travel">Skip&nbsp;to&nbsp;the&nbsp;frames&nbsp;&darr;</a>
+
+<nav class="site-nav" aria-label="site navigation">
+  <div class="site-nav__inner">
+    <ul class="site-nav__links site-nav__links--left">
+      <li><a href="../index.html#home">Home</a></li>
+      <li><a href="../index.html#about">About</a></li>
+      <li><a href="../index.html#resume">Resume</a></li>
+    </ul>
+    <a class="site-nav__brand" href="../index.html">Chase Bonfiglio</a>
+    <ul class="site-nav__links site-nav__links--right">
+      <li class="site-nav__phone"><a href="../index.html#home">Home</a></li>
+      <li><a href="../projects.html">Projects</a></li>
+      <li class="site-nav__more"><a href="../photography/index.html" class="is-active">Photography</a></li>
+      <li><a href="../contact/index.html">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="runhead">
+  <div class="runhead__in">
+    <span class="runhead__mark">Photography</span>
+    <nav aria-label="chapters" id="runnav"><a href="#travel" data-ch="travel">Travel</a><a href="#nature" data-ch="nature">Nature</a><a href="#friends" data-ch="friends">Friends</a><a href="#pets" data-ch="pets">Pets</a></nav>
+  </div>
+</div>
+
+<main class="essay" id="top">
+
+  <div class="row masthead">
+    <div class="masthead__title">
+      <p class="eyebrow-a">67 frames &middot; 2021&ndash;2026</p>
+      <h1>Photography</h1>
+      <p class="masthead__lede">Travel, nature, friends, and my family&rsquo;s slightly absurd number of cats and dogs. I shoot film on a Pentax&nbsp;K1000 now; most of what is here was taken on a Rebel&nbsp;ti6.</p>
+    </div>
+    <ul class="toc"><li><a href="#travel"><span class="toc__name">Travel</span><span class="toc__dots" aria-hidden="true"></span><span class="toc__n">20</span></a></li><li><a href="#nature"><span class="toc__name">Nature</span><span class="toc__dots" aria-hidden="true"></span><span class="toc__n">10</span></a></li><li><a href="#friends"><span class="toc__name">Friends</span><span class="toc__dots" aria-hidden="true"></span><span class="toc__n">17</span></a></li><li><a href="#pets"><span class="toc__name">Pets</span><span class="toc__dots" aria-hidden="true"></span><span class="toc__n">20</span></a></li></ul>
+  </div>
+
+  <section class="chapter" id="travel" aria-labelledby="travel-h">
+    <div class="row chapter__head"><div class="chapter__title"><p class="chapter__no">Chapter I</p><h2 id="travel-h">Travel</h2><p class="chapter__lede">Twenty frames from family trips over the past five years, mostly skylines, harbors and houses.</p></div><p class="note chapter__count">20 frames</p></div>
+    <figure class="bleed"><button class="frame" type="button" data-n="1" data-large="/assets/imgs/travel/show/sunnyroad.JPG" data-small="/assets/imgs/travel/show/sunnyroad.webp" data-chapter="Travel" data-alt="A sunlit road" data-cap="" data-story="" aria-label="Open plate 01 full frame"><img class="shot shot--bleed" src="/assets/imgs/travel/show/sunnyroad.webp" srcset="/assets/imgs/travel/show/sunnyroad.webp 800w, /assets/imgs/travel/show/sunnyroad.JPG 2000w" sizes="100vw" width="2000" height="1125" alt="A sunlit road" loading="eager" fetchpriority="high" decoding="async" style="aspect-ratio: 800 / 450;"></button></figure>
+    <div class="row row--afterbleed"><div class="note"><div class="note__item"><p class="folio">01</p></div></div></div>
+    <div class="row row--pair"><figure class="f f-pairA"><button class="frame" type="button" data-n="2" data-large="/assets/imgs/travel/show/rowerdude.JPG" data-small="/assets/imgs/travel/show/rowerdude.webp" data-chapter="Travel" data-alt="A rower on the water" data-cap="" data-story="" aria-label="Open plate 02 full frame"><img class="shot" src="/assets/imgs/travel/show/rowerdude.webp" srcset="/assets/imgs/travel/show/rowerdude.webp 518w, /assets/imgs/travel/show/rowerdude.JPG 1187w" sizes="(max-width: 700px) calc(100vw - 40px), (max-width: 860px) 44vw, 39vw" width="1187" height="1834" alt="A rower on the water" loading="lazy" decoding="async" style="aspect-ratio: 518 / 800;"></button></figure><figure class="f f-pairB"><button class="frame" type="button" data-n="3" data-large="/assets/imgs/travel/show/reflectionsailboat.JPG" data-small="/assets/imgs/travel/show/reflectionsailboat.webp" data-chapter="Travel" data-alt="A sailboat reflected in still water" data-cap="" data-story="" aria-label="Open plate 03 full frame"><img class="shot" src="/assets/imgs/travel/show/reflectionsailboat.webp" srcset="/assets/imgs/travel/show/reflectionsailboat.webp 533w, /assets/imgs/travel/show/reflectionsailboat.JPG 1333w" sizes="(max-width: 700px) calc(100vw - 40px), (max-width: 860px) 44vw, 39vw" width="1333" height="2000" alt="A sailboat reflected in still water" loading="lazy" decoding="async" style="aspect-ratio: 533 / 800;"></button></figure><div class="note"><div class="note__item"><p class="folio">02</p></div><div class="note__item"><p class="folio">03</p></div></div></div>
+    <div class="row row--wide"><figure class="f f-wide"><button class="frame" type="button" data-n="4" data-large="/assets/imgs/travel/show/fatherinthesnow.JPG" data-small="/assets/imgs/travel/show/fatherinthesnow.webp" data-chapter="Travel" data-alt="My father in the snow" data-cap="" data-story="" aria-label="Open plate 04 full frame"><img class="shot" src="/assets/imgs/travel/show/fatherinthesnow.webp" srcset="/assets/imgs/travel/show/fatherinthesnow.webp 800w, /assets/imgs/travel/show/fatherinthesnow.JPG 1920w" sizes="(max-width: 860px) calc(100vw - 40px), 70vw" width="1920" height="1280" alt="My father in the snow" loading="lazy" decoding="async" style="aspect-ratio: 800 / 533;"></button></figure><div class="note"><div class="note__item"><p class="folio">04</p></div></div></div>
+    <div class="row row--solo"><figure class="f f-solo"><button class="frame" type="button" data-n="5" data-large="/assets/imgs/travel/show/darkapartments.JPG" data-small="/assets/imgs/travel/show/darkapartments.webp" data-chapter="Travel" data-alt="Apartment blocks at night" data-cap="" data-story="" aria-label="Open plate 05 full frame"><img class="shot" src="/assets/imgs/travel/show/darkapartments.webp" srcset="/assets/imgs/travel/show/darkapartments.webp 533w, /assets/imgs/travel/show/darkapartments.JPG 1333w" sizes="(max-width: 860px) 74vw, 31vw" width="1333" height="2000" alt="Apartment blocks at night" loading="lazy" decoding="async" style="aspect-ratio: 533 / 800;"></button></figure><div class="note"><div class="note__item"><p class="folio">05</p></div></div></div>
+    <div class="row row--plate"><figure class="f f-plate"><button class="frame" type="button" data-n="6" data-large="/assets/imgs/travel/show/newyorkskyline.JPG" data-small="/assets/imgs/travel/show/newyorkskyline.webp" data-chapter="Travel" data-alt="The New York skyline" data-cap="" data-story="" aria-label="Open plate 06 full frame"><img class="shot" src="/assets/imgs/travel/show/newyorkskyline.webp" srcset="/assets/imgs/travel/show/newyorkskyline.webp 800w, /assets/imgs/travel/show/newyorkskyline.JPG 2000w" sizes="(max-width: 860px) calc(100vw - 40px), 55vw" width="2000" height="1500" alt="The New York skyline" loading="lazy" decoding="async" style="aspect-ratio: 800 / 600;"></button></figure><div class="note"><div class="note__item"><p class="folio">06</p></div></div></div>
+    <div class="row row--pair"><figure class="f f-pairA"><button class="frame" type="button" data-n="7" data-large="/assets/imgs/travel/show/guysonaboatbutsmaller.JPG" data-small="/assets/imgs/travel/show/guysonaboatbutsmaller.webp" data-chapter="Travel" data-alt="Friends on a boat" data-cap="" data-story="" aria-label="Open plate 07 full frame"><img class="shot" src="/assets/imgs/travel/show/guysonaboatbutsmaller.webp" srcset="/assets/imgs/travel/show/guysonaboatbutsmaller.webp 533w, /assets/imgs/travel/show/guysonaboatbutsmaller.JPG 1333w" sizes="(max-width: 700px) calc(100vw - 40px), (max-width: 860px) 44vw, 39vw" width="1333" height="2000" alt="Friends on a boat" loading="lazy" decoding="async" style="aspect-ratio: 533 / 800;"></button></figure><figure class="f f-pairB"><button class="frame" type="button" data-n="8" data-large="/assets/imgs/travel/show/rubbercement.JPG" data-small="/assets/imgs/travel/show/rubbercement.webp" data-chapter="Travel" data-alt="A travel photograph" data-cap="" data-story="" aria-label="Open plate 08 full frame"><img class="shot" src="/assets/imgs/travel/show/rubbercement.webp" srcset="/assets/imgs/travel/show/rubbercement.webp 533w, /assets/imgs/travel/show/rubbercement.JPG 1333w" sizes="(max-width: 700px) calc(100vw - 40px), (max-width: 860px) 44vw, 39vw" width="1333" height="2000" alt="A travel photograph" loading="lazy" decoding="async" style="aspect-ratio: 533 / 800;"></button></figure><div class="note"><div class="note__item"><p class="folio">07</p></div><div class="note__item"><p class="folio">08</p></div></div></div>
+    <figure class="bleed"><button class="frame" type="button" data-n="9" data-large="/assets/imgs/travel/show/sanfransicoskyline.JPG" data-small="/assets/imgs/travel/show/sanfransicoskyline.webp" data-chapter="Travel" data-alt="The San Francisco skyline" data-cap="" data-story="" aria-label="Open plate 09 full frame"><img class="shot shot--bleed" src="/assets/imgs/travel/show/sanfransicoskyline.webp" srcset="/assets/imgs/travel/show/sanfransicoskyline.webp 800w, /assets/imgs/travel/show/sanfransicoskyline.JPG 2000w" sizes="100vw" width="2000" height="1215" alt="The San Francisco skyline" loading="lazy" decoding="async" style="aspect-ratio: 800 / 486;"></button></figure>
+    <div class="row row--afterbleed"><div class="note"><div class="note__item"><p class="folio">09</p></div></div></div>
+    <div class="row row--pair"><figure class="f f-pairA"><button class="frame" type="button" data-n="10" data-large="/assets/imgs/travel/show/guysonboat.JPG" data-small="/assets/imgs/travel/show/guysonboat.webp" data-chapter="Travel" data-alt="Friends on a boat" data-cap="" data-story="" aria-label="Open plate 10 full frame"><img class="shot" src="/assets/imgs/travel/show/guysonboat.webp" srcset="/assets/imgs/travel/show/guysonboat.webp 533w, /assets/imgs/travel/show/guysonboat.JPG 1333w" sizes="(max-width: 700px) calc(100vw - 40px), (max-width: 860px) 44vw, 39vw" width="1333" height="2000" alt="Friends on a boat" loading="lazy" decoding="async" style="aspect-ratio: 533 / 800;"></button></figure><figure class="f f-pairB"><button class="frame" type="button" data-n="11" data-large="/assets/imgs/travel/show/halfaplane.JPG" data-small="/assets/imgs/travel/show/halfaplane.webp" data-chapter="Travel" data-alt="Half a plane on the tarmac" data-cap="" data-story="" aria-label="Open plate 11 full frame"><img class="shot" src="/assets/imgs/travel/show/halfaplane.webp" srcset="/assets/imgs/travel/show/halfaplane.webp 533w, /assets/imgs/travel/show/halfaplane.JPG 1333w" sizes="(max-width: 700px) calc(100vw - 40px), (max-width: 860px) 44vw, 39vw" width="1333" height="1999" alt="Half a plane on the tarmac" loading="lazy" decoding="async" style="aspect-ratio: 533 / 800;"></button></figure><div class="note"><div class="note__item"><p class="folio">10</p></div><div class="note__item"><p class="folio">11</p></div></div></div>
+    <div class="row row--wide"><figure class="f f-wide"><button class="frame" type="button" data-n="12" data-large="/assets/imgs/travel/show/redboatinwater.JPG" data-small="/assets/imgs/travel/show/redboatinwater.webp" data-chapter="Travel" data-alt="A red boat on the water" data-cap="" data-story="" aria-label="Open plate 12 full frame"><img class="shot" src="/assets/imgs/travel/show/redboatinwater.webp" srcset="/assets/imgs/travel/show/redboatinwater.webp 800w, /assets/imgs/travel/show/redboatinwater.JPG 2000w" sizes="(max-width: 860px) calc(100vw - 40px), 70vw" width="2000" height="1333" alt="A red boat on the water" loading="lazy" decoding="async" style="aspect-ratio: 800 / 533;"></button></figure><div class="note"><div class="note__item"><p class="folio">12</p></div></div></div>
+    <div class="row row--solo"><figure class="f f-soloR"><button class="frame" type="button" data-n="13" data-large="/assets/imgs/travel/show/happyfamily.JPG" data-small="/assets/imgs/travel/show/happyfamily.webp" data-chapter="Travel" data-alt="My family together" data-cap="" data-story="" aria-label="Open plate 13 full frame"><img class="shot" src="/assets/imgs/travel/show/happyfamily.webp" srcset="/assets/imgs/travel/show/happyfamily.webp 520w, /assets/imgs/travel/show/happyfamily.JPG 1299w" sizes="(max-width: 860px) 74vw, 31vw" width="1299" height="2000" alt="My family together" loading="lazy" decoding="async" style="aspect-ratio: 520 / 800;"></button></figure><div class="note"><div class="note__item"><p class="folio">13</p></div></div></div>
+    <div class="row row--plate"><figure class="f f-plate"><button class="frame" type="button" data-n="14" data-large="/assets/imgs/travel/show/greentruckincanopy.JPG" data-small="/assets/imgs/travel/show/greentruckincanopy.webp" data-chapter="Travel" data-alt="A green truck under a tree canopy" data-cap="" data-story="" aria-label="Open plate 14 full frame"><img class="shot" src="/assets/imgs/travel/show/greentruckincanopy.webp" srcset="/assets/imgs/travel/show/greentruckincanopy.webp 800w, /assets/imgs/travel/show/greentruckincanopy.JPG 2000w" sizes="(max-width: 860px) calc(100vw - 40px), 55vw" width="2000" height="1333" alt="A green truck under a tree canopy" loading="lazy" decoding="async" style="aspect-ratio: 800 / 533;"></button></figure><div class="note"><div class="note__item"><p class="folio">14</p></div></div></div>
+    <div class="row row--pair"><figure class="f f-pairA"><button class="frame" type="button" data-n="15" data-large="/assets/imgs/travel/show/carunderlight.JPG" data-small="/assets/imgs/travel/show/carunderlight.webp" data-chapter="Travel" data-alt="A car under a street light" data-cap="" data-story="" aria-label="Open plate 15 full frame"><img class="shot" src="/assets/imgs/travel/show/carunderlight.webp" srcset="/assets/imgs/travel/show/carunderlight.webp 533w, /assets/imgs/travel/show/carunderlight.JPG 1333w" sizes="(max-width: 700px) calc(100vw - 40px), (max-width: 860px) 44vw, 39vw" width="1333" height="2000" alt="A car under a street light" loading="lazy" decoding="async" style="aspect-ratio: 533 / 800;"></button></figure><figure class="f f-pairB"><button class="frame" type="button" data-n="16" data-large="/assets/imgs/travel/show/flowersandhouse.JPG" data-small="/assets/imgs/travel/show/flowersandhouse.webp" data-chapter="Travel" data-alt="Flowers in front of a house" data-cap="" data-story="" aria-label="Open plate 16 full frame"><img class="shot" src="/assets/imgs/travel/show/flowersandhouse.webp" srcset="/assets/imgs/travel/show/flowersandhouse.webp 533w, /assets/imgs/travel/show/flowersandhouse.JPG 1333w" sizes="(max-width: 700px) calc(100vw - 40px), (max-width: 860px) 44vw, 39vw" width="1333" height="2000" alt="Flowers in front of a house" loading="lazy" decoding="async" style="aspect-ratio: 533 / 800;"></button></figure><div class="note"><div class="note__item"><p class="folio">15</p></div><div class="note__item"><p class="folio">16</p></div></div></div>
+    <figure class="bleed"><button class="frame" type="button" data-n="17" data-large="/assets/imgs/travel/show/blueandwhitehouse.JPG" data-small="/assets/imgs/travel/show/blueandwhitehouse.webp" data-chapter="Travel" data-alt="A blue and white house" data-cap="" data-story="" aria-label="Open plate 17 full frame"><img class="shot shot--bleed" src="/assets/imgs/travel/show/blueandwhitehouse.webp" srcset="/assets/imgs/travel/show/blueandwhitehouse.webp 800w, /assets/imgs/travel/show/blueandwhitehouse.JPG 2000w" sizes="100vw" width="2000" height="1333" alt="A blue and white house" loading="lazy" decoding="async" style="aspect-ratio: 800 / 533;"></button></figure>
+    <div class="row row--afterbleed"><div class="note"><div class="note__item"><p class="folio">17</p></div></div></div>
+    <div class="row row--solo"><figure class="f f-solo"><button class="frame" type="button" data-n="18" data-large="/assets/imgs/travel/show/fancywhitehouse.JPG" data-small="/assets/imgs/travel/show/fancywhitehouse.webp" data-chapter="Travel" data-alt="An ornate white house" data-cap="" data-story="" aria-label="Open plate 18 full frame"><img class="shot" src="/assets/imgs/travel/show/fancywhitehouse.webp" srcset="/assets/imgs/travel/show/fancywhitehouse.webp 533w, /assets/imgs/travel/show/fancywhitehouse.JPG 1333w" sizes="(max-width: 860px) 74vw, 31vw" width="1333" height="2000" alt="An ornate white house" loading="lazy" decoding="async" style="aspect-ratio: 533 / 800;"></button></figure><div class="note"><div class="note__item"><p class="folio">18</p></div></div></div>
+    <div class="row row--wide"><figure class="f f-wide"><button class="frame" type="button" data-n="19" data-large="/assets/imgs/travel/show/boatonthewater.JPG" data-small="/assets/imgs/travel/show/boatonthewater.webp" data-chapter="Travel" data-alt="A boat on the water" data-cap="" data-story="" aria-label="Open plate 19 full frame"><img class="shot" src="/assets/imgs/travel/show/boatonthewater.webp" srcset="/assets/imgs/travel/show/boatonthewater.webp 800w, /assets/imgs/travel/show/boatonthewater.JPG 2000w" sizes="(max-width: 860px) calc(100vw - 40px), 70vw" width="2000" height="1333" alt="A boat on the water" loading="lazy" decoding="async" style="aspect-ratio: 800 / 533;"></button></figure><div class="note"><div class="note__item"><p class="folio">19</p></div></div></div>
+    <div class="row row--solo"><figure class="f f-soloR"><button class="frame" type="button" data-n="20" data-large="/assets/imgs/travel/show/fatherandadog.JPG" data-small="/assets/imgs/travel/show/fatherandadog.webp" data-chapter="Travel" data-alt="My father with a dog" data-cap="" data-story="" aria-label="Open plate 20 full frame"><img class="shot" src="/assets/imgs/travel/show/fatherandadog.webp" srcset="/assets/imgs/travel/show/fatherandadog.webp 533w, /assets/imgs/travel/show/fatherandadog.JPG 1280w" sizes="(max-width: 860px) 74vw, 31vw" width="1280" height="1920" alt="My father with a dog" loading="lazy" decoding="async" style="aspect-ratio: 533 / 800;"></button></figure><div class="note"><div class="note__item"><p class="folio">20</p></div></div></div>
+  </section>
+  <section class="chapter" id="nature" aria-labelledby="nature-h">
+    <div class="row chapter__head"><div class="chapter__title"><p class="chapter__no">Chapter II</p><h2 id="nature-h">Nature</h2><p class="chapter__lede">Ten frames of water and weather, a couple of sunsets, and one monkey.</p></div><p class="note chapter__count">10 frames</p></div>
+    <figure class="bleed"><button class="frame" type="button" data-n="21" data-large="/assets/imgs/nature/samaflower.JPG" data-small="/assets/imgs/nature/samaflower.webp" data-chapter="Nature" data-alt="A flower in close-up" data-cap="" data-story="" aria-label="Open plate 21 full frame"><img class="shot shot--bleed" src="/assets/imgs/nature/samaflower.webp" srcset="/assets/imgs/nature/samaflower.webp 800w, /assets/imgs/nature/samaflower.JPG 2000w" sizes="100vw" width="2000" height="1333" alt="A flower in close-up" loading="lazy" decoding="async" style="aspect-ratio: 800 / 533;"></button></figure>
+    <div class="row row--afterbleed"><div class="note"><div class="note__item"><p class="folio">21</p></div></div></div>
+    <div class="row row--pair"><figure class="f f-pairA"><button class="frame" type="button" data-n="22" data-large="/assets/imgs/nature/yosemiteriverbrown.JPG" data-small="/assets/imgs/nature/yosemiteriverbrown.webp" data-chapter="Nature" data-alt="A river in Yosemite" data-cap="" data-story="" aria-label="Open plate 22 full frame"><img class="shot" src="/assets/imgs/nature/yosemiteriverbrown.webp" srcset="/assets/imgs/nature/yosemiteriverbrown.webp 600w, /assets/imgs/nature/yosemiteriverbrown.JPG 1499w" sizes="(max-width: 700px) calc(100vw - 40px), (max-width: 860px) 44vw, 39vw" width="1499" height="2000" alt="A river in Yosemite" loading="lazy" decoding="async" style="aspect-ratio: 600 / 800;"></button></figure><figure class="f f-pairB"><button class="frame" type="button" data-n="23" data-large="/assets/imgs/nature/resortview.JPG" data-small="/assets/imgs/nature/resortview.webp" data-chapter="Nature" data-alt="A view from a resort" data-cap="" data-story="" aria-label="Open plate 23 full frame"><img class="shot" src="/assets/imgs/nature/resortview.webp" srcset="/assets/imgs/nature/resortview.webp 533w, /assets/imgs/nature/resortview.JPG 1333w" sizes="(max-width: 700px) calc(100vw - 40px), (max-width: 860px) 44vw, 39vw" width="1333" height="2000" alt="A view from a resort" loading="lazy" decoding="async" style="aspect-ratio: 533 / 800;"></button></figure><div class="note"><div class="note__item"><p class="folio">22</p></div><div class="note__item"><p class="folio">23</p></div></div></div>
+    <div class="row row--wide"><figure class="f f-wide"><button class="frame" type="button" data-n="24" data-large="/assets/imgs/nature/beachhousesunset.JPG" data-small="/assets/imgs/nature/beachhousesunset.webp" data-chapter="Nature" data-alt="A beach house at sunset" data-cap="" data-story="" aria-label="Open plate 24 full frame"><img class="shot" src="/assets/imgs/nature/beachhousesunset.webp" srcset="/assets/imgs/nature/beachhousesunset.webp 800w, /assets/imgs/nature/beachhousesunset.JPG 2000w" sizes="(max-width: 860px) calc(100vw - 40px), 70vw" width="2000" height="1333" alt="A beach house at sunset" loading="lazy" decoding="async" style="aspect-ratio: 800 / 533;"></button></figure><div class="note"><div class="note__item"><p class="folio">24</p></div></div></div>
+    <div class="row row--solo"><figure class="f f-solo"><button class="frame" type="button" data-n="25" data-large="/assets/imgs/nature/closeupstream.JPG" data-small="/assets/imgs/nature/closeupstream.webp" data-chapter="Nature" data-alt="A close-up of a stream" data-cap="" data-story="" aria-label="Open plate 25 full frame"><img class="shot" src="/assets/imgs/nature/closeupstream.webp" srcset="/assets/imgs/nature/closeupstream.webp 600w, /assets/imgs/nature/closeupstream.JPG 1500w" sizes="(max-width: 860px) 74vw, 31vw" width="1500" height="2000" alt="A close-up of a stream" loading="lazy" decoding="async" style="aspect-ratio: 600 / 800;"></button></figure><div class="note"><div class="note__item"><p class="folio">25</p></div></div></div>
+    <div class="row row--plate"><figure class="f f-plate"><button class="frame" type="button" data-n="26" data-large="/assets/imgs/nature/kayaksunset.JPG" data-small="/assets/imgs/nature/kayaksunset.webp" data-chapter="Nature" data-alt="A kayak at sunset" data-cap="" data-story="" aria-label="Open plate 26 full frame"><img class="shot" src="/assets/imgs/nature/kayaksunset.webp" srcset="/assets/imgs/nature/kayaksunset.webp 800w, /assets/imgs/nature/kayaksunset.JPG 2000w" sizes="(max-width: 860px) calc(100vw - 40px), 55vw" width="2000" height="1333" alt="A kayak at sunset" loading="lazy" decoding="async" style="aspect-ratio: 800 / 533;"></button></figure><div class="note"><div class="note__item"><p class="folio">26</p></div></div></div>
+    <div class="row row--solo"><figure class="f f-soloR"><button class="frame" type="button" data-n="27" data-large="/assets/imgs/nature/monkey.JPG" data-small="/assets/imgs/nature/monkey.webp" data-chapter="Nature" data-alt="A monkey" data-cap="" data-story="" aria-label="Open plate 27 full frame"><img class="shot" src="/assets/imgs/nature/monkey.webp" srcset="/assets/imgs/nature/monkey.webp 533w, /assets/imgs/nature/monkey.JPG 1333w" sizes="(max-width: 860px) 74vw, 31vw" width="1333" height="2000" alt="A monkey" loading="lazy" decoding="async" style="aspect-ratio: 533 / 800;"></button></figure><div class="note"><div class="note__item"><p class="folio">27</p></div></div></div>
+    <figure class="bleed"><button class="frame" type="button" data-n="28" data-large="/assets/imgs/nature/flowerunderside.JPG" data-small="/assets/imgs/nature/flowerunderside.webp" data-chapter="Nature" data-alt="The underside of a flower" data-cap="" data-story="" aria-label="Open plate 28 full frame"><img class="shot shot--bleed" src="/assets/imgs/nature/flowerunderside.webp" srcset="/assets/imgs/nature/flowerunderside.webp 800w, /assets/imgs/nature/flowerunderside.JPG 1710w" sizes="100vw" width="1710" height="1116" alt="The underside of a flower" loading="lazy" decoding="async" style="aspect-ratio: 800 / 522;"></button></figure>
+    <div class="row row--afterbleed"><div class="note"><div class="note__item"><p class="folio">28</p></div></div></div>
+    <div class="row row--wide"><figure class="f f-wide"><button class="frame" type="button" data-n="29" data-large="/assets/imgs/nature/houseflowers.JPG" data-small="/assets/imgs/nature/houseflowers.webp" data-chapter="Nature" data-alt="Flowers beside a house" data-cap="" data-story="" aria-label="Open plate 29 full frame"><img class="shot" src="/assets/imgs/nature/houseflowers.webp" srcset="/assets/imgs/nature/houseflowers.webp 800w, /assets/imgs/nature/houseflowers.JPG 1920w" sizes="(max-width: 860px) calc(100vw - 40px), 70vw" width="1920" height="1280" alt="Flowers beside a house" loading="lazy" decoding="async" style="aspect-ratio: 800 / 533;"></button></figure><div class="note"><div class="note__item"><p class="folio">29</p></div></div></div>
+    <div class="row row--solo"><figure class="f f-solo"><button class="frame" type="button" data-n="30" data-large="/assets/imgs/nature/stormsky.JPG" data-small="/assets/imgs/nature/stormsky.webp" data-chapter="Nature" data-alt="A storm sky" data-cap="" data-story="" aria-label="Open plate 30 full frame"><img class="shot" src="/assets/imgs/nature/stormsky.webp" srcset="/assets/imgs/nature/stormsky.webp 600w, /assets/imgs/nature/stormsky.JPG 1499w" sizes="(max-width: 860px) 74vw, 31vw" width="1499" height="2000" alt="A storm sky" loading="lazy" decoding="async" style="aspect-ratio: 600 / 800;"></button></figure><div class="note"><div class="note__item"><p class="folio">30</p></div></div></div>
+  </section>
+  <section class="chapter" id="friends" aria-labelledby="friends-h">
+    <div class="row chapter__head"><div class="chapter__title"><p class="chapter__no">Chapter III</p><h2 id="friends-h">Friends</h2><p class="chapter__lede">Kayaks, chess, spikeball and basketball, plus a long exposure that turned someone into a ghost.</p></div><p class="note chapter__count">17 frames</p></div>
+    <figure class="bleed"><button class="frame" type="button" data-n="31" data-large="/assets/imgs/friends/domonkayak.JPG" data-small="/assets/imgs/friends/domonkayak.webp" data-chapter="Friends" data-alt="Dom on a kayak" data-cap="" data-story="" aria-label="Open plate 31 full frame"><img class="shot shot--bleed" src="/assets/imgs/friends/domonkayak.webp" srcset="/assets/imgs/friends/domonkayak.webp 800w, /assets/imgs/friends/domonkayak.JPG 2000w" sizes="100vw" width="2000" height="1125" alt="Dom on a kayak" loading="lazy" decoding="async" style="aspect-ratio: 800 / 450;"></button></figure>
+    <div class="row row--afterbleed"><div class="note"><div class="note__item"><p class="folio">31</p></div></div></div>
+    <div class="row row--pair"><figure class="f f-pairA"><button class="frame" type="button" data-n="32" data-large="/assets/imgs/friends/cinamaticchess.JPG" data-small="/assets/imgs/friends/cinamaticchess.webp" data-chapter="Friends" data-alt="A game of chess" data-cap="" data-story="" aria-label="Open plate 32 full frame"><img class="shot" src="/assets/imgs/friends/cinamaticchess.webp" srcset="/assets/imgs/friends/cinamaticchess.webp 533w, /assets/imgs/friends/cinamaticchess.JPG 1333w" sizes="(max-width: 700px) calc(100vw - 40px), (max-width: 860px) 44vw, 39vw" width="1333" height="2000" alt="A game of chess" loading="lazy" decoding="async" style="aspect-ratio: 533 / 800;"></button></figure><figure class="f f-pairB"><button class="frame" type="button" data-n="33" data-large="/assets/imgs/friends/friendsonroof.JPG" data-small="/assets/imgs/friends/friendsonroof.webp" data-chapter="Friends" data-alt="Friends on a roof" data-cap="" data-story="" aria-label="Open plate 33 full frame"><img class="shot" src="/assets/imgs/friends/friendsonroof.webp" srcset="/assets/imgs/friends/friendsonroof.webp 533w, /assets/imgs/friends/friendsonroof.JPG 1333w" sizes="(max-width: 700px) calc(100vw - 40px), (max-width: 860px) 44vw, 39vw" width="1333" height="2000" alt="Friends on a roof" loading="lazy" decoding="async" style="aspect-ratio: 533 / 800;"></button></figure><div class="note"><div class="note__item"><p class="folio">32</p></div><div class="note__item"><p class="folio">33</p></div></div></div>
+    <div class="row row--wide"><figure class="f f-wide"><button class="frame" type="button" data-n="34" data-large="/assets/imgs/friends/firefriends.JPG" data-small="/assets/imgs/friends/firefriends.webp" data-chapter="Friends" data-alt="Friends around a fire" data-cap="" data-story="" aria-label="Open plate 34 full frame"><img class="shot" src="/assets/imgs/friends/firefriends.webp" srcset="/assets/imgs/friends/firefriends.webp 800w, /assets/imgs/friends/firefriends.JPG 2000w" sizes="(max-width: 860px) calc(100vw - 40px), 70vw" width="2000" height="1333" alt="Friends around a fire" loading="lazy" decoding="async" style="aspect-ratio: 800 / 533;"></button></figure><div class="note"><div class="note__item"><p class="folio">34</p></div></div></div>
+    <div class="row row--solo"><figure class="f f-solo"><button class="frame" type="button" data-n="35" data-large="/assets/imgs/friends/basketballdefense.JPG" data-small="/assets/imgs/friends/basketballdefense.webp" data-chapter="Friends" data-alt="Playing basketball defense" data-cap="" data-story="" aria-label="Open plate 35 full frame"><img class="shot" src="/assets/imgs/friends/basketballdefense.webp" srcset="/assets/imgs/friends/basketballdefense.webp 533w, /assets/imgs/friends/basketballdefense.JPG 1333w" sizes="(max-width: 860px) 74vw, 31vw" width="1333" height="2000" alt="Playing basketball defense" loading="lazy" decoding="async" style="aspect-ratio: 533 / 800;"></button></figure><div class="note"><div class="note__item"><p class="folio">35</p></div></div></div>
+    <div class="row row--plate"><figure class="f f-plate"><button class="frame" type="button" data-n="36" data-large="/assets/imgs/friends/paintingkayak.JPG" data-small="/assets/imgs/friends/paintingkayak.webp" data-chapter="Friends" data-alt="Painting a kayak" data-cap="" data-story="" aria-label="Open plate 36 full frame"><img class="shot" src="/assets/imgs/friends/paintingkayak.webp" srcset="/assets/imgs/friends/paintingkayak.webp 800w, /assets/imgs/friends/paintingkayak.JPG 2000w" sizes="(max-width: 860px) calc(100vw - 40px), 55vw" width="2000" height="1333" alt="Painting a kayak" loading="lazy" decoding="async" style="aspect-ratio: 800 / 533;"></button></figure><div class="note"><div class="note__item"><p class="folio">36</p></div></div></div>
+    <div class="row row--pair"><figure class="f f-pairA"><button class="frame" type="button" data-n="37" data-large="/assets/imgs/friends/winningchess.JPG" data-small="/assets/imgs/friends/winningchess.webp" data-chapter="Friends" data-alt="Winning a game of chess" data-cap="" data-story="" aria-label="Open plate 37 full frame"><img class="shot" src="/assets/imgs/friends/winningchess.webp" srcset="/assets/imgs/friends/winningchess.webp 533w, /assets/imgs/friends/winningchess.JPG 1333w" sizes="(max-width: 700px) calc(100vw - 40px), (max-width: 860px) 44vw, 39vw" width="1333" height="2000" alt="Winning a game of chess" loading="lazy" decoding="async" style="aspect-ratio: 533 / 800;"></button></figure><figure class="f f-pairB"><button class="frame" type="button" data-n="38" data-large="/assets/imgs/friends/sittingdownghost.JPG" data-small="/assets/imgs/friends/sittingdownghost.JPG" data-chapter="Friends" data-alt="A long-exposure figure sitting down" data-cap="" data-story="" aria-label="Open plate 38 full frame"><img class="shot" src="/assets/imgs/friends/sittingdownghost.JPG" sizes="(max-width: 700px) calc(100vw - 40px), (max-width: 860px) 44vw, 39vw" width="1440" height="1800" alt="A long-exposure figure sitting down" loading="lazy" decoding="async" style="aspect-ratio: 1440 / 1800;"></button></figure><div class="note"><div class="note__item"><p class="folio">37</p></div><div class="note__item"><p class="folio">38</p></div></div></div>
+    <figure class="bleed"><button class="frame" type="button" data-n="39" data-large="/assets/imgs/friends/alexunderlegs.JPG" data-small="/assets/imgs/friends/alexunderlegs.webp" data-chapter="Friends" data-alt="Alex playing basketball" data-cap="" data-story="" aria-label="Open plate 39 full frame"><img class="shot shot--bleed" src="/assets/imgs/friends/alexunderlegs.webp" srcset="/assets/imgs/friends/alexunderlegs.webp 800w, /assets/imgs/friends/alexunderlegs.JPG 2000w" sizes="100vw" width="2000" height="1333" alt="Alex playing basketball" loading="lazy" decoding="async" style="aspect-ratio: 800 / 533;"></button></figure>
+    <div class="row row--afterbleed"><div class="note"><div class="note__item"><p class="folio">39</p></div></div></div>
+    <div class="row row--solo"><figure class="f f-soloR"><button class="frame" type="button" data-n="40" data-large="/assets/imgs/friends/mirrorphotographer.JPG" data-small="/assets/imgs/friends/mirrorphotographer.webp" data-chapter="Friends" data-alt="A mirror self-portrait" data-cap="" data-story="" aria-label="Open plate 40 full frame"><img class="shot" src="/assets/imgs/friends/mirrorphotographer.webp" srcset="/assets/imgs/friends/mirrorphotographer.webp 640w, /assets/imgs/friends/mirrorphotographer.JPG 1440w" sizes="(max-width: 860px) 74vw, 31vw" width="1440" height="1800" alt="A mirror self-portrait" loading="lazy" decoding="async" style="aspect-ratio: 640 / 800;"></button></figure><div class="note"><div class="note__item"><p class="folio">40</p></div></div></div>
+    <div class="row row--wide"><figure class="f f-wide"><button class="frame" type="button" data-n="41" data-large="/assets/imgs/friends/reflectionspikeball.JPG" data-small="/assets/imgs/friends/reflectionspikeball.webp" data-chapter="Friends" data-alt="A game of spikeball, reflected" data-cap="" data-story="" aria-label="Open plate 41 full frame"><img class="shot" src="/assets/imgs/friends/reflectionspikeball.webp" srcset="/assets/imgs/friends/reflectionspikeball.webp 800w, /assets/imgs/friends/reflectionspikeball.JPG 2000w" sizes="(max-width: 860px) calc(100vw - 40px), 70vw" width="2000" height="1333" alt="A game of spikeball, reflected" loading="lazy" decoding="async" style="aspect-ratio: 800 / 533;"></button></figure><div class="note"><div class="note__item"><p class="folio">41</p></div></div></div>
+    <div class="row row--solo"><figure class="f f-soloW"><button class="frame" type="button" data-n="42" data-large="/assets/imgs/friends/bluehourwater.JPG" data-small="/assets/imgs/friends/bluehourwater.webp" data-chapter="Friends" data-alt="Water at blue hour" data-cap="" data-story="" aria-label="Open plate 42 full frame"><img class="shot" src="/assets/imgs/friends/bluehourwater.webp" srcset="/assets/imgs/friends/bluehourwater.webp 800w, /assets/imgs/friends/bluehourwater.JPG 2000w" sizes="(max-width: 860px) 74vw, 31vw" width="2000" height="1333" alt="Water at blue hour" loading="lazy" decoding="async" style="aspect-ratio: 800 / 533;"></button></figure><div class="note"><div class="note__item"><p class="folio">42</p></div></div></div>
+    <div class="row row--plate"><figure class="f f-plate"><button class="frame" type="button" data-n="43" data-large="/assets/imgs/friends/fitzonshoulders.JPG" data-small="/assets/imgs/friends/fitzonshoulders.webp" data-chapter="Friends" data-alt="Fitz on someone&#x27;s shoulders" data-cap="" data-story="" aria-label="Open plate 43 full frame"><img class="shot" src="/assets/imgs/friends/fitzonshoulders.webp" srcset="/assets/imgs/friends/fitzonshoulders.webp 800w, /assets/imgs/friends/fitzonshoulders.JPG 2000w" sizes="(max-width: 860px) calc(100vw - 40px), 55vw" width="2000" height="1333" alt="Fitz on someone&#x27;s shoulders" loading="lazy" decoding="async" style="aspect-ratio: 800 / 533;"></button></figure><div class="note"><div class="note__item"><p class="folio">43</p></div></div></div>
+    <div class="row row--wide"><figure class="f f-wide"><button class="frame" type="button" data-n="44" data-large="/assets/imgs/friends/youngmirrorphotographer.JPG" data-small="/assets/imgs/friends/youngmirrorphotographer.webp" data-chapter="Friends" data-alt="A mirror self-portrait, taken younger" data-cap="" data-story="" aria-label="Open plate 44 full frame"><img class="shot" src="/assets/imgs/friends/youngmirrorphotographer.webp" srcset="/assets/imgs/friends/youngmirrorphotographer.webp 800w, /assets/imgs/friends/youngmirrorphotographer.JPG 2000w" sizes="(max-width: 860px) calc(100vw - 40px), 70vw" width="2000" height="1333" alt="A mirror self-portrait, taken younger" loading="lazy" decoding="async" style="aspect-ratio: 800 / 533;"></button></figure><div class="note"><div class="note__item"><p class="folio">44</p></div></div></div>
+    <figure class="bleed"><button class="frame" type="button" data-n="45" data-large="/assets/imgs/friends/adenspiking.JPG" data-small="/assets/imgs/friends/adenspiking.webp" data-chapter="Friends" data-alt="Aden spiking a ball" data-cap="" data-story="" aria-label="Open plate 45 full frame"><img class="shot shot--bleed" src="/assets/imgs/friends/adenspiking.webp" srcset="/assets/imgs/friends/adenspiking.webp 800w, /assets/imgs/friends/adenspiking.JPG 2000w" sizes="100vw" width="2000" height="1333" alt="Aden spiking a ball" loading="lazy" decoding="async" style="aspect-ratio: 800 / 533;"></button></figure>
+    <div class="row row--afterbleed"><div class="note"><div class="note__item"><p class="folio">45</p></div></div></div>
+    <div class="row row--wide"><figure class="f f-wide"><button class="frame" type="button" data-n="46" data-large="/assets/imgs/friends/midairfootball.JPG" data-small="/assets/imgs/friends/midairfootball.webp" data-chapter="Friends" data-alt="A football catch in midair" data-cap="" data-story="" aria-label="Open plate 46 full frame"><img class="shot" src="/assets/imgs/friends/midairfootball.webp" srcset="/assets/imgs/friends/midairfootball.webp 800w, /assets/imgs/friends/midairfootball.JPG 2000w" sizes="(max-width: 860px) calc(100vw - 40px), 70vw" width="2000" height="1333" alt="A football catch in midair" loading="lazy" decoding="async" style="aspect-ratio: 800 / 533;"></button></figure><div class="note"><div class="note__item"><p class="folio">46</p></div></div></div>
+    <div class="row row--solo"><figure class="f f-soloR"><button class="frame" type="button" data-n="47" data-large="/assets/imgs/friends/verticalkayakingdom.JPG" data-small="/assets/imgs/friends/verticalkayakingdom.webp" data-chapter="Friends" data-alt="Dom kayaking" data-cap="" data-story="" aria-label="Open plate 47 full frame"><img class="shot" src="/assets/imgs/friends/verticalkayakingdom.webp" srcset="/assets/imgs/friends/verticalkayakingdom.webp 533w, /assets/imgs/friends/verticalkayakingdom.JPG 1333w" sizes="(max-width: 860px) 74vw, 31vw" width="1333" height="2000" alt="Dom kayaking" loading="lazy" decoding="async" style="aspect-ratio: 533 / 800;"></button></figure><div class="note"><div class="note__item"><p class="folio">47</p></div></div></div>
+  </section>
+  <section class="chapter" id="pets" aria-labelledby="pets-h">
+    <div class="row chapter__head"><div class="chapter__title"><p class="chapter__no">Chapter IV</p><h2 id="pets-h">Pets</h2><p class="chapter__lede">The slightly absurd number of cats and dogs: Cosmo, Karlos, Leo, Bodie, Maverick, and a few fosters.</p></div><p class="note chapter__count">20 frames</p></div>
+    <figure class="bleed"><button class="frame" type="button" data-n="48" data-large="/assets/imgs/pets/handsomecosmo.JPG" data-small="/assets/imgs/pets/handsomecosmo.webp" data-chapter="Pets" data-alt="Cosmo" data-cap="" data-story="" aria-label="Open plate 48 full frame"><img class="shot shot--bleed" src="/assets/imgs/pets/handsomecosmo.webp" srcset="/assets/imgs/pets/handsomecosmo.webp 800w, /assets/imgs/pets/handsomecosmo.JPG 1920w" sizes="100vw" width="1920" height="1280" alt="Cosmo" loading="lazy" decoding="async" style="aspect-ratio: 800 / 533;"></button></figure>
+    <div class="row row--afterbleed"><div class="note"><div class="note__item"><p class="folio">48</p></div></div></div>
+    <div class="row row--pair"><figure class="f f-pairA"><button class="frame" type="button" data-n="49" data-large="/assets/imgs/pets/karlosbywindow.JPG" data-small="/assets/imgs/pets/karlosbywindow.webp" data-chapter="Pets" data-alt="Karlos by a window" data-cap="" data-story="" aria-label="Open plate 49 full frame"><img class="shot" src="/assets/imgs/pets/karlosbywindow.webp" srcset="/assets/imgs/pets/karlosbywindow.webp 533w, /assets/imgs/pets/karlosbywindow.JPG 1333w" sizes="(max-width: 700px) calc(100vw - 40px), (max-width: 860px) 44vw, 39vw" width="1333" height="2000" alt="Karlos by a window" loading="lazy" decoding="async" style="aspect-ratio: 533 / 800;"></button></figure><figure class="f f-pairB"><button class="frame" type="button" data-n="50" data-large="/assets/imgs/pets/crazykitty.JPG" data-small="/assets/imgs/pets/crazykitty.webp" data-chapter="Pets" data-alt="An excited cat" data-cap="" data-story="" aria-label="Open plate 50 full frame"><img class="shot" src="/assets/imgs/pets/crazykitty.webp" srcset="/assets/imgs/pets/crazykitty.webp 533w, /assets/imgs/pets/crazykitty.JPG 1280w" sizes="(max-width: 700px) calc(100vw - 40px), (max-width: 860px) 44vw, 39vw" width="1280" height="1920" alt="An excited cat" loading="lazy" decoding="async" style="aspect-ratio: 533 / 800;"></button></figure><div class="note"><div class="note__item"><p class="folio">49</p></div><div class="note__item"><p class="folio">50</p></div></div></div>
+    <div class="row row--wide"><figure class="f f-wide"><button class="frame" type="button" data-n="51" data-large="/assets/imgs/pets/cosmoinfront.JPG" data-small="/assets/imgs/pets/cosmoinfront.webp" data-chapter="Pets" data-alt="Cosmo in the foreground" data-cap="" data-story="" aria-label="Open plate 51 full frame"><img class="shot" src="/assets/imgs/pets/cosmoinfront.webp" srcset="/assets/imgs/pets/cosmoinfront.webp 800w, /assets/imgs/pets/cosmoinfront.JPG 1920w" sizes="(max-width: 860px) calc(100vw - 40px), 70vw" width="1920" height="1280" alt="Cosmo in the foreground" loading="lazy" decoding="async" style="aspect-ratio: 800 / 533;"></button></figure><div class="note"><div class="note__item"><p class="folio">51</p></div></div></div>
+    <div class="row row--solo"><figure class="f f-solo"><button class="frame" type="button" data-n="52" data-large="/assets/imgs/pets/circlebodie.JPG" data-small="/assets/imgs/pets/circlebodie.webp" data-chapter="Pets" data-alt="Bodie curled up" data-cap="" data-story="" aria-label="Open plate 52 full frame"><img class="shot" src="/assets/imgs/pets/circlebodie.webp" srcset="/assets/imgs/pets/circlebodie.webp 800w, /assets/imgs/pets/circlebodie.JPG 1999w" sizes="(max-width: 860px) 74vw, 31vw" width="1999" height="1999" alt="Bodie curled up" loading="lazy" decoding="async" style="aspect-ratio: 800 / 800;"></button></figure><div class="note"><div class="note__item"><p class="folio">52</p></div></div></div>
+    <div class="row row--plate"><figure class="f f-plate"><button class="frame" type="button" data-n="53" data-large="/assets/imgs/pets/wide3cat.JPG" data-small="/assets/imgs/pets/wide3cat.webp" data-chapter="Pets" data-alt="Three cats" data-cap="" data-story="" aria-label="Open plate 53 full frame"><img class="shot" src="/assets/imgs/pets/wide3cat.webp" srcset="/assets/imgs/pets/wide3cat.webp 800w, /assets/imgs/pets/wide3cat.JPG 1920w" sizes="(max-width: 860px) calc(100vw - 40px), 55vw" width="1920" height="1280" alt="Three cats" loading="lazy" decoding="async" style="aspect-ratio: 800 / 533;"></button></figure><div class="note"><div class="note__item"><p class="folio">53</p></div></div></div>
+    <div class="row row--pair"><figure class="f f-pairA"><button class="frame" type="button" data-n="54" data-large="/assets/imgs/pets/karlosandleo.JPG" data-small="/assets/imgs/pets/karlosandleo.webp" data-chapter="Pets" data-alt="Karlos and Leo" data-cap="" data-story="" aria-label="Open plate 54 full frame"><img class="shot" src="/assets/imgs/pets/karlosandleo.webp" srcset="/assets/imgs/pets/karlosandleo.webp 533w, /assets/imgs/pets/karlosandleo.JPG 1333w" sizes="(max-width: 700px) calc(100vw - 40px), (max-width: 860px) 44vw, 39vw" width="1333" height="2000" alt="Karlos and Leo" loading="lazy" decoding="async" style="aspect-ratio: 533 / 800;"></button></figure><figure class="f f-pairB"><button class="frame" type="button" data-n="55" data-large="/assets/imgs/pets/karlosinbed.JPG" data-small="/assets/imgs/pets/karlosinbed.webp" data-chapter="Pets" data-alt="Karlos in bed" data-cap="" data-story="" aria-label="Open plate 55 full frame"><img class="shot" src="/assets/imgs/pets/karlosinbed.webp" srcset="/assets/imgs/pets/karlosinbed.webp 533w, /assets/imgs/pets/karlosinbed.JPG 1280w" sizes="(max-width: 700px) calc(100vw - 40px), (max-width: 860px) 44vw, 39vw" width="1280" height="1920" alt="Karlos in bed" loading="lazy" decoding="async" style="aspect-ratio: 533 / 800;"></button></figure><div class="note"><div class="note__item"><p class="folio">54</p></div><div class="note__item"><p class="folio">55</p></div></div></div>
+    <figure class="bleed"><button class="frame" type="button" data-n="56" data-large="/assets/imgs/pets/tiredkitty.JPG" data-small="/assets/imgs/pets/tiredkitty.webp" data-chapter="Pets" data-alt="A sleepy cat" data-cap="" data-story="" aria-label="Open plate 56 full frame"><img class="shot shot--bleed" src="/assets/imgs/pets/tiredkitty.webp" srcset="/assets/imgs/pets/tiredkitty.webp 800w, /assets/imgs/pets/tiredkitty.JPG 1920w" sizes="100vw" width="1920" height="1280" alt="A sleepy cat" loading="lazy" decoding="async" style="aspect-ratio: 800 / 533;"></button></figure>
+    <div class="row row--afterbleed"><div class="note"><div class="note__item"><p class="folio">56</p></div></div></div>
+    <div class="row row--pair"><figure class="f f-pairA"><button class="frame" type="button" data-n="57" data-large="/assets/imgs/pets/maverickwithtoy.JPG" data-small="/assets/imgs/pets/maverickwithtoy.webp" data-chapter="Pets" data-alt="Maverick with a toy" data-cap="" data-story="" aria-label="Open plate 57 full frame"><img class="shot" src="/assets/imgs/pets/maverickwithtoy.webp" srcset="/assets/imgs/pets/maverickwithtoy.webp 614w, /assets/imgs/pets/maverickwithtoy.JPG 1535w" sizes="(max-width: 700px) calc(100vw - 40px), (max-width: 860px) 44vw, 39vw" width="1535" height="2000" alt="Maverick with a toy" loading="lazy" decoding="async" style="aspect-ratio: 614 / 800;"></button></figure><figure class="f f-pairB"><button class="frame" type="button" data-n="58" data-large="/assets/imgs/pets/karlosinfront.JPG" data-small="/assets/imgs/pets/karlosinfront.webp" data-chapter="Pets" data-alt="Karlos in the foreground" data-cap="" data-story="" aria-label="Open plate 58 full frame"><img class="shot" src="/assets/imgs/pets/karlosinfront.webp" srcset="/assets/imgs/pets/karlosinfront.webp 533w, /assets/imgs/pets/karlosinfront.JPG 1280w" sizes="(max-width: 700px) calc(100vw - 40px), (max-width: 860px) 44vw, 39vw" width="1280" height="1920" alt="Karlos in the foreground" loading="lazy" decoding="async" style="aspect-ratio: 533 / 800;"></button></figure><div class="note"><div class="note__item"><p class="folio">57</p></div><div class="note__item"><p class="folio">58</p></div></div></div>
+    <div class="row row--wide"><figure class="f f-wide"><button class="frame" type="button" data-n="59" data-large="/assets/imgs/pets/kittyinbed.JPG" data-small="/assets/imgs/pets/kittyinbed.webp" data-chapter="Pets" data-alt="A cat in bed" data-cap="" data-story="" aria-label="Open plate 59 full frame"><img class="shot" src="/assets/imgs/pets/kittyinbed.webp" srcset="/assets/imgs/pets/kittyinbed.webp 800w, /assets/imgs/pets/kittyinbed.JPG 1920w" sizes="(max-width: 860px) calc(100vw - 40px), 70vw" width="1920" height="1280" alt="A cat in bed" loading="lazy" decoding="async" style="aspect-ratio: 800 / 533;"></button></figure><div class="note"><div class="note__item"><p class="folio">59</p></div></div></div>
+    <div class="row row--solo"><figure class="f f-soloR"><button class="frame" type="button" data-n="60" data-large="/assets/imgs/pets/cutefosters.JPG" data-small="/assets/imgs/pets/cutefosters.webp" data-chapter="Pets" data-alt="Foster kittens" data-cap="" data-story="" aria-label="Open plate 60 full frame"><img class="shot" src="/assets/imgs/pets/cutefosters.webp" srcset="/assets/imgs/pets/cutefosters.webp 533w, /assets/imgs/pets/cutefosters.JPG 1280w" sizes="(max-width: 860px) 74vw, 31vw" width="1280" height="1920" alt="Foster kittens" loading="lazy" decoding="async" style="aspect-ratio: 533 / 800;"></button></figure><div class="note"><div class="note__item"><p class="folio">60</p></div></div></div>
+    <div class="row row--plate"><figure class="f f-plate"><button class="frame" type="button" data-n="61" data-large="/assets/imgs/pets/lyingdogs.JPG" data-small="/assets/imgs/pets/lyingdogs.webp" data-chapter="Pets" data-alt="Dogs lying down" data-cap="" data-story="" aria-label="Open plate 61 full frame"><img class="shot" src="/assets/imgs/pets/lyingdogs.webp" srcset="/assets/imgs/pets/lyingdogs.webp 800w, /assets/imgs/pets/lyingdogs.JPG 2000w" sizes="(max-width: 860px) calc(100vw - 40px), 55vw" width="2000" height="1333" alt="Dogs lying down" loading="lazy" decoding="async" style="aspect-ratio: 800 / 533;"></button></figure><div class="note"><div class="note__item"><p class="folio">61</p></div></div></div>
+    <div class="row row--wide"><figure class="f f-wide"><button class="frame" type="button" data-n="62" data-large="/assets/imgs/pets/3cat.JPG" data-small="/assets/imgs/pets/3cat.webp" data-chapter="Pets" data-alt="Three cats" data-cap="" data-story="" aria-label="Open plate 62 full frame"><img class="shot" src="/assets/imgs/pets/3cat.webp" srcset="/assets/imgs/pets/3cat.webp 800w, /assets/imgs/pets/3cat.JPG 1920w" sizes="(max-width: 860px) calc(100vw - 40px), 70vw" width="1920" height="1280" alt="Three cats" loading="lazy" decoding="async" style="aspect-ratio: 800 / 533;"></button></figure><div class="note"><div class="note__item"><p class="folio">62</p></div></div></div>
+    <figure class="bleed"><button class="frame" type="button" data-n="63" data-large="/assets/imgs/pets/3cats.JPG" data-small="/assets/imgs/pets/3cats.webp" data-chapter="Pets" data-alt="Three cats" data-cap="" data-story="" aria-label="Open plate 63 full frame"><img class="shot shot--bleed" src="/assets/imgs/pets/3cats.webp" srcset="/assets/imgs/pets/3cats.webp 800w, /assets/imgs/pets/3cats.JPG 1920w" sizes="100vw" width="1920" height="1280" alt="Three cats" loading="lazy" decoding="async" style="aspect-ratio: 800 / 533;"></button></figure>
+    <div class="row row--afterbleed"><div class="note"><div class="note__item"><p class="folio">63</p></div></div></div>
+    <div class="row row--wide"><figure class="f f-wide"><button class="frame" type="button" data-n="64" data-large="/assets/imgs/pets/cutefoster.JPG" data-small="/assets/imgs/pets/cutefoster.webp" data-chapter="Pets" data-alt="A foster kitten" data-cap="" data-story="" aria-label="Open plate 64 full frame"><img class="shot" src="/assets/imgs/pets/cutefoster.webp" srcset="/assets/imgs/pets/cutefoster.webp 800w, /assets/imgs/pets/cutefoster.JPG 1920w" sizes="(max-width: 860px) calc(100vw - 40px), 70vw" width="1920" height="1280" alt="A foster kitten" loading="lazy" decoding="async" style="aspect-ratio: 800 / 533;"></button></figure><div class="note"><div class="note__item"><p class="folio">64</p></div></div></div>
+    <div class="row row--wide"><figure class="f f-wide"><button class="frame" type="button" data-n="65" data-large="/assets/imgs/pets/xmasdogs.JPG" data-small="/assets/imgs/pets/xmasdogs.webp" data-chapter="Pets" data-alt="Dogs at Christmas" data-cap="" data-story="" aria-label="Open plate 65 full frame"><img class="shot" src="/assets/imgs/pets/xmasdogs.webp" srcset="/assets/imgs/pets/xmasdogs.webp 800w, /assets/imgs/pets/xmasdogs.JPG 2000w" sizes="(max-width: 860px) calc(100vw - 40px), 70vw" width="2000" height="1333" alt="Dogs at Christmas" loading="lazy" decoding="async" style="aspect-ratio: 800 / 533;"></button></figure><div class="note"><div class="note__item"><p class="folio">65</p></div></div></div>
+    <div class="row row--solo"><figure class="f f-soloW"><button class="frame" type="button" data-n="66" data-large="/assets/imgs/pets/leoinbed.JPG" data-small="/assets/imgs/pets/leoinbed.webp" data-chapter="Pets" data-alt="Leo in bed" data-cap="" data-story="" aria-label="Open plate 66 full frame"><img class="shot" src="/assets/imgs/pets/leoinbed.webp" srcset="/assets/imgs/pets/leoinbed.webp 800w, /assets/imgs/pets/leoinbed.JPG 1920w" sizes="(max-width: 860px) 74vw, 31vw" width="1920" height="1074" alt="Leo in bed" loading="lazy" decoding="async" style="aspect-ratio: 800 / 448;"></button></figure><div class="note"><div class="note__item"><p class="folio">66</p></div></div></div>
+    <div class="row row--solo"><figure class="f f-soloR"><button class="frame" type="button" data-n="67" data-large="/assets/imgs/pets/babycosmo.JPG" data-small="/assets/imgs/pets/babycosmo.webp" data-chapter="Pets" data-alt="Cosmo as a kitten" data-cap="" data-story="" aria-label="Open plate 67 full frame"><img class="shot" src="/assets/imgs/pets/babycosmo.webp" srcset="/assets/imgs/pets/babycosmo.webp 592w, /assets/imgs/pets/babycosmo.JPG 1481w" sizes="(max-width: 860px) 74vw, 31vw" width="1481" height="2000" alt="Cosmo as a kitten" loading="lazy" decoding="async" style="aspect-ratio: 592 / 800;"></button></figure><div class="note"><div class="note__item"><p class="folio">67</p></div></div></div>
+  </section>
+
+  <div class="row colophon">
+    <div class="colophon__body">
+      <p>Film on a Pentax&nbsp;K1000, digital on a Canon Rebel&nbsp;ti6.<span class="end" aria-hidden="true"></span></p>
+    </div>
+    <p class="colophon__up"><a href="#top">Back to the top</a></p>
+  </div>
+
+</main>
+
+<div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Full frame view">
+  <button class="lb__x" id="lbX" type="button">Close</button>
+  <button class="lb__nav lb__prev" id="lbP" type="button" aria-label="Previous frame">&#8592;</button>
+  <figure class="lb__fig"><img id="lbImg" src="" alt=""></figure>
+  <button class="lb__nav lb__next" id="lbN" type="button" aria-label="Next frame">&#8594;</button>
+  <div class="lb__meta">
+    <p class="lb__folio" id="lbFolio"></p>
+    <p class="lb__cap" id="lbCap"></p>
+    <p class="lb__count" id="lbCount"></p>
+  </div>
+</div>
+
+<footer class="site-foot">
+  <div class="container site-foot__inner">
+    <div class="site-foot__tree">
+      <p class="site-foot__head"><a href="../projects.html">Projects</a></p>
+      <ul class="tree">
+        <li><a href="../sma/index.html">SMA wire arrays &middot; Kennedy Lab</a></li>
+        <li><a href="../so101/index.html">SO-101 arm &middot; imitation learning</a></li>
+        <li><a href="../arc-agi-3/index.html">ARC-AGI-3 reasoning loop</a></li>
+        <li><a href="../dart/index.html">A-Dartment scoring rig</a></li>
+        <li><a href="../camera-tracking/index.html">MachWorks camera tracking</a></li>
+        <li><a href="../avionics/index.html">MachWorks avionics</a></li>
+        <li><a href="../logic-frame-co/index.html">Logic Frame Co.</a></li>
+        <li class="tree__all"><a href="../projects.html">every project &rarr;</a></li>
+      </ul>
+    </div>
+
+    <div class="site-foot__col">
+      <p class="site-foot__head">Site</p>
+      <ul>
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../index.html#about">About</a></li>
+        <li><a href="../resume/index.html">Resume</a></li>
+        <li><a href="../photography/index.html">Photography</a></li>
+        <li><a href="../fitness.html">Training log</a></li>
+        <li><a href="../contact/index.html">Contact</a></li>
+      </ul>
+    </div>
+
+    <div class="site-foot__col">
+      <p class="site-foot__head">Elsewhere</p>
+      <ul>
+        <li><a href="https://www.linkedin.com/in/chase-bonfiglio" target="_blank" rel="noopener">LinkedIn</a></li>
+        <li><a href="https://github.com/chaseab" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="https://www.instagram.com/chaseabon/" target="_blank" rel="noopener">Instagram</a></li>
+        <li><a href="mailto:bonfigliochase@gmail.com">bonfigliochase@gmail.com</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="container site-foot__rule">
+    <span>Chase Bonfiglio &middot; Blacksburg, VA</span>
+    <span>Mechanical engineering @ Virginia Tech, class of 2028</span>
+  </div>
+</footer>
+
+<style>
+  .site-foot { border-top: 1px solid var(--border); margin-top: 0; padding: 34px 0 10px; background: var(--white); }
+  .site-foot__inner { display: grid; grid-template-columns: 1.6fr 1fr 1fr; gap: 28px; }
+  .site-foot__head { font-size: 13px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--navy); margin: 0 0 10px; }
+  .site-foot__head a { color: inherit; text-decoration: none; }
+  .site-foot ul { list-style: none; margin: 0; padding: 0; }
+  .site-foot li { font-size: 14.5px; line-height: 1.85; }
+  .site-foot a { color: var(--muted); text-decoration: none; }
+  .site-foot a:hover { color: var(--navy); text-decoration: underline; }
+  .tree { position: relative; margin-left: 9px; border-left: 1px solid var(--border); padding-left: 0; }
+  .tree li { position: relative; padding-left: 20px; }
+  .tree li::before { content: ""; position: absolute; left: 0; top: 14px; width: 13px; height: 1px; background: var(--border); }
+  .tree li:last-child::after { content: ""; position: absolute; left: -1px; top: 15px; bottom: 0; width: 1px; background: var(--white); }
+  .tree__all a { color: var(--navy); font-weight: 600; }
+  .site-foot__rule { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+                     border-top: 1px solid var(--border); margin-top: 26px; padding-top: 12px;
+                     font-size: 13px; color: var(--muted); }
+  @media (max-width: 720px) { .site-foot__inner { grid-template-columns: 1fr; gap: 22px; } }
+</style>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ---- running head follows the chapter you are reading, and the URL with it ---- */
+  var sections = [].slice.call(document.querySelectorAll(".chapter"));
+  var links = [].slice.call(document.querySelectorAll("#runnav a"));
+  var current = "";
+
+  function mark() {
+    var line = document.querySelector(".runhead").getBoundingClientRect().bottom + 4;
+    var found = sections.length ? sections[0].id : "";
+    for (var i = 0; i < sections.length; i++) {
+      if (sections[i].getBoundingClientRect().top <= line) { found = sections[i].id; }
+    }
+    if (found === current) { return; }
+    current = found;
+    links.forEach(function (a) {
+      a.setAttribute("aria-current", String(a.dataset.ch === found));
+    });
+    if (history.replaceState) { history.replaceState(null, "", "#" + found); }
+  }
+
+  var ticking = false;
+  window.addEventListener("scroll", function () {
+    if (ticking) { return; }
+    ticking = true;
+    window.requestAnimationFrame(function () { ticking = false; mark(); });
+  }, { passive: true });
+  mark();
+
+  /* ---- full frame view ---- */
+  var shots = [].slice.call(document.querySelectorAll(".frame"));
+  var lb = document.getElementById("lb");
+  var lbImg = document.getElementById("lbImg");
+  var lbFolio = document.getElementById("lbFolio");
+  var lbCap = document.getElementById("lbCap");
+  var lbCount = document.getElementById("lbCount");
+  var btnX = document.getElementById("lbX");
+  var btnP = document.getElementById("lbP");
+  var btnN = document.getElementById("lbN");
+  var at = 0, opener = null;
+
+  function pad(n) { return ("0" + n).slice(-2); }
+
+  lbImg.addEventListener("error", function () {
+    var b = shots[at];
+    if (b && lbImg.getAttribute("src") !== b.dataset.small) { lbImg.src = b.dataset.small; }
+  });
+
+  function paint(i) {
+    at = (i + shots.length) % shots.length;
+    var b = shots[at];
+    lbImg.src = b.dataset.large;
+    lbImg.alt = b.dataset.alt;
+    lbFolio.textContent = pad(b.dataset.n) + "  \u00b7  " + b.dataset.chapter;
+    var text = b.dataset.cap || "";
+    if (b.dataset.story) { text = text ? text + " " + b.dataset.story : b.dataset.story; }
+    lbCap.textContent = text;
+    lbCount.textContent = pad(b.dataset.n) + " / " + shots.length;
+  }
+
+  function openAt(i) {
+    opener = shots[i];
+    paint(i);
+    lb.hidden = false;
+    document.body.style.overflow = "hidden";
+    window.requestAnimationFrame(function () { lb.classList.add("is-open"); });
+    btnX.focus();
+  }
+
+  function close() {
+    lb.classList.remove("is-open");
+    lb.hidden = true;
+    lbImg.src = "";
+    document.body.style.overflow = "";
+    if (opener) { opener.focus(); opener = null; }
+  }
+
+  shots.forEach(function (b, i) {
+    b.addEventListener("click", function () { openAt(i); });
+  });
+  btnX.addEventListener("click", close);
+  btnP.addEventListener("click", function () { paint(at - 1); });
+  btnN.addEventListener("click", function () { paint(at + 1); });
+  lb.addEventListener("click", function (e) {
+    if (e.target === lb || e.target.tagName === "FIGURE") { close(); }
+  });
+
+  document.addEventListener("keydown", function (e) {
+    if (lb.hidden) { return; }
+    if (e.key === "Escape") { close(); }
+    else if (e.key === "ArrowLeft") { paint(at - 1); }
+    else if (e.key === "ArrowRight") { paint(at + 1); }
+    else if (e.key === "Tab") {
+      var ring = [btnX, btnP, btnN];
+      var here = ring.indexOf(document.activeElement);
+      var next = here === -1 ? 0 : (e.shiftKey ? here - 1 : here + 1);
+      e.preventDefault();
+      ring[(next + ring.length) % ring.length].focus();
+    }
+  });
+}());
+</script>
+
+</body>
+</html>
