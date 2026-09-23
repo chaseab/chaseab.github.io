@@ -22,6 +22,22 @@ export default async (req) => {
   if (!scope) return json({ error: "scope required" }, 400);
 
   const store = getStore({ name: "notes", consistency: "strong" });
+
+  // scope=all: every scope at once, optionally only what is newer than ?since=<ms>.
+  // Read-only, and it never includes the filed-history scope.
+  if (scope === "all" && req.method === "GET") {
+    const since = Number(url.searchParams.get("since")) || 0;
+    const { blobs } = await store.list();
+    const out = [];
+    for (const b of blobs) {
+      if (b.key === "history") continue;
+      const notes = (await store.get(b.key, { type: "json" })) || [];
+      for (const n of notes) if ((Number(n.ts) || 0) > since) out.push({ ...n, scope: b.key });
+    }
+    out.sort((a, b) => a.ts - b.ts);
+    return json(out);
+  }
+
   const list = (await store.get(scope, { type: "json" })) || [];
 
   if (req.method === "GET") return json(list);
