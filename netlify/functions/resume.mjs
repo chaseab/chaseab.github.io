@@ -27,15 +27,12 @@ async function listJson(store, prefix) {
   const got = await Promise.all(keys.map(async (k) => { const v = await store.get(k, { type: "json" }); return v && { key: k, ...v }; }));
   return got.filter(Boolean);
 }
-// Rebuild an index: from store.list() when it answers within 8 s, else from the keys supplied (each checked with a get).
+// Rebuild an index from the keys supplied (each checked with a get), or from store.list() when none
+// are supplied. On 2026-09-23 list() crashed the function outright, so pass keys when it misbehaves.
 async function reindex(store, prefix, supplied = []) {
-  let keys;
-  try {
-    const listed = await Promise.race([store.list({ prefix: `${prefix}/` }), new Promise((_, rej) => setTimeout(() => rej(new Error("list timed out")), 8000))]);
-    keys = listed.blobs.map((b) => b.key);
-  } catch {
-    keys = (await Promise.all(supplied.map(async (k) => ((await store.get(k)) != null ? k : null)))).filter(Boolean);
-  }
+  const keys = supplied.length
+    ? (await Promise.all(supplied.map(async (k) => ((await store.get(k)) != null ? k : null)))).filter(Boolean)
+    : (await store.list({ prefix: `${prefix}/` })).blobs.map((b) => b.key);
   await store.setJSON(indexKey(prefix), keys);
   return keys;
 }
@@ -98,10 +95,10 @@ export default async (req) => {
   }
   if (req.method === "POST" && what === "reindex") {         // one-off repair: {cards?: [ids], cmds?: [keys]}
     const b = await req.json().catch(() => ({}));
-    return json({
-      card: await reindex(store, "card", (b.cards || []).map((x) => `card/${safe(x)}`)),
-      cmd: await reindex(store, "cmd", (b.cmds || []).filter((k) => String(k).startsWith("cmd/"))),
-    });
+    const out = {};
+    if (b.cards) out.card = await reindex(store, "card", b.cards.map((x) => `card/${safe(x)}`));
+    if (b.cmds) out.cmd = await reindex(store, "cmd", b.cmds.filter((k) => String(k).startsWith("cmd/")));
+    return json(out);
   }
   if (req.method === "POST" && what === "status") {          // worker/scan heartbeat, merged shallowly
     const cur = (await store.get("status", { type: "json" })) || {};
