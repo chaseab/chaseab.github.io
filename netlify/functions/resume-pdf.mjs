@@ -9,7 +9,8 @@ const ROUTES = {
   "/resume-scholarship.pdf": "scholarship",
   "/cv.pdf": "cv",
 };
-export const config = { path: Object.keys(ROUTES) };
+// Netlify reads config statically, so the paths must be written out literally (not Object.keys(ROUTES)).
+export const config = { path: ["/resume.pdf", "/resume-robotics.pdf", "/resume-mech.pdf", "/resume-scholarship.pdf", "/cv.pdf"] };
 
 const FILENAMES = { robotics: "Chase_Bonfiglio_Resume", mech: "Chase_Bonfiglio_Resume_ME",
   scholarship: "Chase_Bonfiglio_Resume_Scholarship", cv: "Chase_Bonfiglio_CV" };
