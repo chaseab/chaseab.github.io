@@ -53,6 +53,15 @@
   .cbn-tab .n{font-weight:400;opacity:.7;margin-left:4px}
   .cbn-body{flex:1;overflow-y:auto;padding:14px 14px 6px;display:flex;flex-direction:column;gap:10px;background:#fff}
   .cbn-empty{margin:auto;text-align:center;color:#6c757d;font-size:14px;max-width:26ch}
+  .cbn-hist{list-style:none;margin:0;padding:2px 0 0;display:flex;flex-direction:column;gap:0}
+  .cbn-hist li{display:flex;gap:8px;padding:7px 2px;border-bottom:1px solid #eceff2;font-size:14px;line-height:1.45}
+  .cbn-hist li:last-child{border-bottom:0}
+  .cbn-hist .d{flex:none;color:#8a94a0;font-size:11.5px;font-weight:600;letter-spacing:.02em;padding-top:2px;min-width:44px}
+  .cbn-hist .t{flex:1;color:#212529}
+  .cbn-hist .t .why{display:block;color:#6c757d;font-size:12.5px;margin-top:2px}
+  .cbn-hist .ok{color:#2f6b47;font-weight:700}
+  .cbn-sum{margin-top:14px;padding:12px 13px;background:#f6f8fa;border:1px solid #e3e7eb;border-left:3px solid #1c2e4a;font-size:13.5px;line-height:1.55;white-space:pre-wrap}
+  .cbn-sum b{display:block;font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:#1c2e4a;margin-bottom:5px}
   .cbn-msg{position:relative;max-width:92%;align-self:flex-start;background:#f1f3f5;border:1px solid #e5e8eb;padding:9px 12px 7px;font-size:15px;white-space:pre-wrap;overflow-wrap:anywhere}
   .cbn-msg a{color:#1c2e4a}
   .cbn-msg .cbn-meta{display:flex;gap:8px;align-items:center;margin-top:5px;font-size:12px;color:#6c757d;white-space:nowrap}
@@ -78,6 +87,7 @@
 
   // ---------- state ----------
   const ui = Object.assign({ mode: "closed", tab: "page" }, ls.get(UI, {}));
+  if (["page", "site", "history"].indexOf(ui.tab) < 0) ui.tab = "page";
   const cache = (scope) => ls.get(CACHE + scope, []);
   const setCache = (scope, list) => ls.set(CACHE + scope, list);
   let status = "";
@@ -121,7 +131,9 @@
   head.append(headTitle, bMin, bExp, bClose);
   const tabs = el("div", "cbn-tabs"); tabs.setAttribute("role", "tablist");
   const tabPage = el("button", "cbn-tab", `This page<span class="n"></span>`), tabSite = el("button", "cbn-tab", `Site-wide<span class="n"></span>`);
-  tabPage.setAttribute("role", "tab"); tabSite.setAttribute("role", "tab"); tabs.append(tabPage, tabSite);
+  const tabHist = el("button", "cbn-tab", `History<span class="n"></span>`);
+  tabPage.setAttribute("role", "tab"); tabSite.setAttribute("role", "tab"); tabHist.setAttribute("role", "tab");
+  tabs.append(tabPage, tabSite, tabHist);
   const body = el("div", "cbn-body");
   const foot = el("div", "cbn-foot");
   const compose = el("div", "cbn-compose");
@@ -193,8 +205,39 @@
   const esc = (s) => s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const linkify = (s) => esc(s).replace(/\bhttps?:\/\/[^\s<]+/g, (u) => `<a href="${u}" target="_blank" rel="noopener">${u}</a>`);
 
-  const scope = () => (ui.tab === "site" ? "site" : slug);
+  const scope = () => (ui.tab === "site" ? "site" : ui.tab === "history" ? "history" : slug);
+  const renderHistory = (list) => {
+    body.innerHTML = "";
+    const summary = list.filter((n) => n.page === "summary").pop();
+    const items = list.filter((n) => n.page !== "summary").sort((a, b) => a.ts - b.ts);
+    if (!items.length && !summary) {
+      body.append(el("div", "cbn-empty", "Nothing filed yet. Once notes are acted on they get condensed here."));
+    } else {
+      const ol = el("ul", "cbn-hist");
+      for (const n of items) {
+        // "what you wrote :: what came of it"
+        const parts = n.text.split("::");
+        const said = parts[0].trim();
+        const why = parts.slice(1).join("::").trim();
+        const li = document.createElement("li");
+        const d = new Date(n.ts);
+        li.innerHTML = `<span class="d">${d.toLocaleDateString([], { month: "short", day: "numeric" })}</span>` +
+          `<span class="t">${linkify(said)}${why ? `<span class="why">${linkify(why)}</span>` : ""}</span>`;
+        ol.append(li);
+      }
+      body.append(ol);
+      if (summary) {
+        const box = el("div", "cbn-sum", "");
+        box.innerHTML = `<b>Where that leaves it</b>${linkify(summary.text)}`;
+        body.append(box);
+      }
+    }
+    body.scrollTop = 0;
+    foot.innerHTML = `<span class="${status ? "bad" : ""}">${status || "Filed \u00b7 read-only"}</span><span>${items.length} note${items.length === 1 ? "" : "s"} acted on</span>`;
+  };
+
   const render = (list) => {
+    if (ui.tab === "history") return renderHistory(list);
     body.innerHTML = "";
     if (!list.length) { body.append(el("div", "cbn-empty", ui.tab === "site" ? "No site-wide notes yet. Things that apply to every page go here." : `No notes on this page yet.`)); }
     for (const n of list) {
@@ -216,11 +259,15 @@
   };
   const counts = () => {
     const p = cache(slug).length, s = cache("site").length;
+    const h = cache("history").filter((n) => n.page !== "summary").length;
     tabPage.querySelector(".n").textContent = p ? ` ${p}` : ""; tabSite.querySelector(".n").textContent = s ? ` ${s}` : "";
+    tabHist.querySelector(".n").textContent = h ? ` ${h}` : "";
     badge.hidden = !p; badge.textContent = p;
   };
   const show = async () => {
-    tabPage.setAttribute("aria-selected", ui.tab !== "site"); tabSite.setAttribute("aria-selected", ui.tab === "site");
+    tabPage.setAttribute("aria-selected", ui.tab === "page"); tabSite.setAttribute("aria-selected", ui.tab === "site");
+    tabHist.setAttribute("aria-selected", ui.tab === "history");
+    compose.hidden = ui.tab === "history";
     ta.placeholder = ui.tab === "site" ? "Site-wide note…" : `Note for ${slug}…`;
     render(cache(scope())); counts();
     const list = await load(scope()).catch(() => null); if (list) { render(list); counts(); }
@@ -264,6 +311,7 @@
   head.ondblclick = (e) => { if (e.target === head || e.target === headTitle) bMin.click(); };
   tabPage.onclick = () => { ui.tab = "page"; ls.set(UI, ui); show(); };
   tabSite.onclick = () => { ui.tab = "site"; ls.set(UI, ui); show(); };
+  tabHist.onclick = () => { ui.tab = "history"; ls.set(UI, ui); show(); };
   send.onclick = add;
   ta.oninput = () => { send.disabled = !ta.value.trim(); ta.style.height = "auto"; ta.style.height = Math.min(160, ta.scrollHeight) + "px"; };
   ta.onkeydown = (e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); add(); } };
