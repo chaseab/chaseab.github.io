@@ -29,13 +29,19 @@ const blobUrls = {};
 const pop = { id: null, pinned: false, editing: false, timer: null };
 
 // ---------- api ----------
+// Netlify has returned sporadic fast 500s; every call is safe to repeat, so 5xx/network errors retry.
 async function api(method, params, body) {
   const opts = { method, headers: { "x-notes-key": key } };
   if (body !== undefined) { opts.headers["content-type"] = "application/json"; opts.body = JSON.stringify(body); }
-  const r = await fetch(`${API}?${new URLSearchParams(params)}`, opts);
-  if (r.status === 401) { const e = new Error("unauthorized"); e.auth = true; throw e; }
-  if (!r.ok) throw new Error(`${r.status} ${await r.text()}`);
-  return r;
+  for (let attempt = 1; ; attempt++) {
+    let r;
+    try { r = await fetch(`${API}?${new URLSearchParams(params)}`, opts); }
+    catch (e) { if (attempt < 3) { await new Promise((res) => setTimeout(res, attempt * 800)); continue; } throw e; }
+    if (r.status >= 500 && attempt < 3) { await new Promise((res) => setTimeout(res, attempt * 800)); continue; }
+    if (r.status === 401) { const e = new Error("unauthorized"); e.auth = true; throw e; }
+    if (!r.ok) throw new Error(`${r.status} ${(await r.text()).slice(0, 200)}`);
+    return r;
+  }
 }
 const getJson = async (params) => (await api("GET", params)).json();
 const post = async (what, body) => (await api("POST", { what }, body)).json();
@@ -292,13 +298,15 @@ function render() {
 }
 
 // ---------- data ----------
+let failures = 0;
 async function refresh() {
   try {
     const [st, content] = await Promise.all([getJson({ what: "state" }), getJson({ what: "content" })]);
-    state = st; snap = content;
+    state = st; snap = content; failures = 0;
     render();
   } catch (e) {
     if (e.auth) return logout("That key didn't work.");
+    if (++failures < 3) return;      // one bad poll isn't worth a banner; the next one retries
     $("banner").hidden = false;
     $("banner").textContent = `Can't reach the API: ${e.message}`;
   }
