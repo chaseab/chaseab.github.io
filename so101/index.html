@@ -246,6 +246,23 @@
   </div>
 </section>
 
+<section class="section" id="sim">
+  <div class="section__head"><h2>Training in simulation</h2><span class="line"></span></div>
+  <div class="reading">
+    <p>After the first real run I moved the training into simulation. The task changed to picking three Jenga blocks and placing them side by side on a coaster, and the demonstrations come from a scripted expert in a MuJoCo digital twin of the bench (including recovery and correction demos), so none of the training data for this policy came from the real arm.</p>
+    <p>The timelapse below is one ACT policy at six points in its training (10k, 50k, 70k, 130k, 160k and 250k steps), each run once on the same scene at 8x speed. It shows the policy learning, it is not a benchmark. On a 10-episode sim evaluation the 250k checkpoint grasped 21 to 23 of 30 blocks and placed 8 to 13 of 30 within 12&nbsp;mm.</p>
+  </div>
+  <figure class="panel">
+    <video controls muted loop playsinline preload="metadata" poster="assets/learning-to-stack-poster.jpg" width="1280" height="720" style="width:100%;height:auto;display:block" aria-label="Timelapse of one ACT policy at six training checkpoints stacking Jenga blocks in simulation">
+      <source src="assets/learning-to-stack.mp4" type="video/mp4" />
+    </video>
+    <figcaption><span class="figure__title">Learning to stack</span><span class="figure__text">Same scene, one attempt per checkpoint, 8x speed. Wrist and overhead cameras, with the training step, blocks placed on the coaster and the loss curve along the bottom.</span></figcaption>
+  </figure>
+  <div class="reading">
+    <p>On 24 Sep I ran it on the real arm. It grasped and carried the block 3 out of 3 times but didn't place it in its slot. The cause was traced to a camera calibration error (the cutting mat's grid is 1/2 inch, not 1 cm), and a model trained on the corrected calibration was started on 25 Sep.</p>
+  </div>
+</section>
+
 <section class="section" id="added">
   <div data-blocks="so101" hidden></div>
 </section>
@@ -260,6 +277,8 @@
     <li><b>13 Sep</b>Reconstruction engine v2 (MoGe-2 depth + plane rectification + best-view surfel fusion). First ghost-free scene from one sweep.</li>
     <li><b>14 Sep</b>CUDA training verified end to end on a synthetic dataset; Jenga task chosen and specced. Two stacking attempts lost to a stale servo speed cap and the UI stop button — 0 episodes kept.</li>
     <li><b>15 Sep</b>First real data: 10 episodes of tower-stacking, 64,672 frames. ACT trained 30k steps in 3 h. Checkpoint on the arm the same evening: places a handed block, can't pick from the pile. Camera-dropout and torque-hold fixes written after the wrist cable came loose mid-episode.</li>
+    <li><b>22 Sep</b>ACT policy trained on simulated demos in the MuJoCo twin: 0 blocks placed at 10k steps, 2 of 3 by 130k on the same scene.</li>
+    <li><b>24 Sep</b>Sim-trained policy on the real arm: grasped and carried the block 3/3, didn't place it. Traced to a camera calibration error; retraining on the corrected calibration started 25 Sep.</li>
   </ul>
 </section>
 
