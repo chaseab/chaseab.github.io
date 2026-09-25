@@ -89,8 +89,10 @@
         A camera-scored dartboard for the apartment, inspired by
         <a href="https://autodarts.io" rel="noopener">Autodarts</a>. Three cameras
         on a Raspberry&nbsp;Pi find where each dart lands and a scoreboard I drew by
-        hand keeps <b>501</b>. The rig is built and mounted; I'm calibrating the
-        cameras now.
+        hand keeps <b>501</b>. The rig is built and scoring live games now, and
+        the scoreboard is up at <a href="https://darts.chasebonfiglio.com">darts.chasebonfiglio.com</a>,
+        where anyone can set up a game (and tap scores in by hand when they
+        aren't at the board).
       </p>
   </div>
   <div class="split">
@@ -127,8 +129,8 @@
       <div><b>Cameras</b><span>3 × OV9732</span><small>1280×720 @ 30&nbsp;fps MJPG on a powered USB hub · addressed by <code>/dev/v4l/by-path</code>, exposure &amp; white-balance locked manual</small></div>
       <div><b>Compute</b><span>Raspberry Pi&nbsp;4B</span><small>RPi&nbsp;OS Lite 64-bit; OpenCV + V4L2; the detection server runs as a <code>systemd</code> service with a tuning UI on the LAN</small></div>
       <div><b>Board</b><span>WDF/BDO regulation</span><small>451&nbsp;mm face, 340&nbsp;mm playing surface; radii measured to the centre of the wire</small></div>
-      <div><b>Mount</b><span>Printed camera mount, v1 → v4</span><small>SolidWorks, on-board and off-board variants; PLA on a Bambu&nbsp;P1S</small></div>
-      <div><b>Scoreboard</b><span>TypeScript · React&nbsp;19 · Vite · Tailwind</span><small>Runs in a browser; no backend needed to keep score</small></div>
+      <div><b>Mount</b><span>Printed camera mount, v1 → v4</span><small>SolidWorks, on-board and off-board variants; PLA on a Bambu&nbsp;P1S; v4 has a lip that hooks onto the ring around the edge of the board</small></div>
+      <div><b>Scoreboard</b><span>TypeScript · React&nbsp;19 · Vite · Tailwind</span><small>Runs in a browser; finished games are logged to a small Node server on my desktop</small></div>
       <div><b>Vision</b><span>Python · OpenCV · PyTorch</span><small>Calibration, detection, fusion and a learned tip detector; 61 <code>pytest</code> cases across 9 modules</small></div>
     </div>
   </div>
@@ -163,7 +165,7 @@
 
   <figure class="panel">
     <img src="assets/tip-labeller.webp" width="1600" height="610" alt="The tip-labelling tool: one camera’s frame of the board with a dart in the 14, a green crosshair on the tip where it enters the board, and a 4× zoom lens panel on the right showing the tip pixels under the cursor." loading="lazy" />
-    <figcaption><span class="figure__title">Tip labelling</span><span class="figure__text">Each recorded throw gets the tip clicked in all three camera views, with a 4× lens to land it on the pixel. Those labels train a ResNet-18 heatmap tip detector, exported to ONNX for the Pi, that will take over from raw differencing for cluttered throws.</span></figcaption>
+    <figcaption><span class="figure__title">Tip labelling</span><span class="figure__text">Each recorded throw gets the tip clicked in all three camera views, with a 4× lens to land it on the pixel. Those labels trained a ResNet-18 heatmap tip detector, exported to ONNX, which is what the Pi uses to find the tip now. Before it, the triples and the edges of the board were hit or miss.</span></figcaption>
   </figure>
 </section>
 
@@ -199,9 +201,10 @@
   </div>
   <div class="reading">
     <p>
-      The loop from camera to called segment is closed and measured; what is left
-      is wiring those calls into the scoreboard’s event feed and measuring the
-      tip error in millimetres rather than by segment.
+      The calls from the rig now go straight into the scoreboard. The table
+      above is from the 17 Sep run, before the learned tip detector was on the
+      Pi, so it hasn't been re-measured with it yet, and tip error in
+      millimetres still isn't measured.
     </p>
   </div>
 </section>
@@ -223,16 +226,36 @@
   </div>
 </section>
 
+<section class="section" id="play">
+  <div class="section__head"><h2>Playing on it</h2><span class="line"></span></div>
+  <div class="reading">
+    <p>
+      When the scoreboard is open, it puts the Pi into game mode, where every
+      detected dart is accepted straight away instead of waiting for me to
+      confirm it. Pulling the darts out (a hand in view, then the board still
+      for about 1.5 seconds) ends the visit early, and after three darts or a
+      bust the turn passes on its own. If a dart gets misread, the fix happens
+      in the scoreboard by dropping that dart and replaying the match, so
+      nothing is sent back to the Pi.
+    </p>
+    <p>
+      The <a href="https://darts.chasebonfiglio.com">public page</a> lets you
+      pick 1 to 4 players, 301, 501 or 701, double-out on or off, and the
+      number of legs and sets. Every finished game is logged with each visit
+      dart by dart, and the last few show up under recent games. The camera
+      views and the detector's settings are on a separate page that only I can
+      log into, since the cameras can see the apartment.
+    </p>
+  </div>
+</section>
+
 <section class="section" id="next">
   <div class="section__head"><h2>Coming next</h2><span class="line"></span></div>
   <div class="reading">
     <p>
-      <b>Live scoring.</b> Wire the rig’s detections into the scoreboard’s
-      event feed, measure hit error against hand-scored throws, then play real
-      matches on it. The learned tip detector goes onto the Pi in the same pass, for the throws
-      differencing gets wrong — a dart behind another dart, a hand still in
-      frame. It has no held-out error number yet, and nothing is claimed for
-      its speed until it is timed on the Pi itself.
+      <b>Re-measure accuracy.</b> Score a new set of hand-checked throws with
+      the learned tip detector on the Pi and replace the 17 Sep table, and
+      measure tip error in millimetres against hand-measured tip positions.
     </p>
     <p>
       <b>Practice mode.</b> The board calls a segment at random, you throw at
