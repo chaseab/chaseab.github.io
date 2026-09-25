@@ -10,10 +10,10 @@
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://chasebonfiglio.com/so101/" />
 <meta property="og:title" content="SO-101 arm — imitation learning on real hardware" />
-<meta property="og:description" content="A leader/follower SO-101 arm pair, a dashboard with a digital twin and a live 3D map from the wrist camera, and a first imitation-learning task. Lab notebook with measured numbers." />
+<meta property="og:description" content="A leader/follower SO-101 arm pair, a dashboard with a digital twin and a live 3D map from the wrist camera, imitation learning from real demos, and policies trained only in a MuJoCo simulation of the bench." />
 <meta property="og:image" content="https://chasebonfiglio.com/assets/imgs/so101-cover.webp" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="description" content="Project log: a leader/follower SO-101 arm pair, a browser dashboard with a digital twin and a live 3D map built from the wrist camera, and a first imitation-learning task (stacking Jenga blocks) — all on one Windows desktop with a GTX 1080 Ti." />
+<meta name="description" content="Project log: a leader/follower SO-101 arm pair, a browser dashboard with a digital twin and a live 3D map built from the wrist camera, imitation learning on stacking Jenga blocks from real demos, and policies trained only in a MuJoCo simulation of the bench, all on one Windows desktop with a GTX 1080 Ti." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,600,700&display=swap" rel="stylesheet">
@@ -89,17 +89,20 @@
   <p class="lead">
     In September 2026 I built a pair of <b>SO-101 arms</b> — a leader I move by hand and a follower that mirrors it — to
     learn imitation learning on real hardware end to end: wiring and calibration, data collection, training a policy, and
-    running it back on the arm. Everything runs on one Windows desktop with a GTX 1080 Ti. This page is a lab notebook,
-    not a product page: numbers are measured, and things that don't work yet say so.
+    running it back on the arm. Everything runs on one Windows desktop with a GTX 1080 Ti. Since 19 Sep most of the training has
+    moved into a MuJoCo simulation of the bench, and the latest policy (trained only on simulated data) grasps and
+    carries blocks on the real arm but doesn't get them into the right spot yet.
   </p>
 
   <div class="status" aria-label="project status">
-    <div class="status__bar"><span>Status · 16 Sep 2026</span><span class="pill">in progress</span></div>
+    <div class="status__bar"><span>Status · 25 Sep 2026</span><span class="pill">in progress</span></div>
     <div class="status__grid">
       <div class="status__item"><b>Rig</b><span class="pill pill--ok">Built &amp; calibrated</span> — leader + follower, two cameras</div>
       <div class="status__item"><b>Dashboard</b><span class="pill pill--ok">Working</span> — live feeds, digital twin, record / train / eval from the browser</div>
       <div class="status__item"><b>Live 3D map</b><span class="pill pill--wip">Working, accuracy in progress</span> — no markers, FK-anchored</div>
-      <div class="status__item"><b>First learned task</b><span class="pill pill--wip">First policy on the arm</span> — 10 demos → ACT; places a handed block, can't pick from the pile yet</div>
+      <div class="status__item"><b>Real demos</b><span class="pill pill--wip">Two datasets</span> — 10 and 11 episodes; the ACT policy from the first placed a handed block but never grasped from the pile</div>
+      <div class="status__item"><b>Sim-trained policy</b><span class="pill pill--wip">Grasps, not placing yet</span> — trained only on simulated demos; on the real arm 3/3 grasp and carry, 0 of 9 blocks in the slot (24 Sep); retraining on a corrected calibration</div>
+      <div class="status__item"><b>Gripper</b><span class="pill pill--wip">Redesign started</span> — TPU fin-ray fingers on a quick-change mount (25 Sep)</div>
     </div>
   </div>
 
@@ -127,7 +130,7 @@
       <li><b>Serial ports.</b> Bluetooth had claimed COM3–COM6 and Windows gave the two identical CH343 servo boards duplicate names. I pinned each board's port number to its USB serial in the registry; they now survive replugging.</li>
       <li><b>Calibration.</b> The leader's shoulder-pan horn is clocked so its mechanical mid-travel sits at encoder count 4092 — two counts under the 4094 ceiling the calibration routine allows — so calibration failed with <code>Magnitude exceeds 2047</code>. Parking that joint off-centre (~3800) before calibrating fixes it and costs no range of motion, since the sweep records the real min/max anyway.</li>
       <li><b>Servo bus.</b> Teleop dropped out on bus errors, so I patched a retry into the bus layer and run teleop through a small wrapper instead of the stock command.</li>
-      <li><b>USB.</b> Both cameras and one servo board share a single USB&nbsp;2 hub. The wrist camera's stream wedges for ~10&nbsp;s whenever the arm moves (a cable/connector issue at the wrist). The mapper waits for an accepted frame rather than mapping from a stale one; the real fix is the cable.</li>
+      <li><b>USB.</b> Both cameras kept dropping off the bus whenever the arm moved. The cause was a USB extension cable on the wrist camera, plus a 4-port hub (Realtek RTS5411) that reset both camera ports whenever one of them glitched. On 14 Sep I moved the extension to the leader's serial link and took the hub out (wrist camera on one root hub, overhead camera and both servo boards on the other), and the dropouts during motion stopped. The server now logs every USB arrival and removal so a bad cable shows up before a recording.</li>
     </ul>
   </div>
 </section>
@@ -189,7 +192,7 @@
 <section class="section" id="jenga">
   <div class="section__head"><h2>Teaching it to stack Jenga blocks</h2><span class="line"></span></div>
   <div class="reading">
-    <p>The first policy the arm learns will be pick-and-place: build a tower from a pile of loose Jenga blocks, as high as it can reach, and recover when blocks fall. I picked it over the obvious "play Jenga" for concrete reasons:</p>
+    <p>The first task I picked for the arm was pick-and-place: build a tower from a pile of loose Jenga blocks, as high as it can reach, and recover when blocks fall. I picked it over the obvious "play Jenga" for concrete reasons:</p>
     <ul>
       <li>±5&nbsp;mm tolerances and a task that is already known to work on this class of arm.</li>
       <li>Progress is fully visible in the images, so a memoryless reactive policy (ACT) doesn't need to count blocks — it reads the tower top and the pile.</li>
@@ -197,13 +200,13 @@
       <li>Recovery is designed in: 2–3 failures are injected per episode and fumbled episodes are never re-recorded, because recovery data is the point.</li>
     </ul>
     <p>Pulling blocks out of a real tower is explicitly out of scope for now. Every published robot that has done it used force/torque sensing to tell a loose block from a stuck one, and the STS3215's load register is unlikely to resolve the ~0.3&nbsp;N that matters. Vision alone can't tell the difference.</p>
-    <p><b>Plan.</b> ACT first, Diffusion Policy second. Training measures 0.40&nbsp;s/step at batch&nbsp;8 with two 640×480 cameras on the 1080&nbsp;Ti — so 30k steps is about 3.3&nbsp;h. A first checkpoint after 20 six-layer episodes (~360 pick-place cycles); 50–70 episodes total, with one DAgger-style correction round. Honest expectation for a first pass: 40–70&nbsp;% success on the simplest level.</p>
+    <p><b>The original plan.</b> ACT first, Diffusion Policy second. Training measures 0.40&nbsp;s/step at batch&nbsp;8 with two 640×480 cameras on the 1080&nbsp;Ti — so 30k steps is about 3.3&nbsp;h. A first checkpoint after 20 six-layer episodes (~360 pick-place cycles); 50–70 episodes total, with one DAgger-style correction round.</p>
     <p><b>Where it started.</b> A 15-minute teleop trial said the task was doable on this rig, and CUDA training was verified on a synthetic dataset. The first real data and the first policy came the next evening — <a href="#firstrun">section 05</a>.</p>
   </div>
 </section>
 
 <section class="section" id="firstrun">
-  <div class="section__head"><h2>Ten demonstrations, one policy, one honest result</h2><span class="line"></span></div>
+  <div class="section__head"><h2>Ten demonstrations and a first policy</h2><span class="line"></span></div>
   <div class="reading reading--wide">
     <p>On the evening of 15 September the loop ran end to end for the first time: teleoperated demonstrations recorded through the dashboard, an ACT policy trained on the 1080&nbsp;Ti, and the checkpoint driven back on the real arm. The numbers below are from the run logs.</p>
 
@@ -242,15 +245,16 @@
       <li><b>Camera-dropout resilience.</b> Mid-episode the wrist camera's cable came loose; LeRobot released torque and the arm dropped. Now a camera that drops serves its last good frame and reconnects in the background for up to 20&nbsp;s, torque is held on any failure, and the recovery park is a self-pacing "leashed" move — the stock park had aborted on following error from a horizontal reach. Verified on the arm: 112° away → home in 22&nbsp;s.</li>
       <li><b>Two smaller ones.</b> A hook that resets a stale sweep speed cap (<code>Goal_Velocity</code> 300 ≈ 26°/s) the moment the follower connects — LeRobot never resets it and it cost the first recording attempt — and a ramp that leashes the follower to the leader's live pose at session start so nothing snaps.</li>
     </ul>
-    <p><b>Next.</b> Re-evaluate the same checkpoint with temporal ensembling (<code>n_action_steps=1</code>, <code>temporal_ensemble_coeff=0.01</code>) — the ACT paper's own smoother, no retraining, now the eval default. Then Run 2: 20–30 episodes with blocks laid out singly on the mat instead of heaped, one grasp approach, before a DAgger-style correction round from the policy's own failure states. Still on the list from the plan: angle the overhead camera to ~45° so tower height is visible, give the wrist camera its own USB root port, and print flat gripper pads.</p>
+    <p><b>What came after.</b> On 16 Sep I re-ran the same checkpoint with temporal ensembling (<code>n_action_steps=1</code>, <code>temporal_ensemble_coeff=0.01</code>) and with the 3D mapper stopped. The eval loop held about 27&nbsp;Hz instead of dipping to 7–20&nbsp;Hz, but the policy still couldn't grasp from the pile, so the problem was the data and not how the chunks were executed. On 17 Sep I recorded a second dataset, <code>intial_stack_v1</code>: 11 episodes (58,197 frames, 32 min) building a 3-layer tower from 9 blocks laid out singly instead of heaped. After that the training moved into simulation (next section). Of the older to-do list, the overhead camera stays straight down, the wrist camera got its own root hub on 14 Sep, and the flat gripper pads were replaced by the gripper redesign below.</p>
   </div>
 </section>
 
 <section class="section" id="sim">
   <div class="section__head"><h2>Training in simulation</h2><span class="line"></span></div>
   <div class="reading">
-    <p>After the first real run I moved the training into simulation. The task changed to picking three Jenga blocks and placing them side by side on a coaster, and the demonstrations come from a scripted expert in a MuJoCo digital twin of the bench (including recovery and correction demos), so none of the training data for this policy came from the real arm.</p>
-    <p>The timelapse below is one ACT policy at six points in its training (10k, 50k, 70k, 130k, 160k and 250k steps), each run once on the same scene at 8x speed. It shows the policy learning, it is not a benchmark. On a 10-episode sim evaluation the 250k checkpoint grasped 21 to 23 of 30 blocks and placed 8 to 13 of 30 within 12&nbsp;mm.</p>
+    <p>After the real runs I moved the training into simulation: a MuJoCo digital twin of the bench with both calibrated cameras and servo behaviour fitted from a sweep of the real arm (about 120&nbsp;ms of lag on every joint). The demonstrations come from a scripted expert in the twin (including recovery and correction demos), so none of the training data for these policies came from the real arm.</p>
+    <p>The first test was a single block: reach it, grasp it, lift it, carry it to a coaster and let go. The first version reached about 8&nbsp;cm off on the real arm, and it seems the overhead camera was the gap, so the second version was trained with randomised lighting, colours and overhead camera focal length. On 20 Sep that version did the whole sequence 3 out of 3 times on the real arm, although every block was set down about 4&nbsp;cm from the coaster, which is where the coaster had been in the sim.</p>
+    <p>The task then changed to picking three Jenga blocks and placing them side by side on the coaster. The timelapse below is one ACT policy (v5) at six points in its training (10k, 50k, 70k, 130k, 160k and 250k steps), each run once on the same scene at 8x speed. It shows the policy learning, it is not a benchmark. On a 10-episode sim evaluation the 250k checkpoint grasped 21 to 23 of 30 blocks and placed 8 to 13 of 30 within 12&nbsp;mm.</p>
   </div>
   <figure class="panel">
     <video controls muted loop playsinline preload="metadata" poster="assets/learning-to-stack-poster.jpg" width="1280" height="720" style="width:100%;height:auto;display:block" aria-label="Timelapse of one ACT policy at six training checkpoints stacking Jenga blocks in simulation">
@@ -259,8 +263,9 @@
     <figcaption><span class="figure__title">Learning to stack</span><span class="figure__text">Same scene, one attempt per checkpoint, 8x speed. Wrist and overhead cameras, with the training step, blocks placed on the coaster and the loss curve along the bottom.</span></figcaption>
   </figure>
   <div class="reading">
-    <p>On 24 Sep I ran it on the real arm. It grasped and carried the block 3 out of 3 times but didn't place it in its slot. The cause was traced to a camera calibration error (the cutting mat's grid is 1/2 inch, not 1 cm), and a model trained on the corrected calibration was started on 25 Sep.</p>
+    <p>On 24 Sep I ran the 250k checkpoint on the real arm three times. It grasped and carried the first block 3 out of 3 times (the earlier versions had not grasped at all on this task), released it once with the block half on the near edge of the coaster, and got 0 of 9 blocks into their slots. While measuring the bench with a tape I found that the cutting mat's grid is 1/2 inch, not 1&nbsp;cm, and every calibration had assumed 1&nbsp;cm, so the model had the overhead camera about 42&nbsp;cm above the mat instead of about 54&nbsp;cm and the coaster closer than it is. The overhead camera was recalibrated for the 1/2-inch grid and the simulated data was regenerated on the corrected twin (150 episodes). Training v6 on it, starting from the v5 checkpoint, began on 25 Sep.</p>
   </div>
+  <div class="note"><b>Next</b> — evaluate v6 in the twin and then on the real arm. The mat texture in the twin was built from an overhead photo with the arm folded at rest, so every dataset so far has a flat phantom arm lying on the table, and the plan for v7 is to regenerate the data with a cleaned-up, more realistic render. Separately, on 25 Sep I started redesigning the gripper: TPU fin-ray fingers on a quick-change mount that clamps onto the stock jaw, with a PLA fit test before the TPU print. All of the datasets so far use the stock jaws, so those stay restorable.</div>
 </section>
 
 <section class="section" id="added">
@@ -277,8 +282,12 @@
     <li><b>13 Sep</b>Reconstruction engine v2 (MoGe-2 depth + plane rectification + best-view surfel fusion). First ghost-free scene from one sweep.</li>
     <li><b>14 Sep</b>CUDA training verified end to end on a synthetic dataset; Jenga task chosen and specced. Two stacking attempts lost to a stale servo speed cap and the UI stop button — 0 episodes kept.</li>
     <li><b>15 Sep</b>First real data: 10 episodes of tower-stacking, 64,672 frames. ACT trained 30k steps in 3 h. Checkpoint on the arm the same evening: places a handed block, can't pick from the pile. Camera-dropout and torque-hold fixes written after the wrist cable came loose mid-episode.</li>
-    <li><b>22 Sep</b>ACT policy trained on simulated demos in the MuJoCo twin: 0 blocks placed at 10k steps, 2 of 3 by 130k on the same scene.</li>
-    <li><b>24 Sep</b>Sim-trained policy on the real arm: grasped and carried the block 3/3, didn't place it. Traced to a camera calibration error; retraining on the corrected calibration started 25 Sep.</li>
+    <li><b>16 Sep</b>Same checkpoint re-run with temporal ensembling: the loop held about 27&nbsp;Hz, the policy still couldn't grasp from the pile.</li>
+    <li><b>17 Sep</b>Second real dataset, <code>intial_stack_v1</code>: 11 episodes, 58,197 frames, a 3-layer tower from 9 blocks laid out singly.</li>
+    <li><b>19–20 Sep</b>MuJoCo twin of the bench built, servo lag and gripper checked against the real arm. A policy trained only on simulated demos went 3/3 on the real arm on the single-block task (reach, grasp, lift, carry, release), setting the block down about 4&nbsp;cm from the coaster.</li>
+    <li><b>22 Sep</b>Three-block task: earlier versions on the real arm placed 0 of 12 blocks. v5 trained on simulated demos in the twin: 0 blocks placed at 10k steps, 2 of 3 by 130k on the same scene.</li>
+    <li><b>24 Sep</b>v5 (250k steps) on the real arm: grasped and carried the first block 3/3, released it 1/3, 0 of 9 blocks in the slot. Found the mat grid is 1/2 inch, not 1&nbsp;cm, so every calibration was off; overhead camera recalibrated.</li>
+    <li><b>25 Sep</b>Simulated data regenerated on the corrected twin (150 episodes) and v6 training started. Gripper redesign started: TPU fin-ray fingers on a quick-change mount.</li>
   </ul>
 </section>
 
