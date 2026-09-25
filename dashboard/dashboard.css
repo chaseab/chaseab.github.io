@@ -127,6 +127,12 @@ main { padding: 20px 24px 40px; max-width: 1400px; }
 .lg-acc { border-left: 3px solid var(--rl-acc); }
 .rl-failed { font-size: 14px; color: var(--warn); margin-bottom: 10px; }
 .rl-desk { background: var(--desk); padding: 24px; border-radius: 6px; overflow-x: auto; }
+main.wide { max-width: none; }
+.rl-pane { margin: 0; min-width: 0; }
+.rl-pane figcaption { font-size: 13px; color: var(--muted); margin: 0 0 8px; }
+.rl-pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px; align-items: start; }
+.rl-pair .rl-paper { margin: 0; }
+@media (max-width: 1100px) { .rl-pair { grid-template-columns: minmax(0, 1fr); } }
 .rl-other-wrap { margin-top: 16px; font-size: 14px; }
 .rl-other-wrap h3 { font-size: 14px; color: var(--muted); margin: 0 0 6px; }
 .rl-other { padding: 6px 10px; border-left: 3px solid var(--warn); margin-bottom: 6px; cursor: pointer; background: var(--panel); }

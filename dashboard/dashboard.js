@@ -2,6 +2,7 @@
 // redline) every 10 s; every request carries the shared notes key in x-notes-key.
 // The redline is drawn client-side with the same modules the PDF build uses (./shared, synced from ~/career/lib).
 import { draftContent, docMarks, renderDoc, esc, show } from "./shared/redline.js";
+import { applyCardPlaced } from "./shared/placement.js";
 
 const API = "/api/resume";
 const DOCS = ["robotics", "mech", "scholarship", "cv"];
@@ -130,6 +131,14 @@ function renderRedline() {
   document.querySelectorAll("#rl-modes button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.mode === rlMode)));
   $("rl-legend").hidden = rlMode === "live";
 
+  // Redline mode gets a clean "after" page beside it: the draft with every pending card applied.
+  const pair = rlMode === "redline";
+  $("rl-desk").classList.toggle("rl-pair", pair);
+  $("rl-after-pane").hidden = !pair;
+  $("tab-redline").closest("main").classList.toggle("wide", pair);
+  $("rl-cap-l").textContent = pair ? "Redline: click a mark to approve, reject, or edit" : "";
+  $("rl-cap-l").hidden = !pair;
+
   let r;
   if (rlMode === "live") {
     const liveDoc = snap.live?.docs.find((d) => d.id === rlDoc);
@@ -139,6 +148,15 @@ function renderRedline() {
     r = renderDoc({ content: draft, doc: d, marks: rlMode === "redline" ? marksFor[d.id] : null, live: snap.live });
   }
   page.innerHTML = r.html;
+  if (pair) {
+    const d = docsById.get(rlDoc) || docsById.get(order[0]);
+    const after = afterContent(draft, cards);
+    const ad = after.docs.find((x) => x.id === d.id) || d;
+    const n = marksFor[d.id].cards.size;
+    $("rl-after").innerHTML = renderDoc({ content: after, doc: ad }).html;
+    $("rl-cap-r").textContent = n ? `After: all ${n} pending change${n > 1 ? "s" : ""} applied` : "After: no pending changes for this doc";
+  } else $("rl-after").innerHTML = "";
+  fitPapers();
   $("rl-other").innerHTML = r.other;
   $("rl-other-wrap").hidden = !r.other;
   $("rl-failed").hidden = !failed.length;
@@ -149,6 +167,29 @@ function renderRedline() {
     if (!c || c.status !== "pending" || rlMode !== "redline") closePop(true);
     else document.querySelectorAll(`[data-card="${CSS.escape(pop.id)}"]`).forEach((n) => n.classList.add("rl-active"));
   }
+}
+
+// The draft as if every pending card were approved too, applied oldest first like the worker does.
+// Cards that can't apply are skipped; the redline already lists them under "Changes not drawn".
+function afterContent(draft, cards) {
+  let content = JSON.parse(JSON.stringify(draft));
+  const pending = cards.filter((c) => c.status === "pending")
+    .sort((a, b) => (a.updated || a.created || 0) - (b.updated || b.created || 0));
+  for (const card of pending) {
+    const trial = JSON.parse(JSON.stringify(content));
+    try { applyCardPlaced(trial, card); content = trial; } catch { /* stale card */ }
+  }
+  return content;
+}
+
+// Side by side, each letter page is zoomed down to fit its column (never up).
+function fitPapers() {
+  document.querySelectorAll("#rl-desk .rl-paper").forEach((el) => { el.style.zoom = ""; });
+  if (!$("rl-desk").classList.contains("rl-pair")) return;
+  document.querySelectorAll("#rl-desk .rl-pane").forEach((pane) => {
+    const el = pane.querySelector(".rl-paper");
+    if (el) el.style.zoom = String(Math.min(1, pane.clientWidth / el.offsetWidth));
+  });
 }
 
 // Popover on a redline mark: why, proof, Approve / Reject / Edit.
@@ -395,7 +436,7 @@ document.addEventListener("click", async (ev) => {
     }
   } catch (e) { showErr(e); }
 });
-window.addEventListener("resize", () => { const m = pop.id && document.querySelector(`[data-card="${CSS.escape(pop.id)}"]`); if (m) placePop(m); });
+window.addEventListener("resize", () => { fitPapers(); const m = pop.id && document.querySelector(`[data-card="${CSS.escape(pop.id)}"]`); if (m) placePop(m); });
 
 // ---------- login ----------
 let timer = null;
