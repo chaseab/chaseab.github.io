@@ -139,7 +139,7 @@ const PROJECTS = [
     date:'2025-11', year:'2025', featured:true, theme:'sma',
     img:'assets/imgs/sma-cover.webp', href:'sma/index.html',
     meta:'Undergraduate researcher · Hume Center · since Nov 2025',
-    blurb:"Parallel Flexinol wire arrays as cheap, small linear actuators for a biomimetic ankle: a 12-wire rig with per-section MOSFET drive, a fail-safe firing controller, and resistance self-sensing on one DAQ timebase. One channel proven; the full array is wired up and about to run. First-author paper in preparation."
+    blurb:"Parallel Flexinol wire arrays as cheap, small linear actuators for a biomimetic ankle: a 12-wire rig with per-section MOSFET drive, a fail-safe firing controller, and resistance self-sensing on one DAQ timebase. The full 12-wire array has run; now troubleshooting v2 and implementing v3. First-author paper in preparation."
   },
   {
     id:'so101', groups:['robotics','personal'], title:'SO-101 Arm · Imitation Learning', cat:'Robotics',
@@ -166,7 +166,7 @@ const PROJECTS = [
     date:'2026-09', year:'2026', theme:'oche',
     img:'assets/imgs/a-dartment-cover.webp', href:'dart/index.html',
     meta:'personal build',
-    blurb:"Three cameras and computer vision to find where each dart lands, and a <b>501</b> double-out scoreboard built on a replayable event log. The vision pipeline and the scoreboard are built and unit-tested; wiring a real dart to the screen is the last mile."
+    blurb:"Three cameras and computer vision to find where each dart lands, and a <b>501</b> double-out scoreboard built on a replayable event log. The rig scores live games now, and anyone can set up a game at <b>darts.chasebonfiglio.com</b>."
   },
   {
     id:'camera-tracking', groups:['robotics','extracurricular'], title:'MachWorks Camera Tracking', cat:'Robotics',
@@ -177,12 +177,12 @@ const PROJECTS = [
     blurb:'Preliminary design of a system that keeps a camera pointed at a Mach 0.3+ test jet: Ronin-S gimbal, XBee telemetry, GPS, IMU and magnetometer fused through a Kalman filter on ROS 2. Project manager, team of four. Designed, not flown.'
   },
   {
-    id:'avionics', groups:['robotics','extracurricular'], title:'MachWorks Avionics - Servo Harness', cat:'Robotics',
-    tags:['FMEA','EMI','bench testing','servos','avionics'],
-    status:'live', statusLabel:'Bench stage',
+    id:'avionics', groups:['robotics','extracurricular'], title:'MachWorks Avionics - Bay Frame', cat:'Robotics',
+    tags:['CAD','3D printing','polycarbonate','avionics'],
+    status:'live', statusLabel:'Design stage',
     date:'2026-01', year:'2026', theme:'avionics',
     img:'assets/imgs/avionics-servo-cover.webp', href:'avionics/index.html', meta:'Avionics subteam, since Jan 2026',
-    blurb:'Validating the harness that moves a test jet\'s control surfaces a foot from a running engine. One bench test per failure mode: brownout, engine EMI, vibration, heat, and a destructive limit.'
+    blurb:'Designing the printed frame that holds ICARUS\'s flight electronics, from the Jetson and two IMUs to the radio, GPS and batteries, in polycarbonate with heat-set inserts into the skin. Before that, a little work on the servo harness.'
   },
   {
     id:'ai-workflow', groups:['personal'], title:'Personal AI Systems', cat:'AI',
@@ -204,8 +204,8 @@ const PROJECTS = [
   {
     id:'rov', groups:['robotics'], title:'Underwater ROV', cat:'Robotics',
     tags:['robotics','marine','telemetry','embedded','capstone'],
-    status:'done', statusLabel:'Complete',
-    date:'2024-05', year:'2024', theme:'rov',
+    status:'done', statusLabel:'Shelved',
+    date:'2024-12', year:'2024', theme:'rov',
     img:'assets/imgs/rov_top.webp', href:'underwaterrov.html', meta:'Senior capstone',
     blurb:"Senior capstone: a tethered underwater vehicle with a CTD sensor package, water sampler, photogrammetry rig, and telemetry over a Cat 6 tether — built for $186.69. Some of it worked, some of it didn't, and the writeup covers both."
   },

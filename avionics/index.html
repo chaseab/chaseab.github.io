@@ -76,28 +76,33 @@
   </nav>
 
   <p class="eyebrow">MachWorks · Virginia Tech · avionics subteam · Jan 2026 → present</p>
-  <h1>Will the servo harness survive the engine?</h1>
+  <h1>MachWorks avionics: the ICARUS bay frame</h1>
   <p class="lead">
-    On the <b>MachWorks</b> avionics subteam I took on the servo harness for <b>ICARUS</b>, the team's Mach&nbsp;0.3+
-    test jet &mdash; the wiring and servos that move its control surfaces, a foot from a running engine. A control
-    surface that goes limp in flight is not an option, so the work is a failure-mode analysis: for every way the
-    harness could fail, a bench test that provokes it and measures the margin. The benches are built and running; the
-    full validation is not finished. I joined this from the
-    <a href="../camera-tracking/">camera-tracking project</a>, which I ran as PM through 2025.
+    On the <b>MachWorks</b> avionics subteam I'm designing the avionics bay frame for <b>ICARUS</b>, the team's
+    Mach&nbsp;0.3+ test jet. Before that I did a little work on the servo harness (the sections further down are
+    from that), and before joining avionics I ran the <a href="../camera-tracking/">camera-tracking project</a> as
+    PM through 2025.
   </p>
 
   <div class="status" aria-label="project status">
     <div class="status__bar"><span>Status</span><span>MachWorks &middot; ICARUS</span></div>
     <div class="status__grid">
-      <div class="status__item"><b>Role</b><span class="pill pill--ok">Avionics subteam</span> &mdash; servo-harness validation</div>
-      <div class="status__item"><b>Stage</b><span class="pill pill--wip">Bench</span> &mdash; FMEA written, EMI / brownout / torque benches running</div>
-      <div class="status__item"><b>Open</b><span class="pill pill--wip">Full-system test</span> &mdash; end-to-end harness validation still pending</div>
+      <div class="status__item"><b>Role</b><span class="pill pill--ok">Avionics subteam</span> &mdash; avionics bay frame design</div>
+      <div class="status__item"><b>Stage</b><span class="pill pill--wip">Design</span> &mdash; requirements and parts list in; envelope inside ICARUS not set yet</div>
+      <div class="status__item"><b>Earlier</b><span class="pill pill--ok">Servo harness</span> &mdash; a little work on it before the bay frame</div>
       <div class="status__item"><b>Since</b><span class="pill pill--ok">Jan 2026</span> &mdash; after the camera-tracking PDR</div>
     </div>
   </div>
 </header>
 
 <main class="container">
+
+<section class="section" id="bay-frame">
+  <div class="section__head"><h2>The bay frame</h2><span class="line"></span></div>
+  <div class="reading">
+    <p>The bay frame is the printed structure in the nose that holds the flight electronics: the Jetson, two IMUs, a barometer, the RFD900x radio, the GPS board, the PCA9685 PWM driver, the RC receiver, the landing gear control box, two batteries and the battery distribution board. It gets printed in polycarbonate on the lab's Bambu printer and attaches to ICARUS with heat-set inserts, with screws going through the skin from the outside. The Jetson's barrel jack and Ethernet port have to stay reachable, the IMUs have to line up with the vehicle's body axes, and their final position relative to the CG gets handed to the software team for the estimator. The space available inside ICARUS isn't set yet (it depends on the recovery bay), so the envelope is still open.</p>
+  </div>
+</section>
 
 <section class="section" id="mission">
   <div class="section__head"><h2>What the harness has to do</h2><span class="line"></span></div>
@@ -144,8 +149,8 @@
   <div class="section__head"><h2>Timeline</h2><span class="line"></span></div>
   <ul class="timeline">
     <li><b>Jan 2026</b>Moved onto the avionics subteam from <a href="../camera-tracking/">camera tracking</a>.</li>
-    <li><b>Spring 2026</b>Wrote the harness FMEA and built the test benches: brownout, engine-EMI, torque.</li>
-    <li><b>Ongoing</b>First bench runs on the ICARUS harness; full-system validation and integration with the rest of the avionics still to come.</li>
+    <li><b>Spring 2026</b>A little work on the servo harness.</li>
+    <li><b>Sep 2026</b>Assigned the avionics bay frame: requirements from the avionics lead, parts list and the previous design pulled together; design in progress.</li>
   </ul>
 </section>
 

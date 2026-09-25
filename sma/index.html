@@ -13,7 +13,7 @@
 <meta property="og:description" content="Undergraduate research on parallel Flexinol wire arrays as low-cost linear actuators for biomimetic robotics: the idea, the rig, and what is not claimed yet." />
 <meta property="og:image" content="https://chasebonfiglio.com/assets/imgs/sma-cover.webp" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="description" content="Undergraduate research in Dr. Scott Kennedy's Intelligent Materials for Biomimetic Sensors and Actuators Lab at Virginia Tech's Hume Center: a drive-and-sensing rig for parallel Flexinol wire arrays as low-cost linear actuators, with resistance self-sensing on one DAQ timebase. One channel proven end to end; the 12-wire array is wired and about to run." />
+<meta name="description" content="Undergraduate research in Dr. Scott Kennedy's Intelligent Materials for Biomimetic Sensors and Actuators Lab at Virginia Tech's Hume Center: a drive-and-sensing rig for parallel Flexinol wire arrays as low-cost linear actuators, with resistance self-sensing on one DAQ timebase. The full 12-wire array has run; v2 of the rig is being troubleshot and v3 is being built." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,600,700&display=swap" rel="stylesheet">
@@ -76,16 +76,16 @@
   <p class="lead">
     Since November 2025 I've been an undergraduate researcher in <b>Dr. Scott Kennedy's Intelligent Materials for Biomimetic Sensors and Actuators Lab</b> at Virginia Tech's Hume Center. The lab works toward shape-memory-alloy
     (SMA) actuated robotic ankle systems; my piece is the rig that <b>drives and characterizes parallel Flexinol wire
-    arrays</b>: the firing electronics, the resistance self-sensing, and the data path. One wire has been proven
-    end to end; the full 12-wire array is wired up and about to run for the first time.
+    arrays</b>: the firing electronics, the resistance self-sensing, and the data path. The full 12-wire array
+    has run, and I'm troubleshooting v2 of the rig and implementing v3 now.
   </p>
 
   <div class="status" aria-label="project status">
-    <div class="status__bar"><span>Status · 21 Sep 2026</span><span class="pill">in progress</span></div>
+    <div class="status__bar"><span>Status · 25 Sep 2026</span><span class="pill">in progress</span></div>
     <div class="status__grid">
-      <div class="status__item"><b>Rig &amp; drive</b><span class="pill pill--wip">12-wire array wired</span> — one channel proven end to end; first full-array runs next</div>
+      <div class="status__item"><b>Rig &amp; drive</b><span class="pill pill--wip">12-wire array running</span> — the full array has run on v2; troubleshooting v2 and implementing v3</div>
       <div class="status__item"><b>Sensing &amp; DAQ</b><span class="pill pill--ok">Working</span> — resistance self-sensing on a multichannel DAQ, live dashboard</div>
-      <div class="status__item"><b>Results</b><span class="pill pill--todo">None yet</span> — single-channel runs logged; array characterization starts once the array runs</div>
+      <div class="status__item"><b>Results</b><span class="pill pill--todo">None yet</span> — no array characterization numbers published here yet</div>
       <div class="status__item"><b>Writing</b><span class="pill pill--wip">This fall</span> — data collection and writing, first author, aiming for IEEE RoboSoft 2027</div>
       <div class="status__item"><b>Presented</b><span class="pill pill--ok">VT Hume Colloquium, May 2026</span> — with Ethan Yueh and Christine Robinson</div>
     </div>
@@ -161,7 +161,7 @@
     <p>The first three steps run today. The rotation is still fixed PERIOD/ONTIME, so ρ is logged rather than acted on; the hot pulse with a resistance-triggered cutoff is the next thing to build once the array is running.</p>
     <p>All of it lands in a browser dashboard I built for the lab: live voltage and resistance strip charts, a motor-unit-style <b>firing raster</b> (one bar per detected pulse, from a voltage-hysteresis detector), and a pulse table logging duration, energy, R&nbsp;start/end, ΔR and cycle count. Every run is written to disk so I can go back through it later.</p>
   </div>
-  <div class="note"><b>No numbers on this page yet.</b> The 12-wire array was only wired up in September 2026. Recruitment factor, force, bandwidth and efficiency all come from the array runs.</div>
+  <div class="note"><b>No numbers on this page yet.</b> The full 12-wire array has run, but recruitment factor, force, bandwidth and efficiency aren't measured yet; those come once v2 is sorted out and v3 is in.</div>
 </section>
 
 <section class="section" id="v1-v2">
