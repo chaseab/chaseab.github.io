@@ -1,0 +1,122 @@
+WEBVTT
+
+1
+00:00:01.300 --> 00:00:07.500
+Hi, I'm Chase. I'm going to go over my
+A-Dartment auto-scoring dartboard.
+
+2
+00:00:08.100 --> 00:00:16.200
+It's mostly inspired by Autodarts,
+and a lot of it was coded using Claude.
+
+3
+00:00:16.600 --> 00:00:20.000
+We got the Spartan to hold the darts,
+that was found online.
+
+4
+00:00:20.200 --> 00:00:24.700
+And then I hand-drew the little
+dashboard and scoreboard.
+
+5
+00:00:24.900 --> 00:00:29.800
+I need to import the records.
+Let's go reset that.
+
+6
+00:00:30.000 --> 00:00:35.800
+Over here with the dartboard,
+I 3D printed the different mounts.
+
+7
+00:00:36.000 --> 00:00:40.500
+They all hold a 32 by 32 camera
+from Amazon.
+
+8
+00:00:40.600 --> 00:00:44.900
+Each one of the mounts
+is a different iteration.
+
+9
+00:00:45.100 --> 00:00:50.600
+This one is the best. It has the lip
+that hooks onto the ring around the edge.
+
+10
+00:00:50.700 --> 00:00:54.100
+Then it all wires down
+to a Raspberry Pi down there.
+
+11
+00:00:54.100 --> 00:01:02.400
+The accuracy for scoring is 90-something.
+
+12
+00:01:08.100 --> 00:01:16.900
+Originally, I just had the detection of the darts,
+and it just takes the different camera angles.
+
+13
+00:01:18.000 --> 00:01:26.700
+Eventually, I needed to implement a model to detect
+the very tip of the dart and where it landed,
+
+14
+00:01:28.900 --> 00:01:35.000
+because when it got to the triples and on the edges,
+it was hit or miss.
+
+15
+00:01:35.000 --> 00:01:38.300
+We'll go ahead and throw a couple.
+
+16
+00:01:39.500 --> 00:01:42.000
+That's 10.
+
+17
+00:01:47.900 --> 00:01:50.500
+16, 1.
+
+18
+00:01:54.200 --> 00:01:58.700
+So we got 15, 16, 1.
+
+19
+00:01:58.700 --> 00:02:02.000
+There's the 90% accuracy for you.
+
+20
+00:02:02.500 --> 00:02:05.700
+And then it switches over to Cade's turn.
+
+21
+00:02:08.400 --> 00:02:12.000
+Grab a couple darts.
+
+22
+00:02:13.700 --> 00:02:16.300
+Triple 20s, maybe? Just 20.
+
+23
+00:02:17.900 --> 00:02:19.500
+Five.
+
+24
+00:02:23.700 --> 00:02:27.900
+So that was 25 and 25.
+
+25
+00:02:28.600 --> 00:02:31.500
+Let's see what we got here. Hey, look at that.
+
+26
+00:02:31.600 --> 00:02:33.300
+25 and 25.
+
+27
+00:02:34.100 --> 00:02:40.800
+That is the A-Dartment auto-scoring project for you.
