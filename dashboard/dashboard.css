@@ -161,6 +161,14 @@ main.wide { max-width: none; }
 .rl-paper li { position: relative; margin-bottom: 1pt; }
 .rl-paper li::before { content: "•"; position: absolute; left: -0.13in; font-size: .8em; top: .05em; }
 .rl-skills { padding-left: 0.15in; font-size: var(--small); }
+/* CV-only parts (templates/cv.tex.njk): summary paragraph, link line, list sections, left-aligned headings */
+.rl-cv h2 { font-weight: bold; margin: 12pt 0 5pt; }
+.rl-cv .rl-item { padding-left: 0; margin-bottom: 6pt; }
+.rl-cv ul { padding-left: 1.4em; font-size: var(--pt); }
+.rl-summary { margin: 2pt 0 1pt; font-size: var(--pt); }
+.rl-link { margin-top: 1pt; }
+.rl-list { display: grid; gap: 3pt; }
+.rl-list.rl-inline { display: block; }
 
 /* marks */
 .rl-paper del { color: var(--rl-del); background: var(--rl-del-bg); text-decoration: line-through; text-decoration-thickness: 1px; }

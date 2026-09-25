@@ -1,6 +1,8 @@
 // Resume dashboard API (dashboard/ page + desktop worker in ~/career).
-// Same shared key as the notes widget: x-notes-key must equal NOTES_KEY.
+// On chasebonfiglio.com: Cloudflare Access (Chase's login or the worker's service token).
+// On previews: the notes key, read-only. See netlify/lib/access.mjs.
 import { getStore } from "@netlify/blobs";
+import { authorize } from "../lib/access.mjs";
 
 export const config = { path: "/api/resume" };
 
@@ -38,8 +40,9 @@ async function reindex(store, prefix, supplied = []) {
 }
 
 export default async (req) => {
-  const key = Netlify.env.get("NOTES_KEY");
-  if (!key || req.headers.get("x-notes-key") !== key) return json({ error: "unauthorized" }, 401);
+  const auth = await authorize(req);
+  if (!auth.ok) return json({ error: auth.error }, auth.status);
+  if (auth.readOnly && req.method !== "GET") return json({ error: "read-only on previews: decide and publish at chasebonfiglio.com/dashboard/" }, 403);
   const url = new URL(req.url);
   const what = url.searchParams.get("what");
   const store = getStore({ name: "resume", consistency: "strong" });

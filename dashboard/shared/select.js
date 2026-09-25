@@ -14,8 +14,9 @@ export const bulletText = (b, doc) => b.override?.[doc.id] ?? b.text;
 export function selectDoc(doc, entries) {
   const byId = new Map(entries.map((e) => [e.id, e]));
   const sections = doc.sections.map((s) => ({
+    ...s,                               // from/style of "list" sections reach the template
     title: s.title,
-    kind: s.kind ?? "entries",          // "skills" renders profile.skills here instead of entries
+    kind: s.kind ?? "entries",          // "skills": profile.skills; "list": the profile list named by `from`
     items: (s.entries ?? []).map((id) => {
       const e = byId.get(id);
       if (!e) throw new Error(`doc ${doc.id}: unknown entry "${id}"`);

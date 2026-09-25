@@ -11,6 +11,9 @@ const OP_NAMES = { edit_bullet: "Edit bullet", add_bullet: "Add bullet", remove_
   move_bullet: "Move bullet", set_field: "Change field", add_entry: "New entry" };
 const EDITABLE = ["edit_bullet", "add_bullet", "set_field"];
 const $ = (id) => document.getElementById(id);
+// On chasebonfiglio.com, Cloudflare Access has already logged Chase in (its cookie rides along on every
+// fetch), so there is no key. Previews use the old key and the API is read-only there.
+const ACCESS = /(^|\.)chasebonfiglio\.com$/.test(location.hostname);
 
 const keyStore = {
   get() { try { return localStorage.getItem("resumeKey") || ""; } catch { return ""; } },
@@ -64,8 +67,9 @@ const targetOf = (c) => c.target || c.entry?.id || "";
 const entryOf = (c) => String(targetOf(c)).split(/[/.]/)[0] || "other";
 const safeUrl = (u) => (/^https?:\/\//i.test(String(u || "")) ? u : null);
 const cardById = (id) => (state?.cards || []).find((c) => c.id === id);
+const authFail = () => (ACCESS ? logout("Your Cloudflare login has expired. Reload the page to sign in again.") : logout("That key didn't work."));
 const showErr = (e) => {
-  if (e.auth) return logout("That key didn't work.");
+  if (e.auth) return authFail();
   $("banner").hidden = false;
   $("banner").textContent = `Request failed: ${e.message}`;
 };
@@ -346,7 +350,7 @@ async function refresh() {
     state = st; snap = content; failures = 0;
     render();
   } catch (e) {
-    if (e.auth) return logout("That key didn't work.");
+    if (e.auth) return authFail();
     if (++failures < 3) return;      // one bad poll isn't worth a banner; the next one retries
     $("banner").hidden = false;
     $("banner").textContent = `Can't reach the API: ${e.message}`;
@@ -432,7 +436,7 @@ document.addEventListener("click", async (ev) => {
     } else if (b.id === "btn-rebuild") {
       await command("rebuild");
     } else if (b.id === "btn-forget") {
-      logout();
+      if (ACCESS) location.href = "/cdn-cgi/access/logout"; else logout();
     }
   } catch (e) { showErr(e); }
 });
@@ -442,6 +446,8 @@ window.addEventListener("resize", () => { fitPapers(); const m = pop.id && docum
 let timer = null;
 function start() {
   $("login").hidden = true; $("app").hidden = false;
+  $("btn-forget").textContent = ACCESS ? "Sign out of Cloudflare Access" : "Forget key on this device";
+  $("preview-note").hidden = ACCESS;
   refresh();
   clearInterval(timer);
   timer = setInterval(refresh, 10000);
@@ -459,4 +465,5 @@ $("login-form").addEventListener("submit", (ev) => {
   start();
 });
 
-if (key) start(); else logout();
+if (ACCESS) $("login-form").hidden = true;
+if (key || ACCESS) start(); else logout();

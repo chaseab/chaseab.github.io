@@ -15,7 +15,9 @@ export function placementsFor(card, docs) {
     if (named.length ? !named.includes(doc.id) : !tagged) continue;
     const titles = doc.sections.filter((s) => (s.kind ?? "entries") === "entries").map((s) => s.title);
     const want = e.stack ? /project/i : /research/i.test(`${e.org ?? ""} ${e.title ?? ""}`) ? /research/i : /experience/i;
-    const section = titles.find((t) => want.test(t)) ?? titles.find((t) => /project/i.test(t)) ?? titles[titles.length - 1];
+    // "Research Experience" is not where a non-research role goes.
+    const fits = (t) => want.test(t) && !(want.source === "experience" && /research/i.test(t));
+    const section = titles.find(fits) ?? titles.find((t) => /project/i.test(t)) ?? titles[titles.length - 1];
     if (section) out.push({ doc: doc.id, section, guessed: true });
   }
   return out;

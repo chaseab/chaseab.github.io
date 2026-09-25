@@ -30,11 +30,14 @@ export function draftContent(current, cards) {
 
 const entryIdsIn = (doc) => new Set(doc.sections.flatMap((s) => s.entries ?? []));
 
-// Is a profile path drawn in this doc? (awards etc. only exist in the CV; skills need a skills section)
+// Is a profile path drawn in this doc? The header and education are always drawn; skills need a
+// skills section; any other profile list (coursework, presentations, ...) needs a list section for it.
+const HEADER_KEYS = ["name", "phone", "email", "site", "linkedin", "education"];
 function profilePathInDoc(path, doc) {
-  if (/^profile\.(awards|coursework|activities|publications)\b/.test(path)) return doc.template === "cv";
-  if (/^profile\.skills\b/.test(path)) return doc.sections.some((s) => s.kind === "skills");
-  return true;
+  const key = path.split(".")[1];
+  if (key === "skills") return doc.sections.some((s) => s.kind === "skills");
+  if (HEADER_KEYS.includes(key)) return true;
+  return doc.sections.some((s) => s.kind === "list" && s.from === key);
 }
 
 function slotFor(m, eid) {
@@ -154,6 +157,7 @@ export function renderDoc({ content, doc, marks = null, live = null }) {
 
   out.push(`<h2>Education</h2>`);
   (p.education ?? []).forEach((ed, i) => {
+    if (ed.docs && !ed.docs.includes(doc.id)) return;   // e.g. high school: CV only
     const k = (f) => `profile.education.${i}.${f}`;
     out.push(`<div class="rl-item"><div class="rl-row"><b>${field(k("school"), ed.school)}</b><span>${field(k("dates"), ed.dates)}</span></div>
       <div class="rl-row rl-sub"><i>${field(k("degree"), ed.degree)}${ed.gpa || marks?.fields.has(k("gpa")) ? `, GPA: ${field(k("gpa"), ed.gpa)}` : ""}</i><i>${field(k("location"), ed.location)}</i></div>
@@ -195,33 +199,53 @@ export function renderDoc({ content, doc, marks = null, live = null }) {
       : `<div class="rl-row"><b>${f(k("title"), e.title)}</b><span>${f(k("dates"), e.dates)}</span></div>
          <div class="rl-row rl-sub"><i>${f(k("org"), e.org)}</i><i>${f(k("location"), e.location)}</i></div>`;
   };
+  // Docs with `summaries: true` (the CV) print an entry's summary paragraph above its bullets and
+  // its link below them.
+  const extra = (x, cls, tagName) => (e, plain) => {
+    if (!doc.summaries) return "";
+    const key = `${e.id}.${x}`;
+    if (!e[x] && (plain || !marks?.fields.has(key))) return "";
+    return `<${tagName} class="${cls}">${plain ? richHtml(show(e[x])) : field(key, e[x], richHtml)}</${tagName}>`;
+  };
+  const summary = extra("summary", "rl-summary", "p"), linkLine = extra("link", "rl-sub rl-link", "div");
+
+  // A "list" section: one profile list (strings, or {title, detail, dates} objects). Drawn as divs,
+  // not <li>, so bullets stay the only list items. A card replacing the whole list shows as one mark.
+  const listSection = (s) => {
+    const key = `profile.${s.from}`;
+    const v = p[s.from];
+    if (marks?.fields.has(key)) return `<div class="rl-list">${field(key, v)}</div>`;
+    rendered.add(key);
+    const items = Array.isArray(v) ? v : v ? [v] : [];
+    if (s.style === "inline") return `<div class="rl-list rl-inline">${field(key, items)}</div>`;
+    return `<div class="rl-list">${items.map((a, i) => {
+      const ik = (x) => `${key}.${i}${x ? `.${x}` : ""}`;
+      if (!a || typeof a !== "object") return `<div class="rl-row">${field(ik(), a, richHtml)}</div>`;
+      return `<div class="rl-row"><span>${field(ik("title"), a.title, richHtml)}${a.detail ? `, <i>${field(ik("detail"), a.detail, richHtml)}</i>` : ""}</span><span>${a.dates ? field(ik("dates"), a.dates) : ""}</span></div>`;
+    }).join("")}</div>`;
+  };
 
   for (const s of doc.sections) {
+    // An empty list section is left out, same as the TeX build, unless a card is filling it.
+    if (s.kind === "list" && !show(p[s.from]) && !marks?.fields.has(`profile.${s.from}`)) continue;
     out.push(`<h2>${esc(s.title)}</h2>`);
     if (s.kind === "skills") {
       out.push(`<div class="rl-skills">${Object.entries(p.skills ?? {}).map(([k, v]) =>
         `<div><b>${esc(k)}</b>: ${field(`profile.skills.${k}`, v, richHtml)}</div>`).join("")}</div>`);
       continue;
     }
+    if (s.kind === "list") { out.push(listSection(s)); continue; }
     for (const id of s.entries ?? []) {
       const e = entries.get(id);
       if (!e) continue;
       const newSinceLive = live && !liveEntries.has(id);
-      out.push(`<div class="rl-item${newSinceLive ? " rl-acc-block" : ""}">${head(e, false)}${bulletLis(e, false)}</div>`);
+      out.push(`<div class="rl-item${newSinceLive ? " rl-acc-block" : ""}">${head(e, false)}${summary(e, false)}${bulletLis(e, false)}${linkLine(e, false)}</div>`);
     }
     for (const x of (marks?.entries ?? []).filter((x) => x.section === s.title)) {
       const note = x.guessed ? `The card didn't say where this goes, so it's placed at the end of ${s.title}.` : "";
       const cut = x.cut.length ? `${x.cut.length} bullet${x.cut.length > 1 ? "s" : ""} past the ${doc.max_bullets}-bullet limit won't show in this doc.` : "";
       out.push(`<div class="rl-mark rl-entry" data-card="${esc(x.card.id)}"><div class="rl-entry-tag">New entry <code>${esc(x.entry.id)}</code>${note ? ` · ${esc(note)}` : ""}</div>
-        ${head(x.entry, true)}${x.kept.length ? `<ul>${x.kept.map((b) => `<li>${richHtml(bulletText(b, doc))}</li>`).join("")}</ul>` : ""}${cut ? `<div class="rl-note">${esc(cut)}</div>` : ""}</div>`);
-    }
-  }
-
-  if (doc.template === "cv") {
-    for (const [title, key] of [["Awards", "awards"], ["Coursework", "coursework"], ["Activities", "activities"], ["Publications", "publications"]]) {
-      const v = p[key];
-      if (!(v?.length) && !marks?.fields.has(`profile.${key}`)) continue;
-      out.push(`<h2>${title}</h2><div class="rl-skills">${field(`profile.${key}`, v, (s) => esc(s))}</div>`);
+        ${head(x.entry, true)}${summary(x.entry, true)}${x.kept.length ? `<ul>${x.kept.map((b) => `<li>${richHtml(bulletText(b, doc))}</li>`).join("")}</ul>` : ""}${linkLine(x.entry, true)}${cut ? `<div class="rl-note">${esc(cut)}</div>` : ""}</div>`);
     }
   }
 
