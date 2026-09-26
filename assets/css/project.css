@@ -125,6 +125,13 @@ h3 { font-size: 19px; font-weight: 600; margin-bottom: 8px; }
 /* ---------- page header ---------- */
 .page-head { padding-top: 48px; }
 .page-head .lead { margin-bottom: 0; }
+/* Centred title block (same as the dart page): eyebrow, title and lead on one centred column. */
+.page-head--center { text-align: center; }
+.page-head--center .crumb { justify-content: center; }
+.page-head--center h1 { max-width: none; }
+.page-head--center h1::after { margin-left: auto; margin-right: auto; }
+.page-head--center .lead { margin-left: auto; margin-right: auto; }
+.page-head--center .status, .page-head--center .split, .page-head--center figure { text-align: left; }
 
 
 /* ---------- status ---------- */
