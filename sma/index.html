@@ -19,6 +19,15 @@
 <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,600,700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/css/project.css?v=20260926">
 <style>
+  .rigs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; }
+  .rig-card { margin: 0; cursor: pointer; }
+  .rig-card img, .rig-card video { display: block; width: 100%; aspect-ratio: 1200 / 928; object-fit: contain; background: #f4f4f4; }
+  .rig-card video { display: none; background: #fff; }
+  .rig-card.is-spinning img { display: none; }
+  .rig-card.is-spinning video { display: block; }
+  .rig-card .figure__title .pill { margin-left: 6px; vertical-align: 1px; }
+  .rigs__note { font-size: 13px; color: var(--muted); margin: 10px 0 0; }
+  @media (max-width: 800px) { .rigs { grid-template-columns: 1fr; } }
   .site-foot { border-top: 1px solid var(--border); margin-top: 64px; padding: 34px 0 10px; background: var(--white); }
   .site-foot__inner { display: grid; grid-template-columns: 1.6fr 1fr 1fr; gap: 28px; }
   .site-foot__head { font-size: 13px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--navy); margin: 0 0 10px; }
@@ -165,11 +174,39 @@
 </section>
 
 <section class="section" id="v1-v2">
-  <div class="section__head"><h2>v1 to v2</h2><span class="line"></span></div>
+  <div class="section__head"><h2>v1 to v3</h2><span class="line"></span></div>
   <div class="reading">
-    <p>The first rig, v1, held one wire. It was there to prove the drive and the sensing on a single channel and to try the mechanical ideas cheaply: swappable saddles so the wrap radius could change, and parts that swap out without reprinting the frame. v2 keeps that and expands to 12 wires so the parallel firing can actually be tested. Both rigs set the free wire length with the pins at the top of the frame.</p>
+    <p>The first rig, v1, was there to prove the drive and the sensing and to try the mechanical ideas cheaply: a fixed-radius foot with one wire per side, running from a bolt on the spine, under the foot arc, to a screw at the end. v2 is the ankle rig. The foot pivots, the saddles swap out so the wrap radius can change, and each side is one continuous Flexinol wire zigzagging 12 strands between the foot bolts and the brass carriage posts, so the parallel firing can actually be tested. v3 is a linear rig for the RoboSoft paper, with 14 parallel wires, each on its own spring, pulling into a load cell, driven by MOSFETs from an Arduino.</p>
   </div>
-  <!-- v1 photo goes here when Chase sends it: <figure class="panel panel--tall"><img src="assets/rig-v1.webp" ...><figcaption>...</figcaption></figure> -->
+
+  <div class="rigs">
+    <figure class="panel rig-card">
+      <img src="assets/rigs/v1-hero.webp" width="1200" height="928" loading="lazy" alt="Render of the v1 rig: a white printed frame with a fixed-radius foot at the bottom and one wire per side running from a bolt on the spine to a screw at the end." />
+      <video class="rig-spin" muted loop playsinline preload="none" poster="assets/rigs/v1-hero.webp" aria-label="v1 rig turntable"><source src="assets/rigs/v1-turntable.mp4" type="video/mp4" /></video>
+      <figcaption><span class="figure__title">v1 <span class="pill pill--ok">done</span></span><span class="figure__text">The first test rig. Fixed-radius foot, one wire per side from a spine bolt under the foot arc to an end screw.</span></figcaption>
+    </figure>
+    <figure class="panel rig-card">
+      <img src="assets/rigs/v2-hero.webp" width="1200" height="928" loading="lazy" alt="Render of the v2 ankle rig: a tall white frame with a black carriage bar of brass posts and parallel Flexinol strands running down to a pivoting foot." />
+      <video class="rig-spin" muted loop playsinline preload="none" poster="assets/rigs/v2-hero.webp" aria-label="v2 rig turntable"><source src="assets/rigs/v2-turntable.mp4" type="video/mp4" /></video>
+      <figcaption><span class="figure__title">v2 <span class="pill pill--wip">troubleshooting</span></span><span class="figure__text">The ankle rig. Pivoting foot with swappable-radius saddles, and one continuous Flexinol wire per side zigzagging 12 strands between the foot bolts and the brass carriage posts.</span></figcaption>
+    </figure>
+    <figure class="panel rig-card">
+      <img src="assets/rigs/v3-hero.webp" width="1200" height="928" loading="lazy" alt="Render of the v3 linear rig: fourteen parallel wires, each with its own spring, running down a white frame into a load cell, with the drive electronics wired along the side." />
+      <video class="rig-spin" muted loop playsinline preload="none" poster="assets/rigs/v3-hero.webp" aria-label="v3 rig turntable"><source src="assets/rigs/v3-turntable.mp4" type="video/mp4" /></video>
+      <figcaption><span class="figure__title">v3 <span class="pill pill--wip">printing</span></span><span class="figure__text">The linear rig for the RoboSoft paper. 14 parallel wires, each with its own spring, pulling into a load cell, with MOSFET and Arduino electronics. The parts are being printed now, and the first tests come right after.</span></figcaption>
+    </figure>
+  </div>
+  <p class="rigs__note">Renders from the CAD in SOLIDWORKS Visualize; hover or tap one to spin it. Bolts and wires were added for the renders only, and the wire is drawn at 0.3&nbsp;mm so it shows up (the wire itself is 0.1&nbsp;mm).</p>
+  <script>
+    // Swap each render for its turntable on hover (desktop) or tap (phone).
+    document.querySelectorAll('.rig-card').forEach(function (card) {
+      var v = card.querySelector('video'), on = false;
+      function spin(yes) { on = yes; card.classList.toggle('is-spinning', yes); if (yes) { v.play().catch(function () {}); } else { v.pause(); } }
+      card.addEventListener('mouseenter', function () { spin(true); });
+      card.addEventListener('mouseleave', function () { spin(false); });
+      card.addEventListener('click', function () { spin(!on); });
+    });
+  </script>
 </section>
 
 <section class="section" id="model">
